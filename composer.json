@@ -17,7 +17,8 @@
     "autoload-dev": {
         "psr-4": {
             "WebAppId\\Member\\Tests\\": "tests/",
-            "WebAppId\\User\\Tests\\": "vendor/webappid/laravel-user/tests"
+            "WebAppId\\User\\Tests\\": "vendor/webappid/laravel-user/tests",
+            "WebAppId\\Content\\Tests\\" : "vendor/webappid/content/tests"
         }
     },
     "require": {
@@ -26,13 +27,15 @@
         "doctrine/dbal": "^2.5",
         "webpatser/laravel-uuid": "^3.0",
         "webappid/laravel-user": "^4.0",
-        "nesbot/carbon": "^2.0"
+        "nesbot/carbon": "^2.0",
+        "webappid/content": "^5.0"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.0",
         "mockery/mockery": "^1.0",
         "phpunit/phpunit": "^8.0",
         "orchestra/testbench": "^4.0|^5.0",
+        "orchestra/testbench-browser-kit": "^4.0|^5.0",
         "webappid/lazycrud": "^1.0@dev"
     },
     "extra": {
