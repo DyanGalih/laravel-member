@@ -5,6 +5,8 @@
 
 namespace WebAppId\Member\Services\Responses;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use WebAppId\Member\Models\Member;
 use WebAppId\DDD\Responses\AbstractResponse;
 
@@ -21,4 +23,9 @@ class MemberServiceResponse extends AbstractResponse
      * @var Member
      */
     public $member;
+
+    /**
+     * @var Collection
+     */
+    public $addressList;
 }

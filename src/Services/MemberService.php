@@ -74,6 +74,7 @@ class MemberService extends BaseService implements MemberServiceContract
             $memberServiceResponse->status = true;
             $memberServiceResponse->message = 'Data Found';
             $memberServiceResponse->member = $result;
+            $memberServiceResponse->addressList = $result->addresses;
         } else {
             $memberServiceResponse->status = false;
             $memberServiceResponse->message = 'Data Not Found';

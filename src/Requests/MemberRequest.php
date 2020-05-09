@@ -31,9 +31,7 @@ class MemberRequest extends AbstractFormRequest
             'dob' => 'string|required',
             'timezone_id' => 'int|required',
             'language_id' => 'int|required',
-            'picture_id' => 'int|required',
-            'creator_id' => 'int|required',
-            'owner_id' => 'int|required'
+            'picture_id' => 'int|required'
          ];
     }
 }

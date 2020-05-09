@@ -20,6 +20,14 @@ Route::group(['middleware' => 'web'], function () {
                         Route::post('', WebAppId\Member\Controllers\Members\MemberStoreController::class)->name('post');
                         Route::post('/{id}/update', WebAppId\Member\Controllers\Members\MemberUpdateController::class)->name('update');
                     });
+
+                    Route::name('memberaddress.')->prefix('memberaddress')->group(function(){
+                        Route::get('', WebAppId\Member\Controllers\MemberAddresses\MemberAddressIndexController::class)->name('index');
+                        Route::get('/{id}', WebAppId\Member\Controllers\MemberAddresses\MemberAddressDetailController::class)->name('detail');
+                        Route::get('/{id}/delete', WebAppId\Member\Controllers\MemberAddresses\MemberAddressDeleteController::class)->name('delete');
+                        Route::post('', WebAppId\Member\Controllers\MemberAddresses\MemberAddressStoreController::class)->name('post');
+                        Route::post('/{id}/update', WebAppId\Member\Controllers\MemberAddresses\MemberAddressUpdateController::class)->name('update');
+                    });
                 });
             });
         });

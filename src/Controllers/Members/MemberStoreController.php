@@ -43,6 +43,8 @@ class MemberStoreController extends BaseController
         $memberServiceRequest = Lazy::copyFromArray($memberValidated, $memberServiceRequest, Lazy::AUTOCAST);
 
         $memberServiceRequest->user_id = Auth::user()->id;
+        $memberServiceRequest->creator_id = Auth::user()->id;
+        $memberServiceRequest->owner_id = Auth::user()->id;
             
         $result = $this->container->call([$memberService, 'store'], ['memberServiceRequest' => $memberServiceRequest]);
 
