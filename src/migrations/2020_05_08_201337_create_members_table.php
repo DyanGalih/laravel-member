@@ -37,8 +37,8 @@ class CreateMembersTable extends Migration
                 ->comment('relation to timezones table');
             $table->unsignedInteger('language_id')
                 ->comment('relation to languages table');
-            $table->unsignedBigInteger('picture_id')
-                ->comment('relation to files table');
+            $table->unsignedBigInteger('content_id')
+                ->comment('relation to contents table for detail information');
             $table->unsignedBigInteger('user_id')
                 ->comment('Relation to users table as last update user');
             $table->unsignedBigInteger('creator_id')
@@ -57,7 +57,7 @@ class CreateMembersTable extends Migration
             $table->foreign('identity_type_id')->references('id')->on('identity_types');
             $table->foreign('timezone_id')->references('id')->on('time_zones');
             $table->foreign('language_id')->references('id')->on('languages');
-            $table->foreign('picture_id')->references('id')->on('files');
+            $table->foreign('content_id')->references('id')->on('contents');
         });
     }
 

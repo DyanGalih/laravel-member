@@ -6,9 +6,8 @@
 namespace WebAppId\Member\Services\Responses;
 
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
+use WebAppId\Content\Services\Responses\ContentServiceResponse;
 use WebAppId\Member\Models\Member;
-use WebAppId\DDD\Responses\AbstractResponse;
 
 /**
  * @author: Dyan Galih<dyan.galih@gmail.com>
@@ -17,7 +16,7 @@ use WebAppId\DDD\Responses\AbstractResponse;
  * Class MemberServiceResponse
  * @package WebAppId\Member\Services\Responses
  */
-class MemberServiceResponse extends AbstractResponse
+class MemberServiceResponse extends ContentServiceResponse
 {
     /**
      * @var Member

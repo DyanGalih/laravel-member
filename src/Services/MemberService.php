@@ -5,6 +5,8 @@
 
 namespace WebAppId\Member\Services;
 
+use WebAppId\Content\Services\ContentService;
+use WebAppId\Content\Services\Requests\ContentServiceRequest;
 use WebAppId\Member\Repositories\MemberRepository;
 use WebAppId\Member\Repositories\Requests\MemberRepositoryRequest;
 use WebAppId\Member\Services\Contracts\MemberServiceContract;
@@ -23,19 +25,29 @@ use WebAppId\DDD\Tools\Lazy;
  */
 class MemberService extends BaseService implements MemberServiceContract
 {
-
     /**
      * @inheritDoc
      */
-    public function store(MemberServiceRequest $memberServiceRequest, MemberRepositoryRequest $memberRepositoryRequest, MemberRepository $memberRepository, MemberServiceResponse $memberServiceResponse): MemberServiceResponse
+    public function store(MemberServiceRequest $memberServiceRequest,
+                          ContentServiceRequest $contentServiceRequest,
+                          ContentService $contentService,
+                          MemberRepositoryRequest $memberRepositoryRequest,
+                          MemberRepository $memberRepository,
+                          MemberServiceResponse $memberServiceResponse): MemberServiceResponse
     {
         $memberRepositoryRequest = Lazy::copy($memberServiceRequest, $memberRepositoryRequest);
 
-        $result = $this->container->call([$memberRepository, 'store'], ['memberRepositoryRequest' => $memberRepositoryRequest]);
+        $result = $this->container->call([$memberRepository, 'store'], compact('memberRepositoryRequest'));
+
         if ($result != null) {
+            $resultContent = $this->container->call([$contentService, 'store'], compact('contentService'));
             $memberServiceResponse->status = true;
             $memberServiceResponse->message = 'Store Data Success';
             $memberServiceResponse->member = $result;
+            $memberServiceResponse->content = $resultContent->content;
+            $memberServiceResponse->categories = $resultContent->categories;
+            $memberServiceResponse->galleries = $resultContent->galleries;
+            $memberServiceResponse->children = $resultContent->children;
         } else {
             $memberServiceResponse->status = false;
             $memberServiceResponse->message = 'Store Data Failed';

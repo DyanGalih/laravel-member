@@ -5,7 +5,8 @@
 
 namespace WebAppId\Member\Requests;
 
-use WebAppId\DDD\Requests\AbstractFormRequest;
+use WebAppId\Content\Requests\ContentRequest;
+
 /**
  * @author: Dyan Galih<dyan.galih@gmail.com>
  * Date: 03:24:51
@@ -14,7 +15,7 @@ use WebAppId\DDD\Requests\AbstractFormRequest;
  * @package WebAppId\Member\Requests
  */
 
-class MemberRequest extends AbstractFormRequest
+class MemberRequest extends ContentRequest
 {
     /**
      * @inheritDoc
@@ -30,8 +31,7 @@ class MemberRequest extends AbstractFormRequest
             'sex' => 'string|required|max:1',
             'dob' => 'string|required',
             'timezone_id' => 'int|required',
-            'language_id' => 'int|required',
-            'picture_id' => 'int|required'
+            'language_id' => 'int|required'
          ];
     }
 }

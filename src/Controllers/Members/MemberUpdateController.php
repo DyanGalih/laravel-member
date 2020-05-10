@@ -2,14 +2,17 @@
 /**
  * Created by LazyCrud - @DyanGalih <dyan.galih@gmail.com>
  */
+
 namespace WebAppId\Member\Controllers\Members;
 
+use Member;
+use WebAppId\Content\Repositories\TimeZoneRepository;
+use WebAppId\Content\Services\Requests\ContentServiceRequest;
+use WebAppId\Content\Traits\Content;
 use WebAppId\Member\Requests\MemberRequest;
 use WebAppId\Member\Services\MemberService;
 use WebAppId\Member\Services\Requests\MemberServiceRequest;
-use Illuminate\Support\Facades\Auth;
 use WebAppId\DDD\Controllers\BaseController;
-use WebAppId\DDD\Tools\Lazy;
 use WebAppId\SmartResponse\Response;
 use WebAppId\SmartResponse\SmartResponse;
 
@@ -22,22 +25,24 @@ use WebAppId\SmartResponse\SmartResponse;
  */
 class MemberUpdateController extends BaseController
 {
+    use Member, Content;
+
     public function __invoke(int $id,
                              MemberRequest $memberRequest,
                              MemberServiceRequest $memberServiceRequest,
+                             ContentServiceRequest $contentServiceRequest,
+                             TimeZoneRepository $timeZoneRepository,
                              MemberService $memberService,
                              SmartResponse $smartResponse,
                              Response $response)
     {
         $memberValidated = $memberRequest->validated();
 
-        $memberServiceRequest = Lazy::copyFromArray($memberValidated, $memberServiceRequest, Lazy::AUTOCAST);
+        $memberServiceRequest = $this->transformMember($memberValidated, $memberServiceRequest);
 
-        $memberServiceRequest->user_id = Auth::user()->id;
-        $memberServiceRequest->creator_id = Auth::user()->id;
-        $memberServiceRequest->owner_id = Auth::user()->id;
-            
-        $result = $this->container->call([$memberService, 'update'], ['id' => $id, 'memberServiceRequest' => $memberServiceRequest]);
+        $contentServiceRequest = $this->transformContent($this->container, $memberValidated, $contentServiceRequest, $timeZoneRepository);
+
+        $result = $this->container->call([$memberService, 'update'], compact('id', 'memberServiceRequest', 'contentServiceRequest'));
 
         if ($result->isStatus()) {
             $response->setData($result->member);

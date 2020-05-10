@@ -33,7 +33,7 @@ class IdentityTypeUpdateController extends BaseController
 
         $identityTypeServiceRequest = Lazy::copyFromArray($identityTypeValidated, $identityTypeServiceRequest, Lazy::AUTOCAST);
 
-        $identityTypeServiceRequest->user_id = Auth::user()->id;
+        $identityTypeServiceRequest->user_id = Auth::id();
             
         $result = $this->container->call([$identityTypeService, 'update'], ['id' => $id, 'identityTypeServiceRequest' => $identityTypeServiceRequest]);
 

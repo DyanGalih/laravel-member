@@ -1,14 +1,15 @@
 <?php
 /**
-* Created by LazyCrud - @DyanGalih <dyan.galih@gmail.com>
-*/
+ * Created by LazyCrud - @DyanGalih <dyan.galih@gmail.com>
+ */
+
 namespace WebAppId\Member\Controllers\MemberAddresses;
 
+use WebAppId\Content\Traits\Content;
 use WebAppId\Member\Requests\MemberAddressRequest;
 use WebAppId\Member\Services\MemberAddressService;
 use WebAppId\Member\Services\Requests\MemberAddressServiceRequest;
 use Exception;
-use Illuminate\Support\Facades\Auth;
 use WebAppId\DDD\Controllers\BaseController;
 use WebAppId\DDD\Tools\Lazy;
 use WebAppId\SmartResponse\Response;
@@ -23,6 +24,9 @@ use WebAppId\SmartResponse\SmartResponse;
  */
 class MemberAddressStoreController extends BaseController
 {
+
+    use Content;
+
     /**
      * @param MemberAddressRequest $memberAddressRequest
      * @param MemberAddressServiceRequest $memberAddressServiceRequest
@@ -42,11 +46,7 @@ class MemberAddressStoreController extends BaseController
 
         $memberAddressServiceRequest = Lazy::copyFromArray($memberAddressValidated, $memberAddressServiceRequest, Lazy::AUTOCAST);
 
-        $memberAddressServiceRequest->user_id = Auth::user()->id;
-        $memberAddressServiceRequest->creator_id = Auth::user()->id;
-        $memberAddressServiceRequest->owner_id = Auth::user()->id;
-
-        $result = $this->container->call([$memberAddressService, 'store'], ['memberAddressServiceRequest' => $memberAddressServiceRequest]);
+        $result = $this->container->call([$memberAddressService, 'store'], compact('memberAddressServiceRequest'));
 
         if ($result->status) {
             $response->setData($result->memberAddress);

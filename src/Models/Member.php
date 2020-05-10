@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
 class Member extends Model
 {
     protected $table = 'members';
-    protected $fillable = ['id', 'identity_type_id', 'name', 'identity', 'email', 'phone', 'phone_alternative', 'sex', 'dob', 'timezone_id', 'language_id', 'picture_id'];
+    protected $fillable = ['id', 'identity_type_id', 'name', 'identity', 'email', 'phone', 'phone_alternative', 'sex', 'dob', 'timezone_id', 'language_id', 'content_id'];
     protected $hidden = ['user_id', 'creator_id', 'owner_id', 'created_at', 'updated_at'];
 
     public function addresses()

@@ -5,6 +5,10 @@
 
 namespace WebAppId\Member\Services\Contracts;
 
+use WebAppId\Content\Repositories\ContentRepository;
+use WebAppId\Content\Repositories\Requests\ContentRepositoryRequest;
+use WebAppId\Content\Services\ContentService;
+use WebAppId\Content\Services\Requests\ContentServiceRequest;
 use WebAppId\Member\Repositories\MemberRepository;
 use WebAppId\Member\Repositories\Requests\MemberRepositoryRequest;
 use WebAppId\Member\Services\Requests\MemberServiceRequest;
@@ -22,12 +26,19 @@ interface MemberServiceContract
 {
     /**
      * @param MemberServiceRequest $memberServiceRequest
+     * @param ContentServiceRequest $contentServiceRequest
+     * @param ContentService $contentService
      * @param MemberRepositoryRequest $memberRepositoryRequest
      * @param MemberRepository $memberRepository
      * @param MemberServiceResponse $memberServiceResponse
      * @return MemberServiceResponse
      */
-    public function store(MemberServiceRequest $memberServiceRequest, MemberRepositoryRequest $memberRepositoryRequest, MemberRepository $memberRepository, MemberServiceResponse $memberServiceResponse): MemberServiceResponse;
+    public function store(MemberServiceRequest $memberServiceRequest,
+                          ContentServiceRequest $contentServiceRequest,
+                          ContentService $contentService,
+                          MemberRepositoryRequest $memberRepositoryRequest,
+                          MemberRepository $memberRepository,
+                          MemberServiceResponse $memberServiceResponse): MemberServiceResponse;
 
     /**
      * @param int $id

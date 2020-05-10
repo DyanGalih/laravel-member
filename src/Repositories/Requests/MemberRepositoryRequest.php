@@ -63,7 +63,7 @@ class MemberRepositoryRequest
     /**
      * @var int
      */
-    public $picture_id;
+    public $content_id;
                 
     /**
      * @var int
