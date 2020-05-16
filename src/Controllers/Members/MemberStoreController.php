@@ -5,7 +5,7 @@
 
 namespace WebAppId\Member\Controllers\Members;
 
-use Member;
+use WebAppId\Member\Traits\Member;
 use WebAppId\Content\Repositories\TimeZoneRepository;
 use WebAppId\Content\Services\Requests\ContentServiceRequest;
 use WebAppId\Content\Traits\Content;

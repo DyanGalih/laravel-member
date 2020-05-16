@@ -3,6 +3,8 @@
  * Created by PhpStorm.
  */
 
+namespace WebAppId\Member\Traits;
+
 use Illuminate\Support\Facades\Auth;
 use WebAppId\DDD\Tools\Lazy;
 use WebAppId\Member\Services\Requests\MemberServiceRequest;
@@ -20,6 +22,7 @@ trait Member
      * @param array $memberValidated
      * @param MemberServiceRequest $memberServiceRequest
      * @return MemberServiceRequest
+     * @throws \Exception
      */
     public function transformMember(array $memberValidated, MemberServiceRequest $memberServiceRequest): MemberServiceRequest
     {
