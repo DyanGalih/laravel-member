@@ -2,37 +2,37 @@
 /**
  * Created by LazyCrud - @DyanGalih <dyan.galih@gmail.com>
  */
-namespace WebAppId\Member\Controllers\Members;
+namespace WebAppId\Member\Controllers\MemberAddresses;
 
-use WebAppId\Member\Requests\MemberSearchRequest;
-use WebAppId\Member\Services\MemberService;
+use WebAppId\Member\Requests\MemberAddressSearchRequest;
+use WebAppId\Member\Services\MemberAddressService;
 use WebAppId\DDD\Controllers\BaseController;
 use WebAppId\SmartResponse\Response;
 use WebAppId\SmartResponse\SmartResponse;
 
 /**
  * @author: Dyan Galih<dyan.galih@gmail.com>
- * Date: 03:24:51
+ * Date: 11:55:32
  * Time: 2020/05/09
- * Class MemberIndexController
- * @package WebAppId\Member\Controllers\Members
+ * Class MemberAddressListController
+ * @package WebAppId\Member\Controllers\MemberAddresses
  */
-class MemberIndexController extends BaseController
+class MemberAddressListController extends BaseController
 {
     /**
-     * @param MemberSearchRequest $memberSearchRequest
-     * @param MemberService $memberService
+     * @param MemberAddressSearchRequest $memberAddressSearchRequest
+     * @param MemberAddressService $memberAddressService
      * @param SmartResponse $smartResponse
      * @param Response $response
      * @return mixed
      */
     public function __invoke(
-                             MemberSearchRequest $memberSearchRequest,
-                             MemberService $memberService,
+                             MemberAddressSearchRequest $memberAddressSearchRequest,
+                             MemberAddressService $memberAddressService,
                              SmartResponse $smartResponse,
                              Response $response)
     {
-        $searchValue = $memberSearchRequest->validated();
+        $searchValue = $memberAddressSearchRequest->validated();
         $q = "";
         if(!empty($searchValue)) {
             if(isset($searchValue['q'])) {
@@ -42,10 +42,10 @@ class MemberIndexController extends BaseController
             }
         }
 
-        $result = $this->container->call([$memberService, 'get'], ['q' => $q]);
+        $result = $this->container->call([$memberAddressService, 'get'], ['q' => $q]);
 
-        if ($result->isStatus()) {
-            $response->setData($result->memberList);
+        if ($result->status) {
+            $response->setData($result->memberAddressList);
             $response->setRecordsTotal($result->count);
             $response->setRecordsFiltered($result->countFiltered);
             return $smartResponse->success($response);

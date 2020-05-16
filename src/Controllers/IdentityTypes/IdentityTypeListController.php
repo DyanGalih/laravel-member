@@ -2,37 +2,37 @@
 /**
  * Created by LazyCrud - @DyanGalih <dyan.galih@gmail.com>
  */
-namespace WebAppId\Member\Controllers\MemberAddresses;
+namespace WebAppId\Member\Controllers\IdentityTypes;
 
-use WebAppId\Member\Requests\MemberAddressSearchRequest;
-use WebAppId\Member\Services\MemberAddressService;
+use WebAppId\Member\Requests\IdentityTypeSearchRequest;
+use WebAppId\Member\Services\IdentityTypeService;
 use WebAppId\DDD\Controllers\BaseController;
 use WebAppId\SmartResponse\Response;
 use WebAppId\SmartResponse\SmartResponse;
 
 /**
  * @author: Dyan Galih<dyan.galih@gmail.com>
- * Date: 11:55:32
- * Time: 2020/05/09
- * Class MemberAddressIndexController
- * @package WebAppId\Member\Controllers\MemberAddresses
+ * Date: 12:22:16
+ * Time: 2020/05/08
+ * Class IdentityTypeListController
+ * @package WebAppId\Member\Controllers\IdentityTypes
  */
-class MemberAddressIndexController extends BaseController
+class IdentityTypeListController extends BaseController
 {
     /**
-     * @param MemberAddressSearchRequest $memberAddressSearchRequest
-     * @param MemberAddressService $memberAddressService
+     * @param IdentityTypeSearchRequest $identityTypeSearchRequest
+     * @param IdentityTypeService $identityTypeService
      * @param SmartResponse $smartResponse
      * @param Response $response
      * @return mixed
      */
     public function __invoke(
-                             MemberAddressSearchRequest $memberAddressSearchRequest,
-                             MemberAddressService $memberAddressService,
+                             IdentityTypeSearchRequest $identityTypeSearchRequest,
+                             IdentityTypeService $identityTypeService,
                              SmartResponse $smartResponse,
                              Response $response)
     {
-        $searchValue = $memberAddressSearchRequest->validated();
+        $searchValue = $identityTypeSearchRequest->validated();
         $q = "";
         if(!empty($searchValue)) {
             if(isset($searchValue['q'])) {
@@ -42,10 +42,10 @@ class MemberAddressIndexController extends BaseController
             }
         }
 
-        $result = $this->container->call([$memberAddressService, 'get'], ['q' => $q]);
+        $result = $this->container->call([$identityTypeService, 'getWhere'], ['q' => $q]);
 
-        if ($result->status) {
-            $response->setData($result->memberAddressList);
+        if ($result->isStatus()) {
+            $response->setData($result->identityTypeList);
             $response->setRecordsTotal($result->count);
             $response->setRecordsFiltered($result->countFiltered);
             return $smartResponse->success($response);
