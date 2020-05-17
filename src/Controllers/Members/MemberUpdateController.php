@@ -44,7 +44,7 @@ class MemberUpdateController extends BaseController
 
         $result = $this->container->call([$memberService, 'update'], compact('id', 'memberServiceRequest', 'contentServiceRequest'));
 
-        if ($result->isStatus()) {
+        if ($result->status) {
             $response->setData($result->member);
             return $smartResponse->saveDataSuccess($response);
         } else {

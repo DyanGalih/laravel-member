@@ -32,7 +32,7 @@ class MemberDetailController extends BaseController
     {
         $result = $this->container->call([$memberService, 'getById'], ['id' => $id]);
 
-        if ($result->isStatus()) {
+        if ($result->status) {
             $response->setData($result->member);
             return $smartResponse->success($response);
         } else {

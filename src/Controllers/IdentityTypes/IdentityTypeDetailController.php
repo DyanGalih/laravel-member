@@ -32,7 +32,7 @@ class IdentityTypeDetailController extends BaseController
     {
         $result = $this->container->call([$identityTypeService, 'getById'], ['id' => $id]);
 
-        if ($result->isStatus()) {
+        if ($result->status) {
             $response->setData($result->identityType);
             return $smartResponse->success($response);
         } else {

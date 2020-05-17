@@ -46,7 +46,7 @@ class IdentityTypeStoreController extends BaseController
             
         $result = $this->container->call([$identityTypeService, 'store'], ['identityTypeServiceRequest' => $identityTypeServiceRequest]);
 
-        if ($result->isStatus()) {
+        if ($result->status) {
             $response->setData($result->identityType);
             return $smartResponse->saveDataSuccess($response);
         } else {

@@ -55,7 +55,7 @@ class MemberStoreController extends BaseController
 
         $result = $this->container->call([$memberService, 'store'], compact('memberServiceRequest', 'contentServiceRequest'));
 
-        if ($result->isStatus()) {
+        if ($result->status) {
             $response->setData($result->member);
             return $smartResponse->saveDataSuccess($response);
         } else {

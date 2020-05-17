@@ -37,7 +37,7 @@ class IdentityTypeUpdateController extends BaseController
             
         $result = $this->container->call([$identityTypeService, 'update'], ['id' => $id, 'identityTypeServiceRequest' => $identityTypeServiceRequest]);
 
-        if ($result->isStatus()) {
+        if ($result->status) {
             $response->setData($result->identityType);
             return $smartResponse->saveDataSuccess($response);
         } else {

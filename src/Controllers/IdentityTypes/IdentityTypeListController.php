@@ -44,7 +44,7 @@ class IdentityTypeListController extends BaseController
 
         $result = $this->container->call([$identityTypeService, 'getWhere'], ['q' => $q]);
 
-        if ($result->isStatus()) {
+        if ($result->status) {
             $response->setData($result->identityTypeList);
             $response->setRecordsTotal($result->count);
             $response->setRecordsFiltered($result->countFiltered);

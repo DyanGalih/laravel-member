@@ -44,7 +44,7 @@ class MemberListController extends BaseController
 
         $result = $this->container->call([$memberService, 'get'], ['q' => $q]);
 
-        if ($result->isStatus()) {
+        if ($result->status) {
             $response->setData($result->memberList);
             $response->setRecordsTotal($result->count);
             $response->setRecordsFiltered($result->countFiltered);
