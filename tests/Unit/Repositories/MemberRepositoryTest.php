@@ -5,6 +5,7 @@
 
 namespace WebAppId\Member\Tests\Unit\Repositories;
 
+use WebAppId\Content\Tests\Unit\Repositories\ContentRepositoryTest;
 use WebAppId\Content\Tests\Unit\Repositories\FileRepositoryTest;
 use WebAppId\Content\Tests\Unit\Repositories\LanguageRepositoryTest;
 use WebAppId\Content\Tests\Unit\Repositories\TimeZoneRepositoryTest;
@@ -46,9 +47,9 @@ class MemberRepositoryTest extends TestCase
     private $languageRepositoryTest;
 
     /**
-     * @var FileRepositoryTest
+     * @var ContentRepositoryTest
      */
-    private $fileRepositoryTest;
+    private $contentRepositoryTest;
 
     /**
      * @var UserRepositoryTest
@@ -63,7 +64,7 @@ class MemberRepositoryTest extends TestCase
             $this->identityRepositoryTest = $this->container->make(IdentityTypeRepositoryTest::class);
             $this->timezoneRepositoryTest = $this->container->make(TimeZoneRepositoryTest::class);
             $this->languageRepositoryTest = $this->container->make(LanguageRepositoryTest::class);
-            $this->fileRepositoryTest = $this->container->make(FileRepositoryTest::class);
+            $this->contentRepositoryTest = $this->container->make(ContentRepositoryTest::class);
             $this->userRepositoryTest = $this->container->make(UserRepositoryTest::class);
         } catch (BindingResolutionException $e) {
             report($e);
@@ -75,12 +76,12 @@ class MemberRepositoryTest extends TestCase
         $dummy = null;
         try {
             $sexList = ['M', 'F', 'O'];
-            $sex = $sexList[$this->getFaker()->numberBetween(0, count($sexList)-1)];
+            $sex = $sexList[$this->getFaker()->numberBetween(0, count($sexList) - 1)];
             $dummy = $this->container->make(MemberRepositoryRequest::class);
             $identityType = $this->container->call([$this->identityRepositoryTest, 'testStore']);
             $timeZone = $this->container->call([$this->timezoneRepositoryTest, 'testStore']);
             $language = $this->container->call([$this->languageRepositoryTest, 'testStore']);
-            $file = $this->container->call([$this->fileRepositoryTest, 'testStore']);
+            $content = $this->container->call([$this->contentRepositoryTest, 'testStore']);
             $user = $this->container->call([$this->userRepositoryTest, 'testStore']);
             $dummy->identity_type_id = $identityType->id;
             $dummy->identity = $this->getFaker()->text(255);
@@ -92,7 +93,7 @@ class MemberRepositoryTest extends TestCase
             $dummy->dob = $this->getFaker()->dateTime();
             $dummy->timezone_id = $timeZone->id;
             $dummy->language_id = $language->id;
-            $dummy->picture_id = $file->id;
+            $dummy->content_id = $content->id;
             $dummy->user_id = $user->id;
             $dummy->creator_id = $user->id;
             $dummy->owner_id = $user->id;

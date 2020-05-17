@@ -5,6 +5,7 @@
 
 namespace WebAppId\Member\Repositories;
 
+use Illuminate\Support\Facades\DB;
 use WebAppId\Member\Models\Member;
 use WebAppId\Member\Repositories\Contracts\MemberRepositoryContract;
 use WebAppId\Member\Repositories\Requests\MemberRepositoryRequest;
@@ -59,7 +60,6 @@ class MemberRepository implements MemberRepositoryContract
                 'members.dob',
                 'members.timezone_id',
                 'members.language_id',
-                'members.picture_id',
                 'members.user_id',
                 'members.creator_id',
                 'members.owner_id',
@@ -71,10 +71,15 @@ class MemberRepository implements MemberRepositoryContract
                 'languages.code AS language_code',
                 'languages.name AS language_name',
                 'owner_users.name AS owner_name',
-                'files.name',
-                'files.description',
-                'files.alt',
-                'files.path',
+                'contents.title AS content_title',
+                'contents.code AS content_code',
+                'contents.keyword AS content_keyword',
+                'contents.description AS content_description',
+                DB::raw('REPLACE("' . route('file.ori', 'file_name') . '", "file_name" , files.name) AS file_uri'),
+                'files.name AS file_name',
+                'files.description AS file_description',
+                'files.alt AS file_alt',
+                'files.path AS file_path',
                 'time_zones.code AS time_zone_code',
                 'time_zones.name AS time_zone_name',
                 'time_zones.minute AS time_zone_minute',
@@ -85,9 +90,10 @@ class MemberRepository implements MemberRepositoryContract
                 ->join('identity_types as identity_types', 'members.identity_type_id', 'identity_types.id')
                 ->join('languages as languages', 'members.language_id', 'languages.id')
                 ->join('users as owner_users', 'members.owner_id', 'owner_users.id')
-                ->join('files as files', 'members.picture_id', 'files.id')
                 ->join('time_zones as time_zones', 'members.timezone_id', 'time_zones.id')
                 ->join('users as user_users', 'members.user_id', 'user_users.id')
+                ->join('contents', 'members.content_id', 'contents.id')
+                ->join('files', 'contents.default_image', 'files.id')
             ->when($q != null, function ($query) use ($q) {
                     return $query->where('members.name', 'LIKE', '%' . $q . '%');
                 });
