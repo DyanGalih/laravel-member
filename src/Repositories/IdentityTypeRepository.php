@@ -32,7 +32,6 @@ class IdentityTypeRepository implements IdentityTypeRepositoryContract
             $identityType->save();
             return $identityType;
         } catch (QueryException $queryException) {
-            dd($queryException);
             report($queryException);
             return null;
         }
@@ -43,20 +42,26 @@ class IdentityTypeRepository implements IdentityTypeRepositoryContract
      * @param string|null $q
      * @return Builder
      */
-    protected function getColumn(IdentityType $identityType, string $q = null): Builder
+    public function getJoin(IdentityType $identityType, string $q = null): Builder
     {
         return $identityType
-            ->select
-                (
-                'identity_types.id',
-                'identity_types.name',
-                'identity_types.user_id',
-                'users.name AS user_name',
-                )
-                ->join('users as users', 'identity_types.user_id', 'users.id')
+            ->join('users as users', 'identity_types.user_id', 'users.id')
             ->when($q != null, function ($query) use ($q) {
-                    return $query->where('identity_types.name', 'LIKE', '%' . $q . '%');
-                });
+                return $query->where('identity_types.name', 'LIKE', '%' . $q . '%');
+            });
+    }
+
+    /**
+     * @return array
+     */
+    protected function getColumn(): array
+    {
+        return [
+            'identity_types.id',
+            'identity_types.name',
+            'identity_types.user_id',
+            'users.name AS user_name',
+        ];
     }
 
     /**
@@ -65,12 +70,12 @@ class IdentityTypeRepository implements IdentityTypeRepositoryContract
     public function update(int $id, IdentityTypeRepositoryRequest $identityTypeRepositoryRequest, IdentityType $identityType): ?IdentityType
     {
         $identityType = $this->getById($id, $identityType);
-        if($identityType!=null){
+        if ($identityType != null) {
             try {
                 $identityType = Lazy::copy($identityTypeRepositoryRequest, $identityType);
                 $identityType->save();
                 return $identityType;
-            }catch (QueryException $queryException){
+            } catch (QueryException $queryException) {
                 report($queryException);
             }
         }
@@ -82,7 +87,15 @@ class IdentityTypeRepository implements IdentityTypeRepositoryContract
      */
     public function getById(int $id, IdentityType $identityType): ?IdentityType
     {
-        return $this->getColumn($identityType)->find($id);
+        return $this->getJoin($identityType)->find($id, $this->getColumn());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getByName(string $name, IdentityType $identityType): ?IdentityType
+    {
+        return $this->getJoin($identityType)->where('identity_types.name', $name)->first($this->getColumn());
     }
 
     /**
@@ -91,9 +104,9 @@ class IdentityTypeRepository implements IdentityTypeRepositoryContract
     public function delete(int $id, IdentityType $identityType): bool
     {
         $identityType = $this->getById($id, $identityType);
-        if($identityType!=null){
+        if ($identityType != null) {
             return $identityType->delete();
-        }else{
+        } else {
             return false;
         }
     }
@@ -104,8 +117,8 @@ class IdentityTypeRepository implements IdentityTypeRepositoryContract
     public function get(IdentityType $identityType, int $length = 12, string $q = null): LengthAwarePaginator
     {
         return $this
-            ->getColumn($identityType, $q)
-            ->paginate($length);
+            ->getJoin($identityType, $q)
+            ->paginate($length, $this->getColumn());
     }
 
     /**
@@ -114,7 +127,7 @@ class IdentityTypeRepository implements IdentityTypeRepositoryContract
     public function getCount(IdentityType $identityType, string $q = null): int
     {
         return $this
-            ->getColumn($identityType, $q)
+            ->getJoin($identityType, $q)
             ->count();
     }
 }

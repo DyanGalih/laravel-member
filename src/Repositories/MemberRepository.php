@@ -33,84 +33,84 @@ class MemberRepository implements MemberRepositoryContract
             $member->save();
             return $member;
         } catch (QueryException $queryException) {
-            dd($queryException);
             report($queryException);
             return null;
         }
     }
 
-    /**
-     * @param Member $member
-     * @param string|null $q
-     * @return Builder
-     */
-    protected function getColumn(Member $member, string $q = null): Builder
+    public function getJoin(Member $member, string $q = null): Builder
     {
         return $member
-            ->select
-                (
-                'members.id',
-                'members.identity_type_id',
-                'members.identity',
-                'members.name',
-                'members.email',
-                'members.phone',
-                'members.phone_alternative',
-                'members.sex',
-                'members.dob',
-                'members.timezone_id',
-                'members.language_id',
-                'members.user_id',
-                'members.creator_id',
-                'members.owner_id',
-                'members.created_at',
-                'members.updated_at',
-                'users.name AS creator_name',
-                'users.email AS creator_email',
-                'identity_types.name AS identity_name',
-                'languages.code AS language_code',
-                'languages.name AS language_name',
-                'owner_users.name AS owner_name',
-                'contents.title AS content_title',
-                'contents.code AS content_code',
-                'contents.keyword AS content_keyword',
-                'contents.description AS content_description',
-                DB::raw('REPLACE("' . route('file.ori', 'file_name') . '", "file_name" , files.name) AS file_uri'),
-                'files.name AS file_name',
-                'files.description AS file_description',
-                'files.alt AS file_alt',
-                'files.path AS file_path',
-                'time_zones.code AS time_zone_code',
-                'time_zones.name AS time_zone_name',
-                'time_zones.minute AS time_zone_minute',
-                'user_users.name AS user_name',
-                'user_users.email AS user_email'
-                )
-                ->join('users as users', 'members.creator_id', 'users.id')
-                ->join('identity_types as identity_types', 'members.identity_type_id', 'identity_types.id')
-                ->join('languages as languages', 'members.language_id', 'languages.id')
-                ->join('users as owner_users', 'members.owner_id', 'owner_users.id')
-                ->join('time_zones as time_zones', 'members.timezone_id', 'time_zones.id')
-                ->join('users as user_users', 'members.user_id', 'user_users.id')
-                ->join('contents', 'members.content_id', 'contents.id')
-                ->join('files', 'contents.default_image', 'files.id')
+            ->join('users as users', 'members.creator_id', 'users.id')
+            ->join('identity_types as identity_types', 'members.identity_type_id', 'identity_types.id')
+            ->join('languages as languages', 'members.language_id', 'languages.id')
+            ->join('users as owner_users', 'members.owner_id', 'owner_users.id')
+            ->join('time_zones as time_zones', 'members.timezone_id', 'time_zones.id')
+            ->join('users as user_users', 'members.user_id', 'user_users.id')
+            ->join('contents', 'members.content_id', 'contents.id')
+            ->join('files', 'contents.default_image', 'files.id')
             ->when($q != null, function ($query) use ($q) {
-                    return $query->where('members.name', 'LIKE', '%' . $q . '%');
-                });
+                return $query->where('members.name', 'LIKE', '%' . $q . '%');
+            });
+    }
+
+    /**
+     * @return array
+     */
+    protected function getColumn(): array
+    {
+        return [
+            'members.id',
+            'members.identity_type_id',
+            'members.identity',
+            'members.name',
+            'members.email',
+            'members.phone',
+            'members.phone_alternative',
+            'members.sex',
+            'members.dob',
+            'members.timezone_id',
+            'members.language_id',
+            'members.user_id',
+            'members.creator_id',
+            'members.owner_id',
+            'members.created_at',
+            'members.updated_at',
+            'users.name AS creator_name',
+            'users.email AS creator_email',
+            'identity_types.name AS identity_name',
+            'languages.code AS language_code',
+            'languages.name AS language_name',
+            'owner_users.name AS owner_name',
+            'contents.title AS content_title',
+            'contents.code AS content_code',
+            'contents.keyword AS content_keyword',
+            'contents.description AS content_description',
+            DB::raw('REPLACE("' . route('file.ori', 'file_name') . '", "file_name" , files.name) AS file_uri'),
+            'files.name AS file_name',
+            'files.description AS file_description',
+            'files.alt AS file_alt',
+            'files.path AS file_path',
+            'time_zones.code AS time_zone_code',
+            'time_zones.name AS time_zone_name',
+            'time_zones.minute AS time_zone_minute',
+            'user_users.name AS user_name',
+            'user_users.email AS user_email'
+        ];
     }
 
     /**
      * @inheritDoc
      */
-    public function update(int $id, MemberRepositoryRequest $memberRepositoryRequest, Member $member): ?Member
+    public function update(string $identity, MemberRepositoryRequest $memberRepositoryRequest, Member $member): ?Member
     {
-        $member = $this->getById($id, $member);
-        if($member!=null){
+        $member = $this->getByIdentity($identity, $member);
+        if ($member != null) {
             try {
                 $member = Lazy::copy($memberRepositoryRequest, $member);
                 $member->save();
                 return $member;
-            }catch (QueryException $queryException){
+            } catch (QueryException $queryException) {
                 report($queryException);
             }
         }
@@ -120,20 +120,20 @@ class MemberRepository implements MemberRepositoryContract
     /**
      * @inheritDoc
      */
-    public function getById(int $id, Member $member): ?Member
+    public function getByIdentity(string $identity, Member $member): ?Member
     {
-        return $this->getColumn($member)->find($id);
+        return $this->getJoin($member)->where('identity', $identity)->first($this->getColumn());
     }
 
     /**
      * @inheritDoc
      */
-    public function delete(int $id, Member $member): bool
+    public function delete(string $identity, Member $member): bool
     {
-        $member = $this->getById($id, $member);
-        if($member!=null){
+        $member = $this->getByIdentity($identity, $member);
+        if ($member != null) {
             return $member->delete();
-        }else{
+        } else {
             return false;
         }
     }
@@ -144,8 +144,8 @@ class MemberRepository implements MemberRepositoryContract
     public function get(Member $member, int $length = 12, string $q = null): LengthAwarePaginator
     {
         return $this
-            ->getColumn($member, $q)
-            ->paginate($length);
+            ->getJoin($member, $q)
+            ->paginate($length, $this->getColumn());
     }
 
     /**
@@ -154,7 +154,7 @@ class MemberRepository implements MemberRepositoryContract
     public function getCount(Member $member, string $q = null): int
     {
         return $this
-            ->getColumn($member, $q)
+            ->getJoin($member, $q)
             ->count();
     }
 }

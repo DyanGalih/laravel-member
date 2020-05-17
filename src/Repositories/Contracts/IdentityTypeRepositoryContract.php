@@ -41,6 +41,13 @@ interface IdentityTypeRepositoryContract
     public function getById(int $id, IdentityType $identityType): ?IdentityType;
 
     /**
+     * @param string $name
+     * @param IdentityType $identityType
+     * @return IdentityType|null
+     */
+    public function getByName(string $name, IdentityType $identityType): ?IdentityType;
+
+    /**
      * @param int $id
      * @param IdentityType $identityType
      * @return bool

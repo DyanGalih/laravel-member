@@ -112,17 +112,17 @@ class MemberRepositoryTest extends TestCase
         return $result;
     }
 
-    public function testGetById()
+    public function testGetByIdentity()
     {
         $member = $this->testStore();
-        $result = $this->container->call([$this->memberRepository, 'getById'], ['id' => $member->id]);
+        $result = $this->container->call([$this->memberRepository, 'getByIdentity'], ['identity' => $member->identity]);
         self::assertNotEquals(null, $result);
     }
 
     public function testDelete()
     {
         $member = $this->testStore();
-        $result = $this->container->call([$this->memberRepository, 'delete'], ['id' => $member->id]);
+        $result = $this->container->call([$this->memberRepository, 'delete'], ['identity' => $member->identity]);
         self::assertTrue($result);
     }
 
@@ -150,7 +150,7 @@ class MemberRepositoryTest extends TestCase
     {
         $member = $this->testStore();
         $memberRepositoryRequest = $this->getDummy(1);
-        $result = $this->container->call([$this->memberRepository, 'update'], ['id' => $member->id, 'memberRepositoryRequest' => $memberRepositoryRequest]);
+        $result = $this->container->call([$this->memberRepository, 'update'], ['identity' => $member->identity, 'memberRepositoryRequest' => $memberRepositoryRequest]);
         self::assertNotEquals(null, $result);
     }
 

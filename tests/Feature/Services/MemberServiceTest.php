@@ -58,10 +58,10 @@ class MemberServiceTest extends TestCase
 
     }
 
-    public function testGetById()
+    public function testGetByIdentity()
     {
         $contentServiceResponse = $this->testStore();
-        $result = $this->container->call([$this->memberService, 'getById'], ['id' => $contentServiceResponse->member->id]);
+        $result = $this->container->call([$this->memberService, 'getByIdentity'], ['identity' => $contentServiceResponse->member->identity]);
         self::assertTrue($result->status);
     }
 
@@ -114,14 +114,14 @@ class MemberServiceTest extends TestCase
     {
         $contentServiceResponse = $this->testStore();
         $memberServiceRequest = $this->getDummy();
-        $result = $this->container->call([$this->memberService, 'update'], ['id' => $contentServiceResponse->member->id, 'memberServiceRequest' => $memberServiceRequest]);
+        $result = $this->container->call([$this->memberService, 'update'], ['identity' => $contentServiceResponse->member->identity, 'memberServiceRequest' => $memberServiceRequest]);
         self::assertNotEquals(null, $result);
     }
 
     public function testDelete()
     {
         $contentServiceResponse = $this->testStore();
-        $result = $this->container->call([$this->memberService, 'delete'], ['id' => $contentServiceResponse->member->id]);
+        $result = $this->container->call([$this->memberService, 'delete'], ['identity' => $contentServiceResponse->member->identity]);
         self::assertTrue($result);
     }
 

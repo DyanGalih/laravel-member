@@ -74,6 +74,13 @@ class IdentityTypeRepositoryTest extends TestCase
         self::assertNotEquals(null, $result);
     }
 
+    public function testGetByName()
+    {
+        $identityType = $this->testStore();
+        $result = $this->container->call([$this->identityTypeRepository, 'getByName'], ['name' => $identityType->name]);
+        self::assertNotEquals(null, $result);
+    }
+
     public function testDelete()
     {
         $identityType = $this->testStore();

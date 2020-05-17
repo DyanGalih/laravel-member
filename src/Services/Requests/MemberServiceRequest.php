@@ -63,11 +63,6 @@ class MemberServiceRequest
     /**
      * @var int
      */
-    public $picture_id;
-
-    /**
-     * @var int
-     */
     public $content_id;
 
     /**

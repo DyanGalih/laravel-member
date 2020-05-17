@@ -42,44 +42,49 @@ class MemberAddressRepository implements MemberAddressRepositoryContract
      * @param string|null $q
      * @return Builder
      */
-    protected function getColumn(MemberAddress $memberAddress, string $q = null): Builder
-    {
+    public function getJoin(MemberAddress $memberAddress, string $q = null): Builder{
         return $memberAddress
-            ->select
-                (
-                'member_addresses.id',
-                'member_addresses.member_id',
-                'member_addresses.address',
-                'member_addresses.city',
-                'member_addresses.state',
-                'member_addresses.post_code',
-                'member_addresses.country',
-                'member_addresses.isDefault',
-                'member_addresses.user_id',
-                'member_addresses.creator_id',
-                'member_addresses.owner_id',
-                'member_addresses.created_at',
-                'member_addresses.updated_at',
-                'users.name AS creator_name',
-                'users.email AS creator_email',
-                'members.identity',
-                'members.name AS member_name',
-                'members.email',
-                'members.phone',
-                'owner_users.id AS owner_id',
-                'owner_users.name AS owner_name',
-                'owner_users.email AS owner_email',
-                'user_users.id AS user_id',
-                'user_users.name AS user_name',
-                'user_users.email AS user_email'
-                )
-                ->join('users as users', 'member_addresses.creator_id', 'users.id')
-                ->join('members as members', 'member_addresses.member_id', 'members.id')
-                ->join('users as owner_users', 'member_addresses.owner_id', 'owner_users.id')
-                ->join('users as user_users', 'member_addresses.user_id', 'user_users.id')
+            ->join('users as users', 'member_addresses.creator_id', 'users.id')
+            ->join('members as members', 'member_addresses.member_id', 'members.id')
+            ->join('users as owner_users', 'member_addresses.owner_id', 'owner_users.id')
+            ->join('users as user_users', 'member_addresses.user_id', 'user_users.id')
             ->when($q != null, function ($query) use ($q) {
-                    return $query->where('address', 'LIKE', '%' . $q . '%');
-                });
+                return $query->where('address', 'LIKE', '%' . $q . '%');
+            });
+    }
+
+    /**
+     * @return array
+     */
+    protected function getColumn(): array
+    {
+        return [
+            'member_addresses.id',
+            'member_addresses.member_id',
+            'member_addresses.address',
+            'member_addresses.city',
+            'member_addresses.state',
+            'member_addresses.post_code',
+            'member_addresses.country',
+            'member_addresses.isDefault',
+            'member_addresses.user_id',
+            'member_addresses.creator_id',
+            'member_addresses.owner_id',
+            'member_addresses.created_at',
+            'member_addresses.updated_at',
+            'users.name AS creator_name',
+            'users.email AS creator_email',
+            'members.identity',
+            'members.name AS member_name',
+            'members.email',
+            'members.phone',
+            'owner_users.id AS owner_id',
+            'owner_users.name AS owner_name',
+            'owner_users.email AS owner_email',
+            'user_users.id AS user_id',
+            'user_users.name AS user_name',
+            'user_users.email AS user_email'
+        ];
     }
 
     /**
@@ -105,7 +110,7 @@ class MemberAddressRepository implements MemberAddressRepositoryContract
      */
     public function getById(int $id, MemberAddress $memberAddress): ?MemberAddress
     {
-        return $this->getColumn($memberAddress)->find($id);
+        return $this->getJoin($memberAddress)->find($id, $this->getColumn());
     }
 
     /**
@@ -127,8 +132,8 @@ class MemberAddressRepository implements MemberAddressRepositoryContract
     public function get(MemberAddress $memberAddress, int $length = 12, string $q = null): LengthAwarePaginator
     {
         return $this
-            ->getColumn($memberAddress, $q)
-            ->paginate($length);
+            ->getJoin($memberAddress, $q)
+            ->paginate($length, $this->getColumn());
     }
 
     /**
@@ -137,7 +142,7 @@ class MemberAddressRepository implements MemberAddressRepositoryContract
     public function getCount(MemberAddress $memberAddress, string $q = null): int
     {
         return $this
-            ->getColumn($memberAddress, $q)
+            ->getJoin($memberAddress, $q)
             ->count();
     }
 }

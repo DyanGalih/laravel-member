@@ -79,9 +79,9 @@ class MemberService extends BaseService implements MemberServiceContract
     /**
      * @inheritDoc
      */
-    public function getById(int $id, MemberRepository $memberRepository, MemberServiceResponse $memberServiceResponse): MemberServiceResponse
+    public function getByIdentity(string $identity, MemberRepository $memberRepository, MemberServiceResponse $memberServiceResponse): MemberServiceResponse
     {
-        $result = $this->container->call([$memberRepository, 'getById'], ['id' => $id]);
+        $result = $this->container->call([$memberRepository, 'getByIdentity'], ['identity' => $identity]);
         if ($result != null) {
             $memberServiceResponse->status = true;
             $memberServiceResponse->message = 'Data Found';

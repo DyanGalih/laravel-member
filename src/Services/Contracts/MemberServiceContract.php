@@ -51,12 +51,12 @@ interface MemberServiceContract
     public function update(int $id, MemberServiceRequest $memberServiceRequest, MemberRepositoryRequest $memberRepositoryRequest, MemberRepository $memberRepository, MemberServiceResponse $memberServiceResponse): MemberServiceResponse;
 
     /**
-     * @param int $id
+     * @param string $identity
      * @param MemberRepository $memberRepository
      * @param MemberServiceResponse $memberServiceResponse
      * @return MemberServiceResponse
      */
-    public function getById(int $id, MemberRepository $memberRepository, MemberServiceResponse $memberServiceResponse): MemberServiceResponse;
+    public function getByIdentity(string $identity, MemberRepository $memberRepository, MemberServiceResponse $memberServiceResponse): MemberServiceResponse;
 
     /**
      * @param int $id
