@@ -10,12 +10,10 @@ use Illuminate\Database\Seeder;
  * Date: 2019-01-25
  * Time: 11:55
  */
-
 class DatabaseSeeder extends Seeder
 {
     public function run()
     {
-
+        $this->call(ContentCategoryTableSeeder::class);
     }
-
 }

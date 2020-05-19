@@ -24,6 +24,11 @@ class MemberRepositoryRequest
      * @var string
      */
     public $identity;
+
+    /**
+     * @var string
+     */
+    public $name;
                 
     /**
      * @var string

@@ -5,9 +5,11 @@
 
 namespace WebAppId\Member\Services;
 
+use WebAppId\Content\Repositories\CategoryRepository;
 use WebAppId\Content\Services\ContentService;
 use WebAppId\Content\Services\Requests\ContentServiceRequest;
 use WebAppId\Member\Repositories\MemberRepository;
+use Illuminate\Support\Facades\DB;
 use WebAppId\Member\Repositories\Requests\MemberRepositoryRequest;
 use WebAppId\Member\Services\Contracts\MemberServiceContract;
 use WebAppId\Member\Services\Requests\MemberServiceRequest;
@@ -31,16 +33,27 @@ class MemberService extends BaseService implements MemberServiceContract
     public function store(MemberServiceRequest $memberServiceRequest,
                           ContentServiceRequest $contentServiceRequest,
                           ContentService $contentService,
+                          CategoryRepository $categoryRepository,
                           MemberRepositoryRequest $memberRepositoryRequest,
                           MemberRepository $memberRepository,
                           MemberServiceResponse $memberServiceResponse): MemberServiceResponse
     {
+        DB::beginTransaction();
         $memberRepositoryRequest = Lazy::copy($memberServiceRequest, $memberRepositoryRequest);
+        $category = $this->container->call([$categoryRepository, 'getByName'], ['name' => 'Profile']);
+        if ($category != null) {
+            $contentServiceRequest->categories[] = $category->id;
+        }
+        if($contentServiceRequest->content == null){
+            $contentServiceRequest->content = '';
+        }
+        $resultContent = $this->container->call([$contentService, 'store'], compact('contentServiceRequest'));
+
+        $memberRepositoryRequest->content_id = $resultContent->content->id;
 
         $result = $this->container->call([$memberRepository, 'store'], compact('memberRepositoryRequest'));
 
         if ($result != null) {
-            $resultContent = $this->container->call([$contentService, 'store'], compact('contentService'));
             $memberServiceResponse->status = true;
             $memberServiceResponse->message = 'Store Data Success';
             $memberServiceResponse->member = $result;
@@ -48,9 +61,11 @@ class MemberService extends BaseService implements MemberServiceContract
             $memberServiceResponse->categories = $resultContent->categories;
             $memberServiceResponse->galleries = $resultContent->galleries;
             $memberServiceResponse->children = $resultContent->children;
+            DB::commit();
         } else {
             $memberServiceResponse->status = false;
             $memberServiceResponse->message = 'Store Data Failed';
+            DB::rollback();
         }
 
         return $memberServiceResponse;

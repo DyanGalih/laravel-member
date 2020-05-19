@@ -14,7 +14,6 @@ use WebAppId\Content\Requests\ContentRequest;
  * Class MemberService
  * @package WebAppId\Member\Requests
  */
-
 class MemberRequest extends ContentRequest
 {
     /**
@@ -22,16 +21,22 @@ class MemberRequest extends ContentRequest
      */
     function rules(): array
     {
-        return [
+        $content = parent::rules();
+        $member = [
             'identity_type_id' => 'int|required',
-            'identity' => 'string|required|max:255',
-            'email' => 'string|required|max:100',
+            'identity' => 'string|required|max:255|unique:members,identity',
+            'name' => 'string|required|max:255',
+            'email' => 'string|required|max:100|unique:members,email',
             'phone' => 'string|required|max:20',
             'phone_alternative' => 'string|required|max:255',
             'sex' => 'string|required|max:1',
-            'dob' => 'string|required',
-            'timezone_id' => 'int|required',
-            'language_id' => 'int|required'
-         ];
+            'dob' => 'string',
+            'timezone_id' => 'int',
+            'language_id' => 'int',
+            'title' => 'string|max:191',
+            'content' => 'string',
+            'default_image' => 'int|nullable'
+        ];
+        return array_merge($content, $member);
     }
 }

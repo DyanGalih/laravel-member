@@ -49,7 +49,9 @@ class MemberStoreController extends BaseController
     {
         $memberValidated = $memberRequest->validated();
 
-        $memberServiceRequest = $this->transformMember($memberValidated, $memberServiceRequest);
+        $memberServiceRequest = $this->transformMember($this->container, $memberValidated, $memberServiceRequest, $timeZoneRepository);
+
+        $memberValidated['title'] = isset($memberValidated['title']) ? $memberValidated['title'] : $memberValidated['name'];
 
         $contentServiceRequest = $this->transformContent($this->container, $memberValidated, $contentServiceRequest, $timeZoneRepository);
 
@@ -57,6 +59,7 @@ class MemberStoreController extends BaseController
 
         if ($result->status) {
             $response->setData($result->member);
+            $response->setRedirect(route('lazy.admin.member.show.index'));
             return $smartResponse->saveDataSuccess($response);
         } else {
             return $smartResponse->saveDataFailed($response);

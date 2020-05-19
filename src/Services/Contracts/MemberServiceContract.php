@@ -5,6 +5,7 @@
 
 namespace WebAppId\Member\Services\Contracts;
 
+use WebAppId\Content\Repositories\CategoryRepository;
 use WebAppId\Content\Repositories\ContentRepository;
 use WebAppId\Content\Repositories\Requests\ContentRepositoryRequest;
 use WebAppId\Content\Services\ContentService;
@@ -28,6 +29,7 @@ interface MemberServiceContract
      * @param MemberServiceRequest $memberServiceRequest
      * @param ContentServiceRequest $contentServiceRequest
      * @param ContentService $contentService
+     * @param CategoryRepository $categoryRepository
      * @param MemberRepositoryRequest $memberRepositoryRequest
      * @param MemberRepository $memberRepository
      * @param MemberServiceResponse $memberServiceResponse
@@ -36,6 +38,7 @@ interface MemberServiceContract
     public function store(MemberServiceRequest $memberServiceRequest,
                           ContentServiceRequest $contentServiceRequest,
                           ContentService $contentService,
+                          CategoryRepository $categoryRepository,
                           MemberRepositoryRequest $memberRepositoryRequest,
                           MemberRepository $memberRepository,
                           MemberServiceResponse $memberServiceResponse): MemberServiceResponse;
