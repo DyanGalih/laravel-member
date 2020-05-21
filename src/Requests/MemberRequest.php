@@ -24,11 +24,11 @@ class MemberRequest extends ContentRequest
         $content = parent::rules();
         $member = [
             'identity_type_id' => 'int|required',
-            'identity' => 'string|required|max:255|unique:members,identity',
-            'name' => 'string|required|max:255',
+            'identity' => 'string|required|max:191|unique:members,identity',
+            'name' => 'string|required|max:191',
             'email' => 'string|required|max:100|unique:members,email',
             'phone' => 'string|required|max:20',
-            'phone_alternative' => 'string|required|max:255',
+            'phone_alternative' => 'string|required|max:191',
             'sex' => 'string|required|max:1',
             'dob' => 'string',
             'timezone_id' => 'int',

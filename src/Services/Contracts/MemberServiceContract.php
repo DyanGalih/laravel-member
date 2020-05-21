@@ -47,11 +47,17 @@ interface MemberServiceContract
      * @param int $id
      * @param MemberServiceRequest $memberServiceRequest
      * @param MemberRepositoryRequest $memberRepositoryRequest
+     * @param ContentService $contentService
      * @param MemberRepository $memberRepository
      * @param MemberServiceResponse $memberServiceResponse
      * @return MemberServiceResponse
      */
-    public function update(int $id, MemberServiceRequest $memberServiceRequest, MemberRepositoryRequest $memberRepositoryRequest, MemberRepository $memberRepository, MemberServiceResponse $memberServiceResponse): MemberServiceResponse;
+    public function update(int $id,
+                           MemberServiceRequest $memberServiceRequest,
+                           MemberRepositoryRequest $memberRepositoryRequest,
+                           ContentService $contentService,
+                           MemberRepository $memberRepository,
+                           MemberServiceResponse $memberServiceResponse): MemberServiceResponse;
 
     /**
      * @param string $identity

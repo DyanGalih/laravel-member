@@ -61,4 +61,20 @@ interface MemberRepositoryContract
      * @param string $q
      */
     public function getCount(Member $member, string $q = null): int;
+
+    /**
+     * @param Member $member
+     * @param string $identity
+     * @param string $memberId
+     * @return bool
+     */
+    public function checkAvailableIdentity(Member $member, string $identity, string $memberId): bool ;
+
+    /**
+     * @param Member $member
+     * @param string $email
+     * @param string $memberId
+     * @return bool
+     */
+    public function checkAvailableEmail(Member $member, string $email, string $memberId): bool ;
 }

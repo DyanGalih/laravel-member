@@ -158,4 +158,32 @@ class MemberRepository implements MemberRepositoryContract
             ->getJoin($member, $q)
             ->count();
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function checkAvailableIdentity(Member $member, string $identity, string $memberId = null): bool
+    {
+
+        $result = $member
+            ->where('identity', $identity)
+            ->when($memberId != null, function ($query) use ($memberId) {
+                return $query->where('id', $memberId);
+            })->first();
+        return $result == null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function checkAvailableEmail(Member $member, string $email, string $memberId = null): bool
+    {
+        $result = $member
+            ->where('email', $email)
+            ->when($memberId != null, function ($query) use ($memberId) {
+                return $query->where('id', $memberId);
+            })->first();
+
+        return $result == null;
+    }
 }

@@ -57,11 +57,14 @@ class MemberStoreController extends BaseController
 
         $result = $this->container->call([$memberService, 'store'], compact('memberServiceRequest', 'contentServiceRequest'));
 
+        $response->setMessage($result->message);
+
         if ($result->status) {
             $response->setData($result->member);
             $response->setRedirect(route('lazy.admin.member.show.index'));
             return $smartResponse->saveDataSuccess($response);
         } else {
+            $response->setRedirect(route('lazy.admin.member.show.create'));
             return $smartResponse->saveDataFailed($response);
         }
     }

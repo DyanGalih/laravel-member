@@ -74,18 +74,32 @@ class MemberService extends BaseService implements MemberServiceContract
     /**
      * @inheritDoc
      */
-    public function update(int $id, MemberServiceRequest $memberServiceRequest, MemberRepositoryRequest $memberRepositoryRequest, MemberRepository $memberRepository, MemberServiceResponse $memberServiceResponse): MemberServiceResponse
+    public function update(int $id,
+                           MemberServiceRequest $memberServiceRequest,
+                           MemberRepositoryRequest $memberRepositoryRequest,
+                           ContentService $contentService,
+                           MemberRepository $memberRepository,
+                           MemberServiceResponse $memberServiceResponse): MemberServiceResponse
     {
+        DB::beginTransaction();
         $memberRepositoryRequest = Lazy::copy($memberServiceRequest, $memberRepositoryRequest);
+
+        $resultContent = $this->container->call([$contentService, 'update'], compact('contentServiceRequest'));
 
         $result = $this->container->call([$memberRepository, 'update'], ['id' => $id, 'memberRepositoryRequest' => $memberRepositoryRequest]);
         if ($result != null) {
             $memberServiceResponse->status = true;
             $memberServiceResponse->message = 'Update Data Success';
             $memberServiceResponse->member = $result;
+            $memberServiceResponse->content = $resultContent->content;
+            $memberServiceResponse->categories = $resultContent->categories;
+            $memberServiceResponse->galleries = $resultContent->galleries;
+            $memberServiceResponse->children = $resultContent->children;
+            DB::commit();
         } else {
             $memberServiceResponse->status = false;
             $memberServiceResponse->message = 'Update Data Failed';
+            DB::rollback();
         }
 
         return $memberServiceResponse;

@@ -6,13 +6,11 @@
 namespace WebAppId\Member\Tests\Unit\Repositories;
 
 use WebAppId\Content\Tests\Unit\Repositories\ContentRepositoryTest;
-use WebAppId\Content\Tests\Unit\Repositories\FileRepositoryTest;
 use WebAppId\Content\Tests\Unit\Repositories\LanguageRepositoryTest;
 use WebAppId\Content\Tests\Unit\Repositories\TimeZoneRepositoryTest;
 use WebAppId\Member\Models\Member;
 use WebAppId\Member\Repositories\MemberRepository;
 use WebAppId\Member\Repositories\Requests\MemberRepositoryRequest;
-use Illuminate\Contracts\Container\BindingResolutionException;
 use WebAppId\Member\Tests\TestCase;
 use WebAppId\User\Tests\Unit\Repositories\UserRepositoryTest;
 
@@ -59,48 +57,39 @@ class MemberRepositoryTest extends TestCase
     public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
-        try {
-            $this->memberRepository = $this->container->make(MemberRepository::class);
-            $this->identityRepositoryTest = $this->container->make(IdentityTypeRepositoryTest::class);
-            $this->timezoneRepositoryTest = $this->container->make(TimeZoneRepositoryTest::class);
-            $this->languageRepositoryTest = $this->container->make(LanguageRepositoryTest::class);
-            $this->contentRepositoryTest = $this->container->make(ContentRepositoryTest::class);
-            $this->userRepositoryTest = $this->container->make(UserRepositoryTest::class);
-        } catch (BindingResolutionException $e) {
-            report($e);
-        }
+        $this->memberRepository = $this->container->make(MemberRepository::class);
+        $this->identityRepositoryTest = $this->container->make(IdentityTypeRepositoryTest::class);
+        $this->timezoneRepositoryTest = $this->container->make(TimeZoneRepositoryTest::class);
+        $this->languageRepositoryTest = $this->container->make(LanguageRepositoryTest::class);
+        $this->contentRepositoryTest = $this->container->make(ContentRepositoryTest::class);
+        $this->userRepositoryTest = $this->container->make(UserRepositoryTest::class);
     }
 
     public function getDummy(int $no = 0): ?MemberRepositoryRequest
     {
         $dummy = null;
-        try {
-            $sexList = ['M', 'F', 'O'];
-            $sex = $sexList[$this->getFaker()->numberBetween(0, count($sexList) - 1)];
-            $dummy = $this->container->make(MemberRepositoryRequest::class);
-            $identityType = $this->container->call([$this->identityRepositoryTest, 'testStore']);
-            $timeZone = $this->container->call([$this->timezoneRepositoryTest, 'testStore']);
-            $language = $this->container->call([$this->languageRepositoryTest, 'testStore']);
-            $content = $this->container->call([$this->contentRepositoryTest, 'testStore']);
-            $user = $this->container->call([$this->userRepositoryTest, 'testStore']);
-            $dummy->identity_type_id = $identityType->id;
-            $dummy->identity = $this->getFaker()->text(255);
-            $dummy->name = $this->getFaker()->name;
-            $dummy->email = $this->getFaker()->text(100);
-            $dummy->phone = $this->getFaker()->text(20);
-            $dummy->phone_alternative = $this->getFaker()->text(255);
-            $dummy->sex = $sex;
-            $dummy->dob = $this->getFaker()->dateTime();
-            $dummy->timezone_id = $timeZone->id;
-            $dummy->language_id = $language->id;
-            $dummy->content_id = $content->id;
-            $dummy->user_id = $user->id;
-            $dummy->creator_id = $user->id;
-            $dummy->owner_id = $user->id;
-
-        } catch (BindingResolutionException $e) {
-            report($e);
-        }
+        $sexList = ['M', 'F', 'O'];
+        $sex = $sexList[$this->getFaker()->numberBetween(0, count($sexList) - 1)];
+        $dummy = $this->container->make(MemberRepositoryRequest::class);
+        $identityType = $this->container->call([$this->identityRepositoryTest, 'testStore']);
+        $timeZone = $this->container->call([$this->timezoneRepositoryTest, 'testStore']);
+        $language = $this->container->call([$this->languageRepositoryTest, 'testStore']);
+        $content = $this->container->call([$this->contentRepositoryTest, 'testStore']);
+        $user = $this->container->call([$this->userRepositoryTest, 'testStore']);
+        $dummy->identity_type_id = $identityType->id;
+        $dummy->identity = $this->getFaker()->uuid;
+        $dummy->name = $this->getFaker()->name;
+        $dummy->email = $this->getFaker()->safeEmailDomain;
+        $dummy->phone = $this->getFaker()->text(20);
+        $dummy->phone_alternative = $this->getFaker()->text(255);
+        $dummy->sex = $sex;
+        $dummy->dob = $this->getFaker()->dateTime();
+        $dummy->timezone_id = $timeZone->id;
+        $dummy->language_id = $language->id;
+        $dummy->content_id = $content->id;
+        $dummy->user_id = $user->id;
+        $dummy->creator_id = $user->id;
+        $dummy->owner_id = $user->id;
         return $dummy;
     }
 
@@ -174,5 +163,34 @@ class MemberRepositoryTest extends TestCase
         $q = $string[$this->getFaker()->numberBetween(0, strlen($string) - 1)];
         $result = $this->container->call([$this->memberRepository, 'getCount'], ['q' => $q]);
         self::assertGreaterThanOrEqual(1, $result);
+    }
+
+    public function testAvailableIdentity()
+    {
+        $member = $this->testStore();
+        $result = $this->container->call([$this->memberRepository, 'checkAvailableIdentity'], ['identity' => $member->identity]);
+        self::assertEquals(null, $result);
+    }
+
+    public function testAvailableIdentityById()
+    {
+        $memberRepositoryRequest = $this->getDummy();
+        $identity = $memberRepositoryRequest->identity;
+        $this->container->call([$this->memberRepository, 'store'], ['memberRepositoryRequest' => $memberRepositoryRequest]);
+        $memberRepositoryRequest = $this->getDummy();
+        $member = $this->container->call([$this->memberRepository, 'store'], ['memberRepositoryRequest' => $memberRepositoryRequest]);
+        $result = $this->container->call([$this->memberRepository, 'checkAvailableIdentity'], ['identity' => $identity, 'memberId' => $member->id]);
+        self::assertTrue($result);
+    }
+
+    public function testAvailableEmail()
+    {
+        $memberRepositoryRequest = $this->getDummy();
+        $email = $memberRepositoryRequest->email;
+        $this->container->call([$this->memberRepository, 'store'], ['memberRepositoryRequest' => $memberRepositoryRequest]);
+        $memberRepositoryRequest = $this->getDummy();
+        $member = $this->container->call([$this->memberRepository, 'store'], ['memberRepositoryRequest' => $memberRepositoryRequest]);
+        $result = $this->container->call([$this->memberRepository, 'checkAvailableEmail'], ['email' => $email, 'memberId' => $member->id]);
+        self::assertTrue($result);
     }
 }
