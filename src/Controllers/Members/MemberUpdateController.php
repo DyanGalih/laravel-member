@@ -38,7 +38,9 @@ class MemberUpdateController extends BaseController
     {
         $memberValidated = $memberUpdateRequest->validated();
 
-        $editFormRoute = route('lazy.admin.member.show.edit');
+        $member = $this->container->call([$memberService, 'getById'], compact('id'));
+
+        $editFormRoute = route('lazy.admin.member.show.edit', $member->member->identity);
 
         try {
             $memberServiceRequest = $this->transformMember($this->container, $memberValidated, $memberServiceRequest, $timeZoneRepository);
