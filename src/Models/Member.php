@@ -6,6 +6,7 @@
 namespace WebAppId\Member\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use WebAppId\Content\Models\Content;
 
 /**
  * @author: Dyan Galih<dyan.galih@gmail.com>
@@ -23,6 +24,10 @@ class Member extends Model
     public function addresses()
     {
         return $this->hasMany(MemberAddress::class);
+    }
+
+    public function content(){
+        return $this->belongsTo(Content::class);
     }
 
 }

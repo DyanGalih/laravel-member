@@ -46,6 +46,7 @@ interface MemberServiceContract
     /**
      * @param int $id
      * @param MemberServiceRequest $memberServiceRequest
+     * @param ContentServiceRequest $contentServiceRequest
      * @param MemberRepositoryRequest $memberRepositoryRequest
      * @param ContentService $contentService
      * @param MemberRepository $memberRepository
@@ -54,6 +55,7 @@ interface MemberServiceContract
      */
     public function update(int $id,
                            MemberServiceRequest $memberServiceRequest,
+                           ContentServiceRequest $contentServiceRequest,
                            MemberRepositoryRequest $memberRepositoryRequest,
                            ContentService $contentService,
                            MemberRepository $memberRepository,
@@ -66,6 +68,14 @@ interface MemberServiceContract
      * @return MemberServiceResponse
      */
     public function getByIdentity(string $identity, MemberRepository $memberRepository, MemberServiceResponse $memberServiceResponse): MemberServiceResponse;
+
+    /**
+     * @param int $id
+     * @param MemberRepository $memberRepository
+     * @param MemberServiceResponse $memberServiceResponse
+     * @return MemberServiceResponse
+     */
+    public function getById(int $id, MemberRepository $memberRepository, MemberServiceResponse $memberServiceResponse): MemberServiceResponse;
 
     /**
      * @param int $id

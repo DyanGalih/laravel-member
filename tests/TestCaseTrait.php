@@ -7,6 +7,7 @@ namespace WebAppId\Member\Tests;
 
 
 use Faker\Factory as Faker;
+use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Artisan;
 use WebAppId\Member\ServiceProvider;
 use WebAppId\User\Models\User;
@@ -20,8 +21,12 @@ use WebAppId\User\Models\User;
  */
 trait TestCaseTrait
 {
+
     private $faker;
 
+    /**
+     * @var Container
+     */
     protected $container;
 
     /**

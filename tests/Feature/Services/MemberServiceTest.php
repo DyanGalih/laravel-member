@@ -5,6 +5,9 @@
 
 namespace WebAppId\Member\Tests\Feature\Services;
 
+use WebAppId\Content\Services\Requests\ContentServiceRequest;
+use WebAppId\Content\Tests\Unit\Repositories\CategoryRepositoryTest;
+use WebAppId\Content\Tests\Unit\Repositories\ContentRepositoryTest;
 use WebAppId\Member\Repositories\MemberAddressRepository;
 use WebAppId\Member\Services\MemberService;
 use WebAppId\Member\Services\Requests\MemberServiceRequest;
@@ -44,6 +47,13 @@ class MemberServiceTest extends TestCase
      */
     protected $memberAddressRepositoryTest;
 
+    /**
+     * @var ContentRepositoryTest
+     */
+    protected $contentRepositoryTest;
+
+    protected $categoryRepositoryTest;
+
     public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
@@ -52,6 +62,8 @@ class MemberServiceTest extends TestCase
             $this->memberRepositoryTest = $this->container->make(MemberRepositoryTest::class);
             $this->memberAddressRepositoryTest = $this->container->make(MemberAddressRepositoryTest::class);
             $this->memberAddressRepository = $this->container->make(MemberAddressRepository::class);
+            $this->contentRepositoryTest = $this->container->make(ContentRepositoryTest::class);
+            $this->categoryRepositoryTest = $this->container->make(CategoryRepositoryTest::class);
         } catch (BindingResolutionException $e) {
             report($e);
         }
@@ -62,6 +74,13 @@ class MemberServiceTest extends TestCase
     {
         $contentServiceResponse = $this->testStore();
         $result = $this->container->call([$this->memberService, 'getByIdentity'], ['identity' => $contentServiceResponse->member->identity]);
+        self::assertTrue($result->status);
+    }
+
+    public function testGetById()
+    {
+        $contentServiceResponse = $this->testStore();
+        $result = $this->container->call([$this->memberService, 'getById'], ['id' => $contentServiceResponse->member->id]);
         self::assertTrue($result->status);
     }
 
@@ -77,10 +96,29 @@ class MemberServiceTest extends TestCase
         return Lazy::copy($memberRepositoryRequest, $memberServiceRequest);
     }
 
+    private function getDummyContent(): ContentServiceRequest
+    {
+        $contentRepositoryRequest = $this->container->call([$this->contentRepositoryTest, 'getDummy']);
+        $contentServiceRequest = null;
+        try {
+            $contentServiceRequest = $this->container->make(ContentServiceRequest::class);
+        } catch (BindingResolutionException $e) {
+            report($e);
+        }
+        return Lazy::copy($contentRepositoryRequest, $contentServiceRequest);
+    }
+
     public function testStore(int $number = 0)
     {
         $memberServiceRequest = $this->getDummy($number);
-        $result = $this->container->call([$this->memberService, 'store'], ['memberServiceRequest' => $memberServiceRequest]);
+
+        $contentServiceRequest = $this->getDummyContent();
+
+        $category = $this->container->call([$this->categoryRepositoryTest, 'testStore']);
+
+        $contentServiceRequest->categories = [$category->id];
+
+        $result = $this->container->call([$this->memberService, 'store'], compact('memberServiceRequest', 'contentServiceRequest'));
 
         $memberAddressRepositoryRequest = $this->container->call([$this->memberAddressRepositoryTest, 'getDummy']);
 
@@ -114,14 +152,16 @@ class MemberServiceTest extends TestCase
     {
         $contentServiceResponse = $this->testStore();
         $memberServiceRequest = $this->getDummy();
-        $result = $this->container->call([$this->memberService, 'update'], ['identity' => $contentServiceResponse->member->identity, 'memberServiceRequest' => $memberServiceRequest]);
+        $contentServiceRequest = $this->getDummyContent();
+        $contentServiceRequest->code = $contentServiceResponse->member->content;
+        $result = $this->container->call([$this->memberService, 'update'], ['id' => $contentServiceResponse->member->id, 'memberServiceRequest' => $memberServiceRequest, 'contentServiceRequest' => $contentServiceRequest]);
         self::assertNotEquals(null, $result);
     }
 
     public function testDelete()
     {
         $contentServiceResponse = $this->testStore();
-        $result = $this->container->call([$this->memberService, 'delete'], ['identity' => $contentServiceResponse->member->identity]);
+        $result = $this->container->call([$this->memberService, 'delete'], ['id' => $contentServiceResponse->member->id]);
         self::assertTrue($result);
     }
 

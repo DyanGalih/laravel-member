@@ -26,12 +26,12 @@ interface MemberRepositoryContract
     public function store(MemberRepositoryRequest $dummyRepositoryClassRequest, Member $member): ?Member;
 
     /**
-     * @param string $identity
+     * @param int $int
      * @param MemberRepositoryRequest $dummyRepositoryClassRequest
      * @param Member $member
      * @return Member|null
      */
-    public function update(string $identity, MemberRepositoryRequest $dummyRepositoryClassRequest, Member $member): ?Member;
+    public function update(int $int, MemberRepositoryRequest $dummyRepositoryClassRequest, Member $member): ?Member;
 
     /**
      * @param string $identity
@@ -41,11 +41,18 @@ interface MemberRepositoryContract
     public function getByIdentity(string $identity, Member $member): ?Member;
 
     /**
-     * @param string $identity
+     * @param int $id
+     * @param Member $member
+     * @return Member|null
+     */
+    public function getById(int $id, Member $member): ?Member;
+
+    /**
+     * @param int $id
      * @param Member $member
      * @return bool
      */
-    public function delete(string $identity, Member $member): bool;
+    public function delete(int $id, Member $member): bool;
 
     /**
      * @param Member $member

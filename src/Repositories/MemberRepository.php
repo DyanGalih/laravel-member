@@ -103,9 +103,9 @@ class MemberRepository implements MemberRepositoryContract
     /**
      * @inheritDoc
      */
-    public function update(string $identity, MemberRepositoryRequest $memberRepositoryRequest, Member $member): ?Member
+    public function update(int $id, MemberRepositoryRequest $memberRepositoryRequest, Member $member): ?Member
     {
-        $member = $this->getByIdentity($identity, $member);
+        $member = $this->getById($id, $member);
         if ($member != null) {
             try {
                 $member = Lazy::copy($memberRepositoryRequest, $member);
@@ -129,9 +129,17 @@ class MemberRepository implements MemberRepositoryContract
     /**
      * @inheritDoc
      */
-    public function delete(string $identity, Member $member): bool
+    public function getById(int $id, Member $member): ?Member
     {
-        $member = $this->getByIdentity($identity, $member);
+        return $this->getJoin($member)->find($id, $this->getColumn());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function delete(int $id, Member $member): bool
+    {
+        $member = $this->getById($id, $member);
         if ($member != null) {
             return $member->delete();
         } else {

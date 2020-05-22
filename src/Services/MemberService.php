@@ -44,7 +44,7 @@ class MemberService extends BaseService implements MemberServiceContract
         if ($category != null) {
             $contentServiceRequest->categories[] = $category->id;
         }
-        if($contentServiceRequest->content == null){
+        if ($contentServiceRequest->content == null) {
             $contentServiceRequest->content = '';
         }
         $resultContent = $this->container->call([$contentService, 'store'], compact('contentServiceRequest'));
@@ -76,6 +76,7 @@ class MemberService extends BaseService implements MemberServiceContract
      */
     public function update(int $id,
                            MemberServiceRequest $memberServiceRequest,
+                           ContentServiceRequest $contentServiceRequest,
                            MemberRepositoryRequest $memberRepositoryRequest,
                            ContentService $contentService,
                            MemberRepository $memberRepository,
@@ -84,7 +85,9 @@ class MemberService extends BaseService implements MemberServiceContract
         DB::beginTransaction();
         $memberRepositoryRequest = Lazy::copy($memberServiceRequest, $memberRepositoryRequest);
 
-        $resultContent = $this->container->call([$contentService, 'update'], compact('contentServiceRequest'));
+        $code = $contentServiceRequest->code;
+
+        $resultContent = $this->container->call([$contentService, 'update'], compact('code', 'contentServiceRequest'));
 
         $result = $this->container->call([$memberRepository, 'update'], ['id' => $id, 'memberRepositoryRequest' => $memberRepositoryRequest]);
         if ($result != null) {
@@ -111,6 +114,25 @@ class MemberService extends BaseService implements MemberServiceContract
     public function getByIdentity(string $identity, MemberRepository $memberRepository, MemberServiceResponse $memberServiceResponse): MemberServiceResponse
     {
         $result = $this->container->call([$memberRepository, 'getByIdentity'], ['identity' => $identity]);
+        if ($result != null) {
+            $memberServiceResponse->status = true;
+            $memberServiceResponse->message = 'Data Found';
+            $memberServiceResponse->member = $result;
+            $memberServiceResponse->addressList = $result->addresses;
+        } else {
+            $memberServiceResponse->status = false;
+            $memberServiceResponse->message = 'Data Not Found';
+        }
+
+        return $memberServiceResponse;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getById(int $id, MemberRepository $memberRepository, MemberServiceResponse $memberServiceResponse): MemberServiceResponse
+    {
+        $result = $this->container->call([$memberRepository, 'getById'], compact('id'));
         if ($result != null) {
             $memberServiceResponse->status = true;
             $memberServiceResponse->message = 'Data Found';
