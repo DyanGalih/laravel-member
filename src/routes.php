@@ -17,8 +17,8 @@ Route::group(['middleware' => 'web'], function () {
                         Route::post('', WebAppId\Member\Controllers\Members\MemberStoreController::class)->name('post');
                         Route::get('/list', WebAppId\Member\Controllers\Members\MemberListController::class)->name('list');
                         Route::get('/{identity}', WebAppId\Member\Controllers\Members\MemberDetailController::class)->name('detail');
-                        Route::get('/{identity}/delete', WebAppId\Member\Controllers\Members\MemberDeleteController::class)->name('delete');
-                        Route::post('/{identity}/update', WebAppId\Member\Controllers\Members\MemberUpdateController::class)->name('update');
+                        Route::get('/{id}/delete', WebAppId\Member\Controllers\Members\MemberDeleteController::class)->name('delete');
+                        Route::post('/{id}/update', WebAppId\Member\Controllers\Members\MemberUpdateController::class)->name('update');
                     });
 
                     Route::name('memberaddress.')->prefix('memberaddress')->group(function(){
