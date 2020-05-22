@@ -86,7 +86,9 @@ class MemberService extends BaseService implements MemberServiceContract
         DB::beginTransaction();
         $memberRepositoryRequest = Lazy::copy($memberServiceRequest, $memberRepositoryRequest);
 
-        $code = $contentServiceRequest->code;
+        $member = $this->container->call([$memberRepository, 'getById'], compact('id'));
+
+        $code = $member->content_code;
 
         $category = $this->container->call([$categoryRepository, 'getByName'], ['name' => 'Profile']);
         if ($category != null) {
@@ -97,11 +99,11 @@ class MemberService extends BaseService implements MemberServiceContract
         }
 
         $resultContent = $this->container->call([$contentService, 'update'], compact('code', 'contentServiceRequest'));
-
+        
         $memberRepositoryRequest->content_id = $resultContent->content->id;
 
         $result = $this->container->call([$memberRepository, 'update'], ['id' => $id, 'memberRepositoryRequest' => $memberRepositoryRequest]);
-        
+
         if ($result != null) {
             $memberServiceResponse->status = true;
             $memberServiceResponse->message = 'Update Data Success';
