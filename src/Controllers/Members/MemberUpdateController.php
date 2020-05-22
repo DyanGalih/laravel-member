@@ -38,6 +38,8 @@ class MemberUpdateController extends BaseController
     {
         $memberValidated = $memberUpdateRequest->validated();
 
+        $memberValidated['title'] = isset($memberValidated['title']) ? $memberValidated['title'] : $memberValidated['name'];
+
         $member = $this->container->call([$memberService, 'getById'], compact('id'));
 
         $editFormRoute = route('lazy.admin.member.show.edit', $member->member->identity);
