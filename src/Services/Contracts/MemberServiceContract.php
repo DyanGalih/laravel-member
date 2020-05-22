@@ -58,6 +58,7 @@ interface MemberServiceContract
                            ContentServiceRequest $contentServiceRequest,
                            MemberRepositoryRequest $memberRepositoryRequest,
                            ContentService $contentService,
+                           CategoryRepository $categoryRepository,
                            MemberRepository $memberRepository,
                            MemberServiceResponse $memberServiceResponse): MemberServiceResponse;
 

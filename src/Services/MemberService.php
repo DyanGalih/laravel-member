@@ -79,6 +79,7 @@ class MemberService extends BaseService implements MemberServiceContract
                            ContentServiceRequest $contentServiceRequest,
                            MemberRepositoryRequest $memberRepositoryRequest,
                            ContentService $contentService,
+                           CategoryRepository $categoryRepository,
                            MemberRepository $memberRepository,
                            MemberServiceResponse $memberServiceResponse): MemberServiceResponse
     {
@@ -87,9 +88,20 @@ class MemberService extends BaseService implements MemberServiceContract
 
         $code = $contentServiceRequest->code;
 
+        $category = $this->container->call([$categoryRepository, 'getByName'], ['name' => 'Profile']);
+        if ($category != null) {
+            $contentServiceRequest->categories[] = $category->id;
+        }
+        if ($contentServiceRequest->content == null) {
+            $contentServiceRequest->content = '';
+        }
+
         $resultContent = $this->container->call([$contentService, 'update'], compact('code', 'contentServiceRequest'));
 
+        $memberRepositoryRequest->content_id = $resultContent->content->id;
+
         $result = $this->container->call([$memberRepository, 'update'], ['id' => $id, 'memberRepositoryRequest' => $memberRepositoryRequest]);
+        
         if ($result != null) {
             $memberServiceResponse->status = true;
             $memberServiceResponse->message = 'Update Data Success';

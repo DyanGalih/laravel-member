@@ -83,6 +83,8 @@ class MemberRepository implements MemberRepositoryContract
             'languages.code AS language_code',
             'languages.name AS language_name',
             'owner_users.name AS owner_name',
+            'contents.id AS content_id',
+            'contents.default_image AS default_image',
             'contents.title AS content_title',
             'contents.code AS content_code',
             'contents.keyword AS content_keyword',
