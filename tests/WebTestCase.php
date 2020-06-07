@@ -6,7 +6,6 @@
 namespace WebAppId\Member\Tests;
 
 use Illuminate\Container\Container;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Orchestra\Testbench\BrowserKit\TestCase as BaseTestCase;
 
 /**

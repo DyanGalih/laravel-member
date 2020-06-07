@@ -21,14 +21,12 @@ class ServiceProvider extends BaseServiceProvider
     public function boot()
     {
         if ($this->isLaravel53AndUp()) {
-            $this->loadMigrationsFrom(__DIR__ . '/../src/migrations');
+            $this->loadMigrationsFrom(__DIR__ . '/migrations');
         } else {
             $this->publishes([
                 __DIR__ . '/migrations' => $this->app->databasePath() . '/migrations'
             ], 'migrations');
         }
-
-        $this->loadRoutesFrom(__DIR__ . '/routes.php');
     }
 
     protected function isLaravel53AndUp()
