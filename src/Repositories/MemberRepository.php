@@ -107,7 +107,7 @@ class MemberRepository implements MemberRepositoryContract
      */
     public function update(int $id, MemberRepositoryRequest $memberRepositoryRequest, Member $member): ?Member
     {
-        $member = $this->getById($id, $member);
+        $member = $member->find($id);
         if ($member != null) {
             try {
                 $member = Lazy::copy($memberRepositoryRequest, $member);
@@ -141,7 +141,7 @@ class MemberRepository implements MemberRepositoryContract
      */
     public function delete(int $id, Member $member): bool
     {
-        $member = $this->getById($id, $member);
+        $member = $member->find($id);
         if ($member != null) {
             return $member->delete();
         } else {

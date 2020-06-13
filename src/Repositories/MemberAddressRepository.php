@@ -92,7 +92,7 @@ class MemberAddressRepository implements MemberAddressRepositoryContract
      */
     public function update(int $id, MemberAddressRepositoryRequest $memberAddressRepositoryRequest, MemberAddress $memberAddress): ?MemberAddress
     {
-        $memberAddress = $this->getById($id, $memberAddress);
+        $memberAddress = $memberAddress->find($id);
         if($memberAddress!=null){
             try {
                 $memberAddress = Lazy::copy($memberAddressRepositoryRequest, $memberAddress);
@@ -118,7 +118,7 @@ class MemberAddressRepository implements MemberAddressRepositoryContract
      */
     public function delete(int $id, MemberAddress $memberAddress): bool
     {
-        $memberAddress = $this->getById($id, $memberAddress);
+        $memberAddress = $memberAddress->find($id);
         if($memberAddress!=null){
             return $memberAddress->delete();
         }else{

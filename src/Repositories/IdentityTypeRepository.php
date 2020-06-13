@@ -69,7 +69,7 @@ class IdentityTypeRepository implements IdentityTypeRepositoryContract
      */
     public function update(int $id, IdentityTypeRepositoryRequest $identityTypeRepositoryRequest, IdentityType $identityType): ?IdentityType
     {
-        $identityType = $this->getById($id, $identityType);
+        $identityType = $identityType->find($id);
         if ($identityType != null) {
             try {
                 $identityType = Lazy::copy($identityTypeRepositoryRequest, $identityType);
@@ -103,7 +103,7 @@ class IdentityTypeRepository implements IdentityTypeRepositoryContract
      */
     public function delete(int $id, IdentityType $identityType): bool
     {
-        $identityType = $this->getById($id, $identityType);
+        $identityType = $identityType->find($id);
         if ($identityType != null) {
             return $identityType->delete();
         } else {
