@@ -26,40 +26,42 @@ interface MemberAddressRepositoryContract
     public function store(MemberAddressRepositoryRequest $dummyRepositoryClassRequest, MemberAddress $memberAddress): ?MemberAddress;
 
     /**
-     * @param int $id
+     * @param string $code
      * @param MemberAddressRepositoryRequest $dummyRepositoryClassRequest
      * @param MemberAddress $memberAddress
      * @return MemberAddress|null
      */
-    public function update(int $id, MemberAddressRepositoryRequest $dummyRepositoryClassRequest, MemberAddress $memberAddress): ?MemberAddress;
+    public function update(string $code, MemberAddressRepositoryRequest $dummyRepositoryClassRequest, MemberAddress $memberAddress): ?MemberAddress;
 
     /**
-     * @param int $id
+     * @param string $code
      * @param MemberAddress $memberAddress
      * @return MemberAddress|null
      */
-    public function getById(int $id, MemberAddress $memberAddress): ?MemberAddress;
+    public function getByCode(string $code, MemberAddress $memberAddress): ?MemberAddress;
 
     /**
-     * @param int $id
+     * @param string $code
      * @param MemberAddress $memberAddress
      * @return bool
      */
-    public function delete(int $id, MemberAddress $memberAddress): bool;
+    public function delete(string $code, MemberAddress $memberAddress): bool;
 
     /**
+     * @param string $identity
      * @param MemberAddress $memberAddress
      * @param int $length
      * @param string $q
      * @return LengthAwarePaginator
      */
-    public function get(MemberAddress $memberAddress, int $length = 12, string $q = null): LengthAwarePaginator;
+    public function get(string $identity, MemberAddress $memberAddress, int $length = 12, string $q = null): LengthAwarePaginator;
 
     /**
+     * @param string $identity
      * @param MemberAddress $memberAddress
-     * @return int
      * @param string $q
+     * @return int
      */
-    public function getCount(MemberAddress $memberAddress, string $q = null): int;
+    public function getCount(string $identity, MemberAddress $memberAddress, string $q = null): int;
 
 }

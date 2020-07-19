@@ -47,11 +47,11 @@ class MemberAddressService extends BaseService implements MemberAddressServiceCo
     /**
      * @inheritDoc
      */
-    public function update(int $id, MemberAddressServiceRequest $memberAddressServiceRequest, MemberAddressRepositoryRequest $memberAddressRepositoryRequest, MemberAddressRepository $memberAddressRepository, MemberAddressServiceResponse $memberAddressServiceResponse): MemberAddressServiceResponse
+    public function update(string $code, MemberAddressServiceRequest $memberAddressServiceRequest, MemberAddressRepositoryRequest $memberAddressRepositoryRequest, MemberAddressRepository $memberAddressRepository, MemberAddressServiceResponse $memberAddressServiceResponse): MemberAddressServiceResponse
     {
         $memberAddressRepositoryRequest = Lazy::copy($memberAddressServiceRequest, $memberAddressRepositoryRequest);
 
-        $result = $this->container->call([$memberAddressRepository, 'update'], ['id' => $id, 'memberAddressRepositoryRequest' => $memberAddressRepositoryRequest]);
+        $result = $this->container->call([$memberAddressRepository, 'update'], ['code' => $code, 'memberAddressRepositoryRequest' => $memberAddressRepositoryRequest]);
         if ($result != null) {
             $memberAddressServiceResponse->status = true;
             $memberAddressServiceResponse->message = 'Update Data Success';
@@ -67,9 +67,9 @@ class MemberAddressService extends BaseService implements MemberAddressServiceCo
     /**
      * @inheritDoc
      */
-    public function getById(int $id, MemberAddressRepository $memberAddressRepository, MemberAddressServiceResponse $memberAddressServiceResponse): MemberAddressServiceResponse
+    public function getByCode(string $code, MemberAddressRepository $memberAddressRepository, MemberAddressServiceResponse $memberAddressServiceResponse): MemberAddressServiceResponse
     {
-        $result = $this->container->call([$memberAddressRepository, 'getById'], ['id' => $id]);
+        $result = $this->container->call([$memberAddressRepository, 'getByCode'], ['code' => $code]);
         if ($result != null) {
             $memberAddressServiceResponse->status = true;
             $memberAddressServiceResponse->message = 'Data Found';
@@ -85,23 +85,23 @@ class MemberAddressService extends BaseService implements MemberAddressServiceCo
     /**
      * @inheritDoc
      */
-    public function delete(int $id, MemberAddressRepository $memberAddressRepository): bool
+    public function delete(string $code, MemberAddressRepository $memberAddressRepository): bool
     {
-        return $this->container->call([$memberAddressRepository, 'delete'], ['id' => $id]);
+        return $this->container->call([$memberAddressRepository, 'delete'], ['code' => $code]);
     }
 
     /**
      * @inheritDoc
      */
-    public function get(MemberAddressRepository $memberAddressRepository, MemberAddressServiceResponseList $memberAddressServiceResponseList, int $length = 12, string $q = null): MemberAddressServiceResponseList
+    public function get(string $identity, MemberAddressRepository $memberAddressRepository, MemberAddressServiceResponseList $memberAddressServiceResponseList, int $length = 12, string $q = null): MemberAddressServiceResponseList
     {
-        $result = $this->container->call([$memberAddressRepository, 'get'], ['q' => $q]);
+        $result = $this->container->call([$memberAddressRepository, 'get'], compact('q', 'identity'));
         if (count($result) > 0) {
             $memberAddressServiceResponseList->status = true;
             $memberAddressServiceResponseList->message = 'Data Found';
             $memberAddressServiceResponseList->memberAddressList = $result;
-            $memberAddressServiceResponseList->count = $this->container->call([$memberAddressRepository, 'getCount']);
-            $memberAddressServiceResponseList->countFiltered = $this->container->call([$memberAddressRepository, 'getCount'], ['q' => $q]);
+            $memberAddressServiceResponseList->count = $this->container->call([$memberAddressRepository, 'getCount'], compact('identity'));
+            $memberAddressServiceResponseList->countFiltered = $this->container->call([$memberAddressRepository, 'getCount'], compact('q', 'identity'));
         } else {
             $memberAddressServiceResponseList->status = false;
             $memberAddressServiceResponseList->message = 'Data Not Found';
@@ -112,8 +112,8 @@ class MemberAddressService extends BaseService implements MemberAddressServiceCo
     /**
      * @inheritDoc
      */
-    public function getCount(MemberAddressRepository $memberAddressRepository, string $q = null): int
+    public function getCount(string $identity, MemberAddressRepository $memberAddressRepository, string $q = null): int
     {
-        return $this->container->call([$memberAddressRepository, 'getCount'], ['q' => $q]);
+        return $this->container->call([$memberAddressRepository, 'getCount'], compact('q', 'identity'));
     }
 }

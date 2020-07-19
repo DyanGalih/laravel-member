@@ -42,14 +42,17 @@ class MemberAddressRepository implements MemberAddressRepositoryContract
      * @param string|null $q
      * @return Builder
      */
-    public function getJoin(MemberAddress $memberAddress, string $q = null): Builder{
+    public function getJoin(MemberAddress $memberAddress, string $q = null): Builder
+    {
         return $memberAddress
             ->join('users as users', 'member_addresses.creator_id', 'users.id')
+            ->join('address_types as address_types', 'member_addresses.type_id', 'address_types.id')
             ->join('members as members', 'member_addresses.member_id', 'members.id')
             ->join('users as owner_users', 'member_addresses.owner_id', 'owner_users.id')
             ->join('users as user_users', 'member_addresses.user_id', 'user_users.id')
             ->when($q != null, function ($query) use ($q) {
-                return $query->where('address', 'LIKE', '%' . $q . '%');
+                return $query->where('address', 'LIKE', '%' . $q . '%')
+                    ->orWhere('member_addresses.name', 'LIKE', '%' . $q . '%');
             });
     }
 
@@ -60,6 +63,9 @@ class MemberAddressRepository implements MemberAddressRepositoryContract
     {
         return [
             'member_addresses.id',
+            'address_types.name AS address_type',
+            'member_addresses.code',
+            'member_addresses.name',
             'member_addresses.member_id',
             'member_addresses.address',
             'member_addresses.city',
@@ -90,15 +96,15 @@ class MemberAddressRepository implements MemberAddressRepositoryContract
     /**
      * @inheritDoc
      */
-    public function update(int $id, MemberAddressRepositoryRequest $memberAddressRepositoryRequest, MemberAddress $memberAddress): ?MemberAddress
+    public function update(string $code, MemberAddressRepositoryRequest $memberAddressRepositoryRequest, MemberAddress $memberAddress): ?MemberAddress
     {
-        $memberAddress = $memberAddress->find($id);
-        if($memberAddress!=null){
+        $memberAddress = $memberAddress->where('code', $code)->first();
+        if ($memberAddress != null) {
             try {
                 $memberAddress = Lazy::copy($memberAddressRepositoryRequest, $memberAddress);
                 $memberAddress->save();
                 return $memberAddress;
-            }catch (QueryException $queryException){
+            } catch (QueryException $queryException) {
                 report($queryException);
             }
         }
@@ -108,20 +114,20 @@ class MemberAddressRepository implements MemberAddressRepositoryContract
     /**
      * @inheritDoc
      */
-    public function getById(int $id, MemberAddress $memberAddress): ?MemberAddress
+    public function getByCode(string $code, MemberAddress $memberAddress): ?MemberAddress
     {
-        return $this->getJoin($memberAddress)->find($id, $this->getColumn());
+        return $this->getJoin($memberAddress)->where('code', $code)->first($this->getColumn());
     }
 
     /**
      * @inheritDoc
      */
-    public function delete(int $id, MemberAddress $memberAddress): bool
+    public function delete(string $code, MemberAddress $memberAddress): bool
     {
-        $memberAddress = $memberAddress->find($id);
-        if($memberAddress!=null){
+        $memberAddress = $memberAddress->where('code', $code)->first();
+        if ($memberAddress != null) {
             return $memberAddress->delete();
-        }else{
+        } else {
             return false;
         }
     }
@@ -129,7 +135,7 @@ class MemberAddressRepository implements MemberAddressRepositoryContract
     /**
      * @inheritDoc
      */
-    public function get(MemberAddress $memberAddress, int $length = 12, string $q = null): LengthAwarePaginator
+    public function get(string $identity, MemberAddress $memberAddress, int $length = 12, string $q = null): LengthAwarePaginator
     {
         return $this
             ->getJoin($memberAddress, $q)
@@ -139,7 +145,7 @@ class MemberAddressRepository implements MemberAddressRepositoryContract
     /**
      * @inheritDoc
      */
-    public function getCount(MemberAddress $memberAddress, string $q = null): int
+    public function getCount(string $identity, MemberAddress $memberAddress, string $q = null): int
     {
         return $this
             ->getJoin($memberAddress, $q)

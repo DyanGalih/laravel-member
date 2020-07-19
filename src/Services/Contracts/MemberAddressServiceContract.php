@@ -30,43 +30,45 @@ interface MemberAddressServiceContract
     public function store(MemberAddressServiceRequest $memberAddressServiceRequest, MemberAddressRepositoryRequest $memberAddressRepositoryRequest, MemberAddressRepository $memberAddressRepository, MemberAddressServiceResponse $memberAddressServiceResponse): MemberAddressServiceResponse;
 
     /**
-     * @param int $id
+     * @param string $code
      * @param MemberAddressServiceRequest $memberAddressServiceRequest
      * @param MemberAddressRepositoryRequest $memberAddressRepositoryRequest
      * @param MemberAddressRepository $memberAddressRepository
      * @param MemberAddressServiceResponse $memberAddressServiceResponse
      * @return MemberAddressServiceResponse
      */
-    public function update(int $id, MemberAddressServiceRequest $memberAddressServiceRequest, MemberAddressRepositoryRequest $memberAddressRepositoryRequest, MemberAddressRepository $memberAddressRepository, MemberAddressServiceResponse $memberAddressServiceResponse): MemberAddressServiceResponse;
+    public function update(string $code, MemberAddressServiceRequest $memberAddressServiceRequest, MemberAddressRepositoryRequest $memberAddressRepositoryRequest, MemberAddressRepository $memberAddressRepository, MemberAddressServiceResponse $memberAddressServiceResponse): MemberAddressServiceResponse;
 
     /**
-     * @param int $id
+     * @param string $code
      * @param MemberAddressRepository $memberAddressRepository
      * @param MemberAddressServiceResponse $memberAddressServiceResponse
      * @return MemberAddressServiceResponse
      */
-    public function getById(int $id, MemberAddressRepository $memberAddressRepository, MemberAddressServiceResponse $memberAddressServiceResponse): MemberAddressServiceResponse;
+    public function getByCode(string $code, MemberAddressRepository $memberAddressRepository, MemberAddressServiceResponse $memberAddressServiceResponse): MemberAddressServiceResponse;
 
     /**
-     * @param int $id
+     * @param string $code
      * @param MemberAddressRepository $memberAddressRepository
      * @return bool
      */
-    public function delete(int $id, MemberAddressRepository $memberAddressRepository): bool;
+    public function delete(string $code, MemberAddressRepository $memberAddressRepository): bool;
 
     /**
-     * @param string $q
+     * @param string $identity
      * @param MemberAddressRepository $memberAddressRepository
      * @param MemberAddressServiceResponseList $memberAddressServiceResponseList
      * @param int $length
+     * @param string $q
      * @return MemberAddressServiceResponseList
      */
-    public function get(MemberAddressRepository $memberAddressRepository, MemberAddressServiceResponseList $memberAddressServiceResponseList,int $length = 12, string $q = null): MemberAddressServiceResponseList;
+    public function get(string $identity, MemberAddressRepository $memberAddressRepository, MemberAddressServiceResponseList $memberAddressServiceResponseList,int $length = 12, string $q = null): MemberAddressServiceResponseList;
 
     /**
-     * @param string $q
+     * @param string $identity
      * @param MemberAddressRepository $memberAddressRepository
+     * @param string $q
      * @return int
      */
-    public function getCount(MemberAddressRepository $memberAddressRepository, string $q = null):int;
+    public function getCount(string $identity, MemberAddressRepository $memberAddressRepository, string $q = null):int;
 }

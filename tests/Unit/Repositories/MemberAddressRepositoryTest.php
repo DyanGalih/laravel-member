@@ -5,6 +5,7 @@
 
 namespace WebAppId\Member\Tests\Unit\Repositories;
 
+use WebAppId\Member\Models\Member;
 use WebAppId\Member\Models\MemberAddress;
 use WebAppId\Member\Repositories\MemberAddressRepository;
 use WebAppId\Member\Repositories\Requests\MemberAddressRepositoryRequest;
@@ -42,6 +43,11 @@ class MemberAddressRepositoryTest extends TestCase
      */
     private $addressTypeRepositoryTest;
 
+    /**
+     * @var Member
+     */
+    private $member;
+
     public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
@@ -55,18 +61,27 @@ class MemberAddressRepositoryTest extends TestCase
         }
     }
 
+    public function getMember(): ?Member
+    {
+        return $this->member;
+    }
+
     public function getDummy(int $no = 0): ?MemberAddressRepositoryRequest
     {
         $dummy = null;
         try {
             $dummy = $this->container->make(MemberAddressRepositoryRequest::class);
             $user = $this->container->call([$this->userRepositoryTest, 'testStore']);
-            $member = $this->container->call([$this->memberRepositoryTest, 'testStore']);
+
+            if ($this->member == null) {
+                $this->member = $this->container->call([$this->memberRepositoryTest, 'testStore']);
+            }
+
             $addressType = $this->container->call([$this->addressTypeRepositoryTest, 'testStore']);
             $dummy->type_id = $addressType->id;
             $dummy->code = $this->getFaker()->uuid;
             $dummy->name = $this->getFaker()->domainName;
-            $dummy->member_id = $member->id;
+            $dummy->member_id = $this->member->id;
             $dummy->address = $this->getFaker()->text(65535);
             $dummy->city = $this->getFaker()->text(255);
             $dummy->state = $this->getFaker()->text(255);
@@ -91,37 +106,37 @@ class MemberAddressRepositoryTest extends TestCase
         return $result;
     }
 
-    public function testGetById()
+    public function testGetByCode()
     {
         $memberAddress = $this->testStore();
-        $result = $this->container->call([$this->memberAddressRepository, 'getById'], ['id' => $memberAddress->id]);
+        $result = $this->container->call([$this->memberAddressRepository, 'getByCode'], ['code' => $memberAddress->code]);
         self::assertNotEquals(null, $result);
     }
 
     public function testDelete()
     {
         $memberAddress = $this->testStore();
-        $result = $this->container->call([$this->memberAddressRepository, 'delete'], ['id' => $memberAddress->id]);
+        $result = $this->container->call([$this->memberAddressRepository, 'delete'], ['code' => $memberAddress->code]);
         self::assertTrue($result);
     }
 
     public function testGet()
     {
-        for ($i = 0; $i < $this->getFaker()->numberBetween(10, $this->getFaker()->numberBetween(10, 30)); $i++) {
+        for ($i = 0; $i < $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10)); $i++) {
             $this->testStore($i);
         }
 
-        $resultList = $this->container->call([$this->memberAddressRepository, 'get']);
+        $resultList = $this->container->call([$this->memberAddressRepository, 'get'], ['identity' => $this->member->identity]);
         self::assertGreaterThanOrEqual(1, count($resultList));
     }
 
     public function testGetCount()
     {
-        for ($i = 0; $i < $this->getFaker()->numberBetween(10, $this->getFaker()->numberBetween(10, 30)); $i++) {
+        for ($i = 0; $i < $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10)); $i++) {
             $this->testStore($i);
         }
 
-        $result = $this->container->call([$this->memberAddressRepository, 'getCount']);
+        $result = $this->container->call([$this->memberAddressRepository, 'getCount'], ['identity' => $this->member->identity]);
         self::assertGreaterThanOrEqual(1, $result);
     }
 
@@ -129,29 +144,29 @@ class MemberAddressRepositoryTest extends TestCase
     {
         $memberAddress = $this->testStore();
         $memberAddressRepositoryRequest = $this->getDummy(1);
-        $result = $this->container->call([$this->memberAddressRepository, 'update'], ['id' => $memberAddress->id, 'memberAddressRepositoryRequest' => $memberAddressRepositoryRequest]);
+        $result = $this->container->call([$this->memberAddressRepository, 'update'], ['code' => $memberAddress->code, 'memberAddressRepositoryRequest' => $memberAddressRepositoryRequest]);
         self::assertNotEquals(null, $result);
     }
 
     public function testGetWhere()
     {
-        for ($i = 0; $i < $this->getFaker()->numberBetween(10, $this->getFaker()->numberBetween(10, 30)); $i++) {
+        for ($i = 0; $i < $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10)); $i++) {
             $this->testStore($i);
         }
         $string = 'aiueo';
         $q = $string[$this->getFaker()->numberBetween(0, strlen($string) - 1)];
-        $result = $this->container->call([$this->memberAddressRepository, 'get'], ['q' => $q]);
+        $result = $this->container->call([$this->memberAddressRepository, 'get'], ['identity' => $this->member->identity, 'q' => $q]);
         self::assertGreaterThanOrEqual(1, count($result));
     }
 
     public function testGetWhereCount()
     {
-        for ($i = 0; $i < $this->getFaker()->numberBetween(10, $this->getFaker()->numberBetween(10, 30)); $i++) {
+        for ($i = 0; $i < $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10)); $i++) {
             $this->testStore($i);
         }
         $string = 'aiueo';
         $q = $string[$this->getFaker()->numberBetween(0, strlen($string) - 1)];
-        $result = $this->container->call([$this->memberAddressRepository, 'getCount'], ['q' => $q]);
+        $result = $this->container->call([$this->memberAddressRepository, 'getCount'], ['identity' => $this->member->identity, 'q' => $q]);
         self::assertGreaterThanOrEqual(1, $result);
     }
 }
