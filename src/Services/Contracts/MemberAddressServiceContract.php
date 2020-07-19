@@ -6,6 +6,7 @@
 namespace WebAppId\Member\Services\Contracts;
 
 use WebAppId\Member\Repositories\MemberAddressRepository;
+use WebAppId\Member\Repositories\MemberRepository;
 use WebAppId\Member\Repositories\Requests\MemberAddressRepositoryRequest;
 use WebAppId\Member\Services\Requests\MemberAddressServiceRequest;
 use WebAppId\Member\Services\Responses\MemberAddressServiceResponse;
@@ -21,38 +22,51 @@ use WebAppId\Member\Services\Responses\MemberAddressServiceResponseList;
 interface MemberAddressServiceContract
 {
     /**
+     * @param string $identity
+     * @param MemberAddressServiceRequest $memberAddressServiceRequest
+     * @param MemberAddressRepositoryRequest $memberAddressRepositoryRequest
+     * @param MemberRepository $memberRepository
+     * @param MemberAddressRepository $memberAddressRepository
+     * @param MemberAddressServiceResponse $memberAddressServiceResponse
+     * @return MemberAddressServiceResponse
+     */
+    public function store(string $identity,
+                          MemberAddressServiceRequest $memberAddressServiceRequest,
+                          MemberAddressRepositoryRequest $memberAddressRepositoryRequest,
+                          MemberRepository $memberRepository,
+                          MemberAddressRepository $memberAddressRepository,
+                          MemberAddressServiceResponse $memberAddressServiceResponse): MemberAddressServiceResponse;
+
+    /**
+     * @param string $identity
+     * @param string $code
      * @param MemberAddressServiceRequest $memberAddressServiceRequest
      * @param MemberAddressRepositoryRequest $memberAddressRepositoryRequest
      * @param MemberAddressRepository $memberAddressRepository
      * @param MemberAddressServiceResponse $memberAddressServiceResponse
      * @return MemberAddressServiceResponse
      */
-    public function store(MemberAddressServiceRequest $memberAddressServiceRequest, MemberAddressRepositoryRequest $memberAddressRepositoryRequest, MemberAddressRepository $memberAddressRepository, MemberAddressServiceResponse $memberAddressServiceResponse): MemberAddressServiceResponse;
+    public function update(string $identity, string $code, MemberAddressServiceRequest $memberAddressServiceRequest, MemberAddressRepositoryRequest $memberAddressRepositoryRequest, MemberAddressRepository $memberAddressRepository, MemberAddressServiceResponse $memberAddressServiceResponse): MemberAddressServiceResponse;
 
     /**
-     * @param string $code
-     * @param MemberAddressServiceRequest $memberAddressServiceRequest
-     * @param MemberAddressRepositoryRequest $memberAddressRepositoryRequest
-     * @param MemberAddressRepository $memberAddressRepository
-     * @param MemberAddressServiceResponse $memberAddressServiceResponse
-     * @return MemberAddressServiceResponse
-     */
-    public function update(string $code, MemberAddressServiceRequest $memberAddressServiceRequest, MemberAddressRepositoryRequest $memberAddressRepositoryRequest, MemberAddressRepository $memberAddressRepository, MemberAddressServiceResponse $memberAddressServiceResponse): MemberAddressServiceResponse;
-
-    /**
+     * @param string $identity
      * @param string $code
      * @param MemberAddressRepository $memberAddressRepository
      * @param MemberAddressServiceResponse $memberAddressServiceResponse
      * @return MemberAddressServiceResponse
      */
-    public function getByCode(string $code, MemberAddressRepository $memberAddressRepository, MemberAddressServiceResponse $memberAddressServiceResponse): MemberAddressServiceResponse;
+    public function getByCode(string $identity, string $code, MemberAddressRepository $memberAddressRepository, MemberAddressServiceResponse $memberAddressServiceResponse): MemberAddressServiceResponse;
 
     /**
+     * @param string $identity
      * @param string $code
      * @param MemberAddressRepository $memberAddressRepository
+     * @param MemberAddressServiceResponse $memberAddressServiceResponse
      * @return bool
      */
-    public function delete(string $code, MemberAddressRepository $memberAddressRepository): bool;
+    public function delete(string $identity, string $code,
+                           MemberAddressRepository $memberAddressRepository,
+                           MemberAddressServiceResponse $memberAddressServiceResponse): bool;
 
     /**
      * @param string $identity

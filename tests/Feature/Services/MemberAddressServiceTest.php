@@ -6,6 +6,7 @@
 namespace WebAppId\Member\Tests\Feature\Services;
 
 use WebAppId\Member\Models\Member;
+use WebAppId\Member\Repositories\MemberRepository;
 use WebAppId\Member\Services\MemberAddressService;
 use WebAppId\Member\Services\Requests\MemberAddressServiceRequest;
 use Illuminate\Contracts\Container\BindingResolutionException;
@@ -34,6 +35,11 @@ class MemberAddressServiceTest extends TestCase
     protected $memberAddressRepositoryTest;
 
     /**
+     * @var MemberRepository
+     */
+    protected $memberRepository;
+
+    /**
      * @var Member
      */
     protected $member;
@@ -43,6 +49,7 @@ class MemberAddressServiceTest extends TestCase
         parent::__construct($name, $data, $dataName);
         try {
             $this->memberAddressService = $this->container->make(MemberAddressService::class);
+            $this->memberRepository = $this->container->make(MemberRepository::class);
             $this->memberAddressRepositoryTest = $this->container->make(MemberAddressRepositoryTest::class);
         } catch (BindingResolutionException $e) {
             report($e);
@@ -53,7 +60,8 @@ class MemberAddressServiceTest extends TestCase
     public function testGetByCode()
     {
         $contentServiceResponse = $this->testStore();
-        $result = $this->container->call([$this->memberAddressService, 'getByCode'], ['code' => $contentServiceResponse->memberAddress->code]);
+        $member = $this->container->call([$this->memberRepository, 'getById'], ['id' => $contentServiceResponse->memberAddress->member_id]);
+        $result = $this->container->call([$this->memberAddressService, 'getByCode'], ['identity' => $member->identity, 'code' => $contentServiceResponse->memberAddress->code]);
         self::assertTrue($result->status);
     }
 
@@ -75,7 +83,7 @@ class MemberAddressServiceTest extends TestCase
     public function testStore(int $number = 0)
     {
         $memberAddressServiceRequest = $this->getDummy($number);
-        $result = $this->container->call([$this->memberAddressService, 'store'], ['memberAddressServiceRequest' => $memberAddressServiceRequest]);
+        $result = $this->container->call([$this->memberAddressService, 'store'], ['identity' => $this->member->identity, 'memberAddressServiceRequest' => $memberAddressServiceRequest]);
         self::assertTrue($result->status);
         return $result;
     }
@@ -102,14 +110,15 @@ class MemberAddressServiceTest extends TestCase
     {
         $contentServiceResponse = $this->testStore();
         $memberAddressServiceRequest = $this->getDummy();
-        $result = $this->container->call([$this->memberAddressService, 'update'], ['code' => $contentServiceResponse->memberAddress->code, 'memberAddressServiceRequest' => $memberAddressServiceRequest]);
+        $member = $this->container->call([$this->memberRepository, 'getById'], ['id' => $contentServiceResponse->memberAddress->member_id]);
+        $result = $this->container->call([$this->memberAddressService, 'update'], ['identity' => $member->identity, 'code' => $contentServiceResponse->memberAddress->code, 'memberAddressServiceRequest' => $memberAddressServiceRequest]);
         self::assertNotEquals(null, $result);
     }
 
     public function testDelete()
     {
         $contentServiceResponse = $this->testStore();
-        $result = $this->container->call([$this->memberAddressService, 'delete'], ['code' => $contentServiceResponse->memberAddress->code]);
+        $result = $this->container->call([$this->memberAddressService, 'delete'], ['identity' => $this->member->identity, 'code' => $contentServiceResponse->memberAddress->code]);
         self::assertTrue($result);
     }
 
@@ -131,7 +140,7 @@ class MemberAddressServiceTest extends TestCase
         }
         $string = 'aiueo';
         $q = $string[$this->getFaker()->numberBetween(0, strlen($string) - 1)];
-        $result = $this->container->call([$this->memberAddressService, 'getCount'] , ['identity' => $this->member->identity ,'q' => $q]);
+        $result = $this->container->call([$this->memberAddressService, 'getCount'], ['identity' => $this->member->identity, 'q' => $q]);
         self::assertGreaterThanOrEqual(1, $result);
     }
 }

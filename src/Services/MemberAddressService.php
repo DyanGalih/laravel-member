@@ -5,7 +5,9 @@
 
 namespace WebAppId\Member\Services;
 
+use Ramsey\Uuid\Uuid;
 use WebAppId\Member\Repositories\MemberAddressRepository;
+use WebAppId\Member\Repositories\MemberRepository;
 use WebAppId\Member\Repositories\Requests\MemberAddressRepositoryRequest;
 use WebAppId\Member\Services\Contracts\MemberAddressServiceContract;
 use WebAppId\Member\Services\Requests\MemberAddressServiceRequest;
@@ -27,9 +29,26 @@ class MemberAddressService extends BaseService implements MemberAddressServiceCo
     /**
      * @inheritDoc
      */
-    public function store(MemberAddressServiceRequest $memberAddressServiceRequest, MemberAddressRepositoryRequest $memberAddressRepositoryRequest, MemberAddressRepository $memberAddressRepository, MemberAddressServiceResponse $memberAddressServiceResponse): MemberAddressServiceResponse
+    public function store(string $identity,
+                          MemberAddressServiceRequest $memberAddressServiceRequest,
+                          MemberAddressRepositoryRequest $memberAddressRepositoryRequest,
+                          MemberRepository $memberRepository,
+                          MemberAddressRepository $memberAddressRepository,
+                          MemberAddressServiceResponse $memberAddressServiceResponse): MemberAddressServiceResponse
     {
+
+        $memberAddressServiceRequest->code = Uuid::uuid4()->toString();
+
         $memberAddressRepositoryRequest = Lazy::copy($memberAddressServiceRequest, $memberAddressRepositoryRequest);
+
+        $member = $this->container->call([$memberRepository, 'getByIdentity'], compact('identity'));
+        if ($member == null) {
+            $memberAddressServiceResponse->status = false;
+            $memberAddressServiceResponse->message = 'Store Data Failed';
+            return $memberAddressServiceResponse;
+        } else {
+            $memberAddressRepositoryRequest->member_id = $member->id;
+        }
 
         $result = $this->container->call([$memberAddressRepository, 'store'], ['memberAddressRepositoryRequest' => $memberAddressRepositoryRequest]);
         if ($result != null) {
@@ -47,8 +66,10 @@ class MemberAddressService extends BaseService implements MemberAddressServiceCo
     /**
      * @inheritDoc
      */
-    public function update(string $code, MemberAddressServiceRequest $memberAddressServiceRequest, MemberAddressRepositoryRequest $memberAddressRepositoryRequest, MemberAddressRepository $memberAddressRepository, MemberAddressServiceResponse $memberAddressServiceResponse): MemberAddressServiceResponse
+    public function update(string $identity, string $code, MemberAddressServiceRequest $memberAddressServiceRequest, MemberAddressRepositoryRequest $memberAddressRepositoryRequest, MemberAddressRepository $memberAddressRepository, MemberAddressServiceResponse $memberAddressServiceResponse): MemberAddressServiceResponse
     {
+        $memberAddressServiceRequest->code = $code;
+
         $memberAddressRepositoryRequest = Lazy::copy($memberAddressServiceRequest, $memberAddressRepositoryRequest);
 
         $result = $this->container->call([$memberAddressRepository, 'update'], ['code' => $code, 'memberAddressRepositoryRequest' => $memberAddressRepositoryRequest]);
@@ -67,10 +88,11 @@ class MemberAddressService extends BaseService implements MemberAddressServiceCo
     /**
      * @inheritDoc
      */
-    public function getByCode(string $code, MemberAddressRepository $memberAddressRepository, MemberAddressServiceResponse $memberAddressServiceResponse): MemberAddressServiceResponse
+    public function getByCode(string $identity, string $code, MemberAddressRepository $memberAddressRepository, MemberAddressServiceResponse $memberAddressServiceResponse): MemberAddressServiceResponse
     {
         $result = $this->container->call([$memberAddressRepository, 'getByCode'], ['code' => $code]);
-        if ($result != null) {
+
+        if ($result != null && $result->identity == $identity) {
             $memberAddressServiceResponse->status = true;
             $memberAddressServiceResponse->message = 'Data Found';
             $memberAddressServiceResponse->memberAddress = $result;
@@ -85,9 +107,16 @@ class MemberAddressService extends BaseService implements MemberAddressServiceCo
     /**
      * @inheritDoc
      */
-    public function delete(string $code, MemberAddressRepository $memberAddressRepository): bool
+    public function delete(string $identity, string $code,
+                           MemberAddressRepository $memberAddressRepository,
+                           MemberAddressServiceResponse $memberAddressServiceResponse): bool
     {
-        return $this->container->call([$memberAddressRepository, 'delete'], ['code' => $code]);
+        $memberAddress = $this->getByCode($identity, $code, $memberAddressRepository, $memberAddressServiceResponse);
+        if (!$memberAddress->status) {
+            return false;
+        } else {
+            return $this->container->call([$memberAddressRepository, 'delete'], ['code' => $code]);
+        }
     }
 
     /**

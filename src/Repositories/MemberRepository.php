@@ -33,7 +33,6 @@ class MemberRepository implements MemberRepositoryContract
             $member->save();
             return $member;
         } catch (QueryException $queryException) {
-            dd($queryException);
             report($queryException);
             return null;
         }
