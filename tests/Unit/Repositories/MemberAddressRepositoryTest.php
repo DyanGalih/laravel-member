@@ -56,6 +56,8 @@ class MemberAddressRepositoryTest extends TestCase
             $dummy = $this->container->make(MemberAddressRepositoryRequest::class);
             $user = $this->container->call([$this->userRepositoryTest, 'testStore']);
             $member = $this->container->call([$this->memberRepositoryTest, 'testStore']);
+            $dummy->code = $this->getFaker()->uuid;
+            $dummy->name = $this->getFaker()->domainName;
             $dummy->member_id = $member->id;
             $dummy->address = $this->getFaker()->text(65535);
             $dummy->city = $this->getFaker()->text(255);

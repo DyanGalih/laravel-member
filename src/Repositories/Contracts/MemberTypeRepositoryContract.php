@@ -62,4 +62,11 @@ interface MemberTypeRepositoryContract
      */
     public function getCount(MemberType $memberType, string $q = null): int;
 
+    /**
+     * @param string $name
+     * @param MemberType $memberType
+     * @return MemberType|null
+     */
+    public function getByName(string $name, MemberType $memberType): ?MemberType;
+
 }

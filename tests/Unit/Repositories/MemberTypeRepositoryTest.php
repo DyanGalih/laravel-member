@@ -42,7 +42,7 @@ class MemberTypeRepositoryTest extends TestCase
         try {
             $dummy = $this->container->make(MemberTypeRepositoryRequest::class);
             $dummy->name = $this->getFaker()->text(50);
-            
+
         } catch (BindingResolutionException $e) {
             report($e);
         }
@@ -61,6 +61,13 @@ class MemberTypeRepositoryTest extends TestCase
     {
         $memberType = $this->testStore();
         $result = $this->container->call([$this->memberTypeRepository, 'getById'], ['id' => $memberType->id]);
+        self::assertNotEquals(null, $result);
+    }
+
+    public function testGetByName()
+    {
+        $memberType = $this->testStore();
+        $result = $this->container->call([$this->memberTypeRepository, 'getByName'], ['name' => $memberType->name]);
         self::assertNotEquals(null, $result);
     }
 

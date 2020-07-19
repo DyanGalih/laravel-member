@@ -122,4 +122,12 @@ class MemberTypeRepository implements MemberTypeRepositoryContract
             ->getJoin($memberType, $q)
             ->count();
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getByName(string $name, MemberType $memberType): ?MemberType
+    {
+        return $this->getJoin($memberType)->where('name', $name)->first($this->getColumn());
+    }
 }

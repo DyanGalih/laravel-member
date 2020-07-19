@@ -17,6 +17,6 @@ use Illuminate\Database\Eloquent\Model;
 class MemberAddress extends Model
 {
     protected $table = 'member_addresses';
-    protected $fillable = ['id', 'member_id', 'address', 'city', 'state', 'post_code', 'country', 'isDefault'];
+    protected $fillable = ['id', 'code', 'name', 'member_id', 'address', 'city', 'state', 'post_code', 'country', 'isDefault'];
     protected $hidden = ['user_id', 'creator_id', 'owner_id', 'created_at', 'updated_at'];
 }

@@ -14,7 +14,19 @@ namespace WebAppId\Member\Repositories\Requests;
  */
 class MemberAddressRepositoryRequest
 {
-    
+
+    /**
+     * @var string
+     */
+
+    public $code;
+
+    /**
+     * @var string
+     */
+
+    public $name;
+
     /**
      * @var int
      */

@@ -14,6 +14,18 @@ namespace WebAppId\Member\Services\Requests;
  */
 class MemberAddressServiceRequest
 {
+
+    /**
+     * @var string
+     */
+
+    public $code;
+
+    /**
+     * @var string
+     */
+
+    public $name;
     
     /**
      * @var int
