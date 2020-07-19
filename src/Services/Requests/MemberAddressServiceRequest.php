@@ -16,6 +16,12 @@ class MemberAddressServiceRequest
 {
 
     /**
+     * @var int
+     */
+
+    public $type_id;
+
+    /**
      * @var string
      */
 

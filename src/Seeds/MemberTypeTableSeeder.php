@@ -15,7 +15,7 @@ use Illuminate\Database\Seeder;
  * Date: 04/07/2020
  * Time: 07.47
  * Class MemberTypeTableSeeder
- * @package ${NAMESPACE}
+ * @package WebAppId\Member\Seeds
  */
 class MemberTypeTableSeeder extends Seeder
 {

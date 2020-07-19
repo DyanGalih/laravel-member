@@ -37,6 +37,11 @@ class MemberAddressRepositoryTest extends TestCase
      */
     private $userRepositoryTest;
 
+    /**
+     * @var AddressTypeRepositoryTest
+     */
+    private $addressTypeRepositoryTest;
+
     public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
@@ -44,6 +49,7 @@ class MemberAddressRepositoryTest extends TestCase
             $this->memberAddressRepository = $this->container->make(MemberAddressRepository::class);
             $this->memberRepositoryTest = $this->container->make(MemberRepositoryTest::class);
             $this->userRepositoryTest = $this->container->make(UserRepositoryTest::class);
+            $this->addressTypeRepositoryTest = $this->container->make(AddressTypeRepositoryTest::class);
         } catch (BindingResolutionException $e) {
             report($e);
         }
@@ -56,6 +62,8 @@ class MemberAddressRepositoryTest extends TestCase
             $dummy = $this->container->make(MemberAddressRepositoryRequest::class);
             $user = $this->container->call([$this->userRepositoryTest, 'testStore']);
             $member = $this->container->call([$this->memberRepositoryTest, 'testStore']);
+            $addressType = $this->container->call([$this->addressTypeRepositoryTest, 'testStore']);
+            $dummy->type_id = $addressType->id;
             $dummy->code = $this->getFaker()->uuid;
             $dummy->name = $this->getFaker()->domainName;
             $dummy->member_id = $member->id;
