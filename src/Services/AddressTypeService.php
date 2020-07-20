@@ -85,6 +85,24 @@ class AddressTypeService extends BaseService implements AddressTypeServiceContra
     /**
      * @inheritDoc
      */
+    public function getByName(string $name, AddressTypeRepository $addressTypeRepository, AddressTypeServiceResponse $addressTypeServiceResponse): AddressTypeServiceResponse
+    {
+        $result = $this->container->call([$addressTypeRepository, 'getByName'], ['name' => $name]);
+        if ($result != null) {
+            $addressTypeServiceResponse->status = true;
+            $addressTypeServiceResponse->message = 'Data Found';
+            $addressTypeServiceResponse->addressType = $result;
+        } else {
+            $addressTypeServiceResponse->status = false;
+            $addressTypeServiceResponse->message = 'Data Not Found';
+        }
+
+        return $addressTypeServiceResponse;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function delete(int $id, AddressTypeRepository $addressTypeRepository): bool
     {
         return $this->container->call([$addressTypeRepository, 'delete'], ['id' => $id]);

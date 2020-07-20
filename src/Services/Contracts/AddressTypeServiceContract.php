@@ -48,6 +48,14 @@ interface AddressTypeServiceContract
     public function getById(int $id, AddressTypeRepository $addressTypeRepository, AddressTypeServiceResponse $addressTypeServiceResponse): AddressTypeServiceResponse;
 
     /**
+     * @param string $name
+     * @param AddressTypeRepository $addressTypeRepository
+     * @param AddressTypeServiceResponse $addressTypeServiceResponse
+     * @return AddressTypeServiceResponse
+     */
+    public function getByName(string $name, AddressTypeRepository $addressTypeRepository, AddressTypeServiceResponse $addressTypeServiceResponse): AddressTypeServiceResponse;
+
+    /**
      * @param int $id
      * @param AddressTypeRepository $addressTypeRepository
      * @return bool
@@ -61,12 +69,12 @@ interface AddressTypeServiceContract
      * @param int $length
      * @return AddressTypeServiceResponseList
      */
-    public function get(AddressTypeRepository $addressTypeRepository, AddressTypeServiceResponseList $addressTypeServiceResponseList,int $length = 12, string $q = null): AddressTypeServiceResponseList;
+    public function get(AddressTypeRepository $addressTypeRepository, AddressTypeServiceResponseList $addressTypeServiceResponseList, int $length = 12, string $q = null): AddressTypeServiceResponseList;
 
     /**
      * @param string $q
      * @param AddressTypeRepository $addressTypeRepository
      * @return int
      */
-    public function getCount(AddressTypeRepository $addressTypeRepository, string $q = null):int;
+    public function getCount(AddressTypeRepository $addressTypeRepository, string $q = null): int;
 }

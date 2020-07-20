@@ -83,9 +83,9 @@ class MemberRepositoryTest extends TestCase
             $dummy->name = $this->getFaker()->name;
             $dummy->email = $this->getFaker()->safeEmailDomain;
             $dummy->phone = $this->getFaker()->text(20);
-            $dummy->phone_alternative = $this->getFaker()->text(255);
+            $dummy->phone_alternative = $this->getFaker()->text(20);
             $dummy->sex = $sex;
-            $dummy->dob = $this->getFaker()->dateTime();
+            $dummy->dob = $this->getFaker()->dateTime()->format('Y-m-d');
             $dummy->timezone_id = $timeZone->id;
             $dummy->language_id = $language->id;
             $dummy->content_id = $content->id;

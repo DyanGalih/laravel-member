@@ -51,6 +51,13 @@ class AddressTypeServiceTest extends TestCase
         self::assertTrue($result->status);
     }
 
+    public function testGetByName()
+    {
+        $contentServiceResponse = $this->testStore();
+        $result = $this->container->call([$this->addressTypeService, 'getByName'], ['name' => $contentServiceResponse->addressType->name]);
+        self::assertTrue($result->status);
+    }
+
     private function getDummy(int $number = 0): AddressTypeServiceRequest
     {
         $addressTypeRepositoryRequest = $this->container->call([$this->addressTypeRepositoryTest, 'getDummy'], ['no' => $number]);
