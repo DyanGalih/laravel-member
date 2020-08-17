@@ -57,12 +57,12 @@ interface MemberRepositoryContract
                             int $ownerId = null): ?Member;
 
     /**
-     * @param int $id
+     * @param string $code
      * @param Member $member
      * @param int|null $ownerId
      * @return bool
      */
-    public function delete(int $id,
+    public function delete(string $code,
                            Member $member,
                            int $ownerId = null): bool;
 

@@ -6,8 +6,6 @@
 namespace WebAppId\Member\Services\Contracts;
 
 use WebAppId\Content\Repositories\CategoryRepository;
-use WebAppId\Content\Repositories\ContentRepository;
-use WebAppId\Content\Repositories\Requests\ContentRepositoryRequest;
 use WebAppId\Content\Services\ContentService;
 use WebAppId\Content\Services\Requests\ContentServiceRequest;
 use WebAppId\Member\Repositories\MemberRepository;
@@ -90,12 +88,12 @@ interface MemberServiceContract
                             int $ownerId = null): MemberServiceResponse;
 
     /**
-     * @param int $id
+     * @param string $code
      * @param MemberRepository $memberRepository
      * @param int|null $ownerId
      * @return bool
      */
-    public function delete(int $id,
+    public function delete(string $code,
                            MemberRepository $memberRepository,
                            int $ownerId = null): bool;
 

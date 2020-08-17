@@ -89,7 +89,7 @@ class MemberService extends BaseService implements MemberServiceContract
 
         $member = $this->container->call([$memberRepository, 'getByCode'], compact('code', 'ownerId'));
 
-        $code = $member->content_code;
+        $contentCode = $member->content_code;
 
         $category = $this->container->call([$categoryRepository, 'getByName'], ['name' => 'Profile']);
         if ($category != null) {
@@ -99,8 +99,8 @@ class MemberService extends BaseService implements MemberServiceContract
             $contentServiceRequest->content = '';
         }
 
-        $resultContent = $this->container->call([$contentService, 'update'], compact('code', 'contentServiceRequest', 'ownerId'));
-        
+        $resultContent = $this->container->call([$contentService, 'update'], ['code' => $contentCode, 'contentServiceRequest' => $contentServiceRequest, 'ownerId' => $ownerId]);
+
         $memberRepositoryRequest->content_id = $resultContent->content->id;
 
         $result = $this->container->call([$memberRepository, 'update'], compact('code', 'memberRepositoryRequest', 'ownerId'));
@@ -170,11 +170,11 @@ class MemberService extends BaseService implements MemberServiceContract
     /**
      * @inheritDoc
      */
-    public function delete(int $id,
+    public function delete(string $code,
                            MemberRepository $memberRepository,
                            int $ownerId = null): bool
     {
-        return $this->container->call([$memberRepository, 'delete'], compact('id', 'ownerId'));
+        return $this->container->call([$memberRepository, 'delete'], compact('code', 'ownerId'));
     }
 
     /**

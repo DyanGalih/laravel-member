@@ -164,14 +164,16 @@ class MemberRepository implements MemberRepositoryContract
     /**
      * @inheritDoc
      */
-    public function delete(int $id,
+    public function delete(string $code,
                            Member $member,
                            int $ownerId = null): bool
     {
         $member = $member
             ->when($ownerId != null, function ($query) use ($ownerId) {
                 return $query->where('members.owner_id', $ownerId);
-            })->find($id);
+            })
+            ->where('code', $code)
+            ->first();
         if ($member != null) {
             return $member->delete();
         } else {
