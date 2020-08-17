@@ -80,6 +80,7 @@ class MemberRepositoryTest extends TestCase
             $user = $this->container->call([$this->userRepositoryTest, 'testStore']);
             $dummy->identity_type_id = $identityType->id;
             $dummy->identity = $this->getFaker()->uuid;
+            $dummy->profile_id = $user->id;
             $dummy->name = $this->getFaker()->name;
             $dummy->email = $this->getFaker()->safeEmailDomain;
             $dummy->phone = $this->getFaker()->text(20);
