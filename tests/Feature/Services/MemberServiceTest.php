@@ -70,17 +70,17 @@ class MemberServiceTest extends TestCase
 
     }
 
-    public function testGetByIdentity()
+    public function testGetByCode()
     {
-        $contentServiceResponse = $this->testStore();
-        $result = $this->container->call([$this->memberService, 'getByIdentity'], ['identity' => $contentServiceResponse->member->identity]);
+        $memberServiceResponse = $this->testStore();
+        $result = $this->container->call([$this->memberService, 'getByCode'], ['code' => $memberServiceResponse->member->code, 'ownerId' => $this->getFaker()->boolean ? $memberServiceResponse->member->owner_id : null]);
         self::assertTrue($result->status);
     }
 
     public function testGetById()
     {
-        $contentServiceResponse = $this->testStore();
-        $result = $this->container->call([$this->memberService, 'getById'], ['id' => $contentServiceResponse->member->id]);
+        $memberServiceResponse = $this->testStore();
+        $result = $this->container->call([$this->memberService, 'getById'], ['id' => $memberServiceResponse->member->id, 'ownerId' => $this->getFaker()->boolean ? $memberServiceResponse->member->owner_id : null]);
         self::assertTrue($result->status);
     }
 
@@ -133,57 +133,57 @@ class MemberServiceTest extends TestCase
     public function testGet()
     {
         for ($i = 0; $i < $this->getFaker()->numberBetween(10, $this->getFaker()->numberBetween(10, 30)); $i++) {
-            $this->testStore($i);
+            $memberServiceResponse = $this->testStore($i);
         }
-        $result = $this->container->call([$this->memberService, 'get']);
+        $result = $this->container->call([$this->memberService, 'get'],['ownerId' => $this->getFaker()->boolean ? $memberServiceResponse->member->owner_id : null]);
         self::assertTrue($result->status);
     }
 
     public function testGetCount()
     {
         for ($i = 0; $i < $this->getFaker()->numberBetween(10, $this->getFaker()->numberBetween(10, 30)); $i++) {
-            $this->testStore($i);
+            $memberServiceResponse = $this->testStore($i);
         }
-        $result = $this->container->call([$this->memberService, 'getCount']);
+        $result = $this->container->call([$this->memberService, 'getCount'], ['ownerId' => $this->getFaker()->boolean ? $memberServiceResponse->member->owner_id : null]);
         self::assertGreaterThanOrEqual(1, $result);
     }
 
     public function testUpdate()
     {
-        $contentServiceResponse = $this->testStore();
+        $memberServiceResponse = $this->testStore();
         $memberServiceRequest = $this->getDummy();
         $contentServiceRequest = $this->getDummyContent();
-        $contentServiceRequest->code = $contentServiceResponse->member->content;
-        $result = $this->container->call([$this->memberService, 'update'], ['id' => $contentServiceResponse->member->id, 'memberServiceRequest' => $memberServiceRequest, 'contentServiceRequest' => $contentServiceRequest]);
+        $contentServiceRequest->code = $memberServiceResponse->member->content;
+        $result = $this->container->call([$this->memberService, 'update'], ['code' => $memberServiceResponse->member->code, 'memberServiceRequest' => $memberServiceRequest, 'contentServiceRequest' => $contentServiceRequest, 'ownerId' => $this->getFaker()->boolean ? $memberServiceResponse->member->owner_id : null]);
         self::assertNotEquals(null, $result);
     }
 
     public function testDelete()
     {
-        $contentServiceResponse = $this->testStore();
-        $result = $this->container->call([$this->memberService, 'delete'], ['id' => $contentServiceResponse->member->id]);
+        $memberServiceResponse = $this->testStore();
+        $result = $this->container->call([$this->memberService, 'delete'], ['id' => $memberServiceResponse->member->id,'ownerId' => $this->getFaker()->boolean ? $memberServiceResponse->member->owner_id : null]);
         self::assertTrue($result);
     }
 
     public function testGetWhere()
     {
         for ($i = 0; $i < $this->getFaker()->numberBetween(10, $this->getFaker()->numberBetween(10, 30)); $i++) {
-            $this->testStore($i);
+            $memberServiceResponse = $this->testStore($i);
         }
         $string = 'aiueo';
         $q = $string[$this->getFaker()->numberBetween(0, strlen($string) - 1)];
-        $result = $this->container->call([$this->memberService, 'get'], ['q' => $q]);
+        $result = $this->container->call([$this->memberService, 'get'], ['q' => $q, 'ownerId' => $this->getFaker()->boolean ? $memberServiceResponse->member->owner_id : null]);
         self::assertTrue($result->status);
     }
 
     public function testGetWhereCount()
     {
         for ($i = 0; $i < $this->getFaker()->numberBetween(10, $this->getFaker()->numberBetween(10, 30)); $i++) {
-            $this->testStore($i);
+            $memberServiceResponse = $this->testStore($i);
         }
         $string = 'aiueo';
         $q = $string[$this->getFaker()->numberBetween(0, strlen($string) - 1)];
-        $result = $this->container->call([$this->memberService, 'getCount'], ['q' => $q]);
+        $result = $this->container->call([$this->memberService, 'getCount'], ['q' => $q, 'ownerId' => $this->getFaker()->boolean ? $memberServiceResponse->member->owner_id : null]);
         self::assertGreaterThanOrEqual(1, $result);
     }
 }

@@ -101,7 +101,7 @@ class MemberTypeService extends BaseService implements MemberTypeServiceContract
             $memberTypeServiceResponseList->message = 'Data Found';
             $memberTypeServiceResponseList->memberTypeList = $result;
             $memberTypeServiceResponseList->count = $this->container->call([$memberTypeRepository, 'getCount']);
-            $memberTypeServiceResponseList->countFiltered = $this->container->call([$memberTypeRepository, 'getCount'], ['q' => $q]);
+            $memberTypeServiceResponseList->countFiltered = $result->total();
         } else {
             $memberTypeServiceResponseList->status = false;
             $memberTypeServiceResponseList->message = 'Data Not Found';

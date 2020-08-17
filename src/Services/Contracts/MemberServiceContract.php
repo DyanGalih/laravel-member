@@ -44,60 +44,81 @@ interface MemberServiceContract
                           MemberServiceResponse $memberServiceResponse): MemberServiceResponse;
 
     /**
-     * @param int $id
+     * @param string $code
      * @param MemberServiceRequest $memberServiceRequest
      * @param ContentServiceRequest $contentServiceRequest
      * @param MemberRepositoryRequest $memberRepositoryRequest
      * @param ContentService $contentService
+     * @param CategoryRepository $categoryRepository
      * @param MemberRepository $memberRepository
      * @param MemberServiceResponse $memberServiceResponse
+     * @param int|null $ownerId
      * @return MemberServiceResponse
      */
-    public function update(int $id,
+    public function update(string $code,
                            MemberServiceRequest $memberServiceRequest,
                            ContentServiceRequest $contentServiceRequest,
                            MemberRepositoryRequest $memberRepositoryRequest,
                            ContentService $contentService,
                            CategoryRepository $categoryRepository,
                            MemberRepository $memberRepository,
-                           MemberServiceResponse $memberServiceResponse): MemberServiceResponse;
+                           MemberServiceResponse $memberServiceResponse,
+                           int $ownerId = null): MemberServiceResponse;
 
     /**
-     * @param string $identity
+     * @param string $code
      * @param MemberRepository $memberRepository
      * @param MemberServiceResponse $memberServiceResponse
+     * @param int|null $ownerId
      * @return MemberServiceResponse
      */
-    public function getByIdentity(string $identity, MemberRepository $memberRepository, MemberServiceResponse $memberServiceResponse): MemberServiceResponse;
+    public function getByCode(string $code,
+                              MemberRepository $memberRepository,
+                              MemberServiceResponse $memberServiceResponse,
+                              int $ownerId = null): MemberServiceResponse;
 
     /**
      * @param int $id
      * @param MemberRepository $memberRepository
      * @param MemberServiceResponse $memberServiceResponse
+     * @param int|null $ownerId
      * @return MemberServiceResponse
      */
-    public function getById(int $id, MemberRepository $memberRepository, MemberServiceResponse $memberServiceResponse): MemberServiceResponse;
+    public function getById(int $id,
+                            MemberRepository $memberRepository,
+                            MemberServiceResponse $memberServiceResponse,
+                            int $ownerId = null): MemberServiceResponse;
 
     /**
      * @param int $id
      * @param MemberRepository $memberRepository
+     * @param int|null $ownerId
      * @return bool
      */
-    public function delete(int $id, MemberRepository $memberRepository): bool;
+    public function delete(int $id,
+                           MemberRepository $memberRepository,
+                           int $ownerId = null): bool;
 
     /**
-     * @param string $q
      * @param MemberRepository $memberRepository
      * @param MemberServiceResponseList $memberServiceResponseList
      * @param int $length
+     * @param string|null $q
+     * @param int|null $ownerId
      * @return MemberServiceResponseList
      */
-    public function get(MemberRepository $memberRepository, MemberServiceResponseList $memberServiceResponseList,int $length = 12, string $q = null): MemberServiceResponseList;
+    public function get(MemberRepository $memberRepository,
+                        MemberServiceResponseList $memberServiceResponseList,
+                        int $length = 12,
+                        string $q = null,
+                        int $ownerId = null): MemberServiceResponseList;
 
     /**
-     * @param string $q
      * @param MemberRepository $memberRepository
+     * @param string|null $q
+     * @param int|null $ownerId
      * @return int
      */
-    public function getCount(MemberRepository $memberRepository, string $q = null):int;
+    public function getCount(MemberRepository $memberRepository,
+                             string $q = null, int $ownerId = null): int;
 }

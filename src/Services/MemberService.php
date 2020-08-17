@@ -74,19 +74,20 @@ class MemberService extends BaseService implements MemberServiceContract
     /**
      * @inheritDoc
      */
-    public function update(int $id,
+    public function update(string $code,
                            MemberServiceRequest $memberServiceRequest,
                            ContentServiceRequest $contentServiceRequest,
                            MemberRepositoryRequest $memberRepositoryRequest,
                            ContentService $contentService,
                            CategoryRepository $categoryRepository,
                            MemberRepository $memberRepository,
-                           MemberServiceResponse $memberServiceResponse): MemberServiceResponse
+                           MemberServiceResponse $memberServiceResponse,
+                           int $ownerId = null): MemberServiceResponse
     {
         DB::beginTransaction();
         $memberRepositoryRequest = Lazy::copy($memberServiceRequest, $memberRepositoryRequest);
 
-        $member = $this->container->call([$memberRepository, 'getById'], compact('id'));
+        $member = $this->container->call([$memberRepository, 'getByCode'], compact('code', 'ownerId'));
 
         $code = $member->content_code;
 
@@ -98,11 +99,11 @@ class MemberService extends BaseService implements MemberServiceContract
             $contentServiceRequest->content = '';
         }
 
-        $resultContent = $this->container->call([$contentService, 'update'], compact('code', 'contentServiceRequest'));
+        $resultContent = $this->container->call([$contentService, 'update'], compact('code', 'contentServiceRequest', 'ownerId'));
         
         $memberRepositoryRequest->content_id = $resultContent->content->id;
 
-        $result = $this->container->call([$memberRepository, 'update'], ['id' => $id, 'memberRepositoryRequest' => $memberRepositoryRequest]);
+        $result = $this->container->call([$memberRepository, 'update'], compact('code', 'memberRepositoryRequest', 'ownerId'));
 
         if ($result != null) {
             $memberServiceResponse->status = true;
@@ -125,9 +126,12 @@ class MemberService extends BaseService implements MemberServiceContract
     /**
      * @inheritDoc
      */
-    public function getByIdentity(string $identity, MemberRepository $memberRepository, MemberServiceResponse $memberServiceResponse): MemberServiceResponse
+    public function getByCode(string $code,
+                              MemberRepository $memberRepository,
+                              MemberServiceResponse $memberServiceResponse,
+                              int $ownerId = null): MemberServiceResponse
     {
-        $result = $this->container->call([$memberRepository, 'getByIdentity'], ['identity' => $identity]);
+        $result = $this->container->call([$memberRepository, 'getByCode'], compact('code', 'ownerId'));
         if ($result != null) {
             $memberServiceResponse->status = true;
             $memberServiceResponse->message = 'Data Found';
@@ -144,9 +148,12 @@ class MemberService extends BaseService implements MemberServiceContract
     /**
      * @inheritDoc
      */
-    public function getById(int $id, MemberRepository $memberRepository, MemberServiceResponse $memberServiceResponse): MemberServiceResponse
+    public function getById(int $id,
+                            MemberRepository $memberRepository,
+                            MemberServiceResponse $memberServiceResponse,
+                            int $ownerId = null): MemberServiceResponse
     {
-        $result = $this->container->call([$memberRepository, 'getById'], compact('id'));
+        $result = $this->container->call([$memberRepository, 'getById'], compact('id', 'ownerId'));
         if ($result != null) {
             $memberServiceResponse->status = true;
             $memberServiceResponse->message = 'Data Found';
@@ -163,23 +170,29 @@ class MemberService extends BaseService implements MemberServiceContract
     /**
      * @inheritDoc
      */
-    public function delete(int $id, MemberRepository $memberRepository): bool
+    public function delete(int $id,
+                           MemberRepository $memberRepository,
+                           int $ownerId = null): bool
     {
-        return $this->container->call([$memberRepository, 'delete'], ['id' => $id]);
+        return $this->container->call([$memberRepository, 'delete'], compact('id', 'ownerId'));
     }
 
     /**
      * @inheritDoc
      */
-    public function get(MemberRepository $memberRepository, MemberServiceResponseList $memberServiceResponseList, int $length = 12, string $q = null): MemberServiceResponseList
+    public function get(MemberRepository $memberRepository,
+                        MemberServiceResponseList $memberServiceResponseList,
+                        int $length = 12,
+                        string $q = null,
+                        int $ownerId = null): MemberServiceResponseList
     {
-        $result = $this->container->call([$memberRepository, 'get'], ['q' => $q]);
+        $result = $this->container->call([$memberRepository, 'get'], compact('q', 'ownerId'));
         if (count($result) > 0) {
             $memberServiceResponseList->status = true;
             $memberServiceResponseList->message = 'Data Found';
             $memberServiceResponseList->memberList = $result;
-            $memberServiceResponseList->count = $this->container->call([$memberRepository, 'getCount']);
-            $memberServiceResponseList->countFiltered = $this->container->call([$memberRepository, 'getCount'], ['q' => $q]);
+            $memberServiceResponseList->count = $this->container->call([$memberRepository, 'getCount'], compact('ownerId'));
+            $memberServiceResponseList->countFiltered = $result->total();
         } else {
             $memberServiceResponseList->status = false;
             $memberServiceResponseList->message = 'Data Not Found';
@@ -190,8 +203,10 @@ class MemberService extends BaseService implements MemberServiceContract
     /**
      * @inheritDoc
      */
-    public function getCount(MemberRepository $memberRepository, string $q = null): int
+    public function getCount(MemberRepository $memberRepository,
+                             string $q = null,
+                             int $ownerId = null): int
     {
-        return $this->container->call([$memberRepository, 'getCount'], ['q' => $q]);
+        return $this->container->call([$memberRepository, 'getCount'], compact('ownerId', 'q'));
     }
 }

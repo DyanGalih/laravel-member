@@ -130,7 +130,7 @@ class MemberAddressService extends BaseService implements MemberAddressServiceCo
             $memberAddressServiceResponseList->message = 'Data Found';
             $memberAddressServiceResponseList->memberAddressList = $result;
             $memberAddressServiceResponseList->count = $this->container->call([$memberAddressRepository, 'getCount'], compact('identity'));
-            $memberAddressServiceResponseList->countFiltered = $this->container->call([$memberAddressRepository, 'getCount'], compact('q', 'identity'));
+            $memberAddressServiceResponseList->countFiltered = $result->total();
         } else {
             $memberAddressServiceResponseList->status = false;
             $memberAddressServiceResponseList->message = 'Data Not Found';

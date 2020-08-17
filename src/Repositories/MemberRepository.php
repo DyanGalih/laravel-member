@@ -6,6 +6,7 @@
 namespace WebAppId\Member\Repositories;
 
 use Illuminate\Support\Facades\DB;
+use Ramsey\Uuid\Uuid;
 use WebAppId\Member\Models\Member;
 use WebAppId\Member\Repositories\Contracts\MemberRepositoryContract;
 use WebAppId\Member\Repositories\Requests\MemberRepositoryRequest;
@@ -30,10 +31,12 @@ class MemberRepository implements MemberRepositoryContract
     {
         try {
             $member = Lazy::copy($memberRepositoryRequest, $member);
+            $member->code = Uuid::uuid4()->toString();
             $member->save();
             return $member;
         } catch (QueryException $queryException) {
             report($queryException);
+            dd($queryException);
             return null;
         }
     }
@@ -61,6 +64,7 @@ class MemberRepository implements MemberRepositoryContract
     {
         return [
             'members.id',
+            'members.code',
             'members.identity_type_id',
             'members.identity',
             'members.name',
@@ -104,9 +108,17 @@ class MemberRepository implements MemberRepositoryContract
     /**
      * @inheritDoc
      */
-    public function update(int $id, MemberRepositoryRequest $memberRepositoryRequest, Member $member): ?Member
+    public function update(string $code,
+                           MemberRepositoryRequest $memberRepositoryRequest,
+                           Member $member,
+                           int $ownerId = null): ?Member
     {
-        $member = $member->find($id);
+        $member = $member
+            ->where('code', $code)
+            ->when($ownerId != null, function ($query) use ($ownerId) {
+                return $query->where('members.owner_id', $ownerId);
+            })
+            ->first();
         if ($member != null) {
             try {
                 $member = Lazy::copy($memberRepositoryRequest, $member);
@@ -122,25 +134,44 @@ class MemberRepository implements MemberRepositoryContract
     /**
      * @inheritDoc
      */
-    public function getByIdentity(string $identity, Member $member): ?Member
+    public function getByCode(string $code,
+                              Member $member,
+                              int $ownerId = null): ?Member
     {
-        return $this->getJoin($member)->where('identity', $identity)->first($this->getColumn());
+        return $this->getJoin($member)
+            ->where('members.code', $code)
+            ->when($ownerId != null, function ($query) use ($ownerId) {
+                return $query->where('members.owner_id', $ownerId);
+            })
+            ->first($this->getColumn());
     }
 
     /**
      * @inheritDoc
      */
-    public function getById(int $id, Member $member): ?Member
+    public function getById(int $id,
+                            Member $member,
+                            int $ownerId = null): ?Member
     {
-        return $this->getJoin($member)->find($id, $this->getColumn());
+        return $this
+            ->getJoin($member)
+            ->when($ownerId != null, function ($query) use ($ownerId) {
+                return $query->where('members.owner_id', $ownerId);
+            })
+            ->find($id, $this->getColumn());
     }
 
     /**
      * @inheritDoc
      */
-    public function delete(int $id, Member $member): bool
+    public function delete(int $id,
+                           Member $member,
+                           int $ownerId = null): bool
     {
-        $member = $member->find($id);
+        $member = $member
+            ->when($ownerId != null, function ($query) use ($ownerId) {
+                return $query->where('members.owner_id', $ownerId);
+            })->find($id);
         if ($member != null) {
             return $member->delete();
         } else {
@@ -151,20 +182,31 @@ class MemberRepository implements MemberRepositoryContract
     /**
      * @inheritDoc
      */
-    public function get(Member $member, int $length = 12, string $q = null): LengthAwarePaginator
+    public function get(Member $member,
+                        int $length = 12,
+                        string $q = null,
+                        int $ownerId = null): LengthAwarePaginator
     {
         return $this
             ->getJoin($member, $q)
+            ->when($ownerId != null, function ($query) use ($ownerId) {
+                return $query->where('members.owner_id', $ownerId);
+            })
             ->paginate($length, $this->getColumn());
     }
 
     /**
      * @inheritDoc
      */
-    public function getCount(Member $member, string $q = null): int
+    public function getCount(Member $member,
+                             string $q = null,
+                             int $ownerId = null): int
     {
         return $this
             ->getJoin($member, $q)
+            ->when($ownerId != null, function ($query) use ($ownerId) {
+                return $query->where('members.owner_id', $ownerId);
+            })
             ->count();
     }
 

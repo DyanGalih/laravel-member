@@ -119,7 +119,7 @@ class AddressTypeService extends BaseService implements AddressTypeServiceContra
             $addressTypeServiceResponseList->message = 'Data Found';
             $addressTypeServiceResponseList->addressTypeList = $result;
             $addressTypeServiceResponseList->count = $this->container->call([$addressTypeRepository, 'getCount']);
-            $addressTypeServiceResponseList->countFiltered = $this->container->call([$addressTypeRepository, 'getCount'], ['q' => $q]);
+            $addressTypeServiceResponseList->countFiltered = $result->total();
         } else {
             $addressTypeServiceResponseList->status = false;
             $addressTypeServiceResponseList->message = 'Data Not Found';

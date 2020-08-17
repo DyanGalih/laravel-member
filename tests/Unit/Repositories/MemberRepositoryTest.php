@@ -107,44 +107,44 @@ class MemberRepositoryTest extends TestCase
         return $result;
     }
 
-    public function testGetByIdentity()
+    public function testGetByCode()
     {
         $member = $this->testStore();
-        $result = $this->container->call([$this->memberRepository, 'getByIdentity'], ['identity' => $member->identity]);
+        $result = $this->container->call([$this->memberRepository, 'getByCode'], ['code' => $member->code, 'ownerId' => $this->getFaker()->boolean ? $member->owner_id : null]);
         self::assertNotEquals(null, $result);
     }
 
     public function testGetById()
     {
         $member = $this->testStore();
-        $result = $this->container->call([$this->memberRepository, 'getById'], ['id' => $member->id]);
+        $result = $this->container->call([$this->memberRepository, 'getById'], ['id' => $member->id, 'ownerId' => $this->getFaker()->boolean ? $member->owner_id : null]);
         self::assertNotEquals(null, $result);
     }
 
     public function testDelete()
     {
         $member = $this->testStore();
-        $result = $this->container->call([$this->memberRepository, 'delete'], ['id' => $member->id]);
+        $result = $this->container->call([$this->memberRepository, 'delete'], ['id' => $member->id, 'ownerId' => $this->getFaker()->boolean ? $member->owner_id : null]);
         self::assertTrue($result);
     }
 
     public function testGet()
     {
         for ($i = 0; $i < $this->getFaker()->numberBetween(10, $this->getFaker()->numberBetween(10, 30)); $i++) {
-            $this->testStore($i);
+            $member = $this->testStore($i);
         }
 
-        $resultList = $this->container->call([$this->memberRepository, 'get']);
+        $resultList = $this->container->call([$this->memberRepository, 'get'], ['ownerId' => $this->getFaker()->boolean ? $member->owner_id : null]);
         self::assertGreaterThanOrEqual(1, count($resultList));
     }
 
     public function testGetCount()
     {
         for ($i = 0; $i < $this->getFaker()->numberBetween(10, $this->getFaker()->numberBetween(10, 30)); $i++) {
-            $this->testStore($i);
+            $member = $this->testStore($i);
         }
 
-        $result = $this->container->call([$this->memberRepository, 'getCount']);
+        $result = $this->container->call([$this->memberRepository, 'getCount'], ['ownerId' => $this->getFaker()->boolean ? $member->owner_id : null]);
         self::assertGreaterThanOrEqual(1, $result);
     }
 
@@ -152,7 +152,13 @@ class MemberRepositoryTest extends TestCase
     {
         $member = $this->testStore();
         $memberRepositoryRequest = $this->getDummy(1);
-        $result = $this->container->call([$this->memberRepository, 'update'], ['id' => $member->id, 'memberRepositoryRequest' => $memberRepositoryRequest]);
+        $ownerId = $this->getFaker()->boolean ? $member->owner_id : null;
+        $result = $this->container->call([$this->memberRepository, 'update'],
+            [
+                'code' => $member->code,
+                'memberRepositoryRequest' => $memberRepositoryRequest,
+                'ownerId' => $this->getFaker()->boolean ? $member->owner_id : null
+            ]);
         self::assertNotEquals(null, $result);
     }
 
@@ -203,7 +209,7 @@ class MemberRepositoryTest extends TestCase
         $this->container->call([$this->memberRepository, 'store'], ['memberRepositoryRequest' => $memberRepositoryRequest]);
         $memberRepositoryRequest = $this->getDummy();
         $member = $this->container->call([$this->memberRepository, 'store'], ['memberRepositoryRequest' => $memberRepositoryRequest]);
-        $result = $this->container->call([$this->memberRepository, 'checkAvailableEmail'], ['email' => $email, 'memberId' => $member->id]);
+        $result = $this->container->call([$this->memberRepository, 'checkAvailableEmail'], ['email' => $this->getFaker()->email, 'memberId' => $member->id]);
         self::assertTrue($result);
     }
 }

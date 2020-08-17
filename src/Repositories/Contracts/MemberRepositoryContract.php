@@ -26,48 +26,67 @@ interface MemberRepositoryContract
     public function store(MemberRepositoryRequest $dummyRepositoryClassRequest, Member $member): ?Member;
 
     /**
-     * @param int $int
+     * @param string $code
      * @param MemberRepositoryRequest $dummyRepositoryClassRequest
      * @param Member $member
+     * @param int|null $ownerId
      * @return Member|null
      */
-    public function update(int $int, MemberRepositoryRequest $dummyRepositoryClassRequest, Member $member): ?Member;
+    public function update(string $code,
+                           MemberRepositoryRequest $dummyRepositoryClassRequest,
+                           Member $member,
+                           int $ownerId = null): ?Member;
 
     /**
-     * @param string $identity
+     * @param string $code
      * @param Member $member
+     * @param int|null $ownerId
      * @return Member|null
      */
-    public function getByIdentity(string $identity, Member $member): ?Member;
+    public function getByCode(string $code,
+                              Member $member,
+                              int $ownerId = null): ?Member;
 
     /**
      * @param int $id
      * @param Member $member
+     * @param int|null $ownerId
      * @return Member|null
      */
-    public function getById(int $id, Member $member): ?Member;
+    public function getById(int $id, Member $member,
+                            int $ownerId = null): ?Member;
 
     /**
      * @param int $id
      * @param Member $member
+     * @param int|null $ownerId
      * @return bool
      */
-    public function delete(int $id, Member $member): bool;
+    public function delete(int $id,
+                           Member $member,
+                           int $ownerId = null): bool;
 
     /**
      * @param Member $member
      * @param int $length
-     * @param string $q
+     * @param string|null $q
+     * @param int|null $ownerId
      * @return LengthAwarePaginator
      */
-    public function get(Member $member, int $length = 12, string $q = null): LengthAwarePaginator;
+    public function get(Member $member,
+                        int $length = 12,
+                        string $q = null,
+                        int $ownerId = null): LengthAwarePaginator;
 
     /**
      * @param Member $member
+     * @param string|null $q
+     * @param int|null $ownerId
      * @return int
-     * @param string $q
      */
-    public function getCount(Member $member, string $q = null): int;
+    public function getCount(Member $member,
+                             string $q = null,
+                             int $ownerId = null): int;
 
     /**
      * @param Member $member
@@ -75,7 +94,9 @@ interface MemberRepositoryContract
      * @param string $memberId
      * @return bool
      */
-    public function checkAvailableIdentity(Member $member, string $identity, string $memberId): bool ;
+    public function checkAvailableIdentity(Member $member,
+                                           string $identity,
+                                           string $memberId): bool;
 
     /**
      * @param Member $member
@@ -83,5 +104,5 @@ interface MemberRepositoryContract
      * @param string $memberId
      * @return bool
      */
-    public function checkAvailableEmail(Member $member, string $email, string $memberId): bool ;
+    public function checkAvailableEmail(Member $member, string $email, string $memberId): bool;
 }

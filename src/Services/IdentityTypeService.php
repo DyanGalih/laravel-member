@@ -96,12 +96,13 @@ class IdentityTypeService extends BaseService implements IdentityTypeServiceCont
     public function get(IdentityTypeRepository $identityTypeRepository, IdentityTypeServiceResponseList $identityTypeServiceResponseList, int $length = 12, string $q = null): IdentityTypeServiceResponseList
     {
         $result = $this->container->call([$identityTypeRepository, 'get'], ['q' => $q]);
+        
         if (count($result) > 0) {
             $identityTypeServiceResponseList->status = true;
             $identityTypeServiceResponseList->message = 'Data Found';
             $identityTypeServiceResponseList->identityTypeList = $result;
             $identityTypeServiceResponseList->count = $this->container->call([$identityTypeRepository, 'getCount']);
-            $identityTypeServiceResponseList->countFiltered = $this->container->call([$identityTypeRepository, 'getCount'], ['q' => $q]);
+            $identityTypeServiceResponseList->countFiltered = $result->total();
         } else {
             $identityTypeServiceResponseList->status = false;
             $identityTypeServiceResponseList->message = 'Data Not Found';
