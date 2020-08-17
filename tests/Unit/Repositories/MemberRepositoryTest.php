@@ -124,13 +124,13 @@ class MemberRepositoryTest extends TestCase
     public function testDelete()
     {
         $member = $this->testStore();
-        $result = $this->container->call([$this->memberRepository, 'delete'], ['id' => $member->id, 'ownerId' => $this->getFaker()->boolean ? $member->owner_id : null]);
+        $result = $this->container->call([$this->memberRepository, 'delete'], ['code' => $member->code, 'ownerId' => $this->getFaker()->boolean ? $member->owner_id : null]);
         self::assertTrue($result);
     }
 
     public function testGet()
     {
-        for ($i = 0; $i < $this->getFaker()->numberBetween(10, $this->getFaker()->numberBetween(10, 30)); $i++) {
+        for ($i = 0; $i < $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10)); $i++) {
             $member = $this->testStore($i);
         }
 
@@ -140,7 +140,7 @@ class MemberRepositoryTest extends TestCase
 
     public function testGetCount()
     {
-        for ($i = 0; $i < $this->getFaker()->numberBetween(10, $this->getFaker()->numberBetween(10, 30)); $i++) {
+        for ($i = 0; $i < $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10)); $i++) {
             $member = $this->testStore($i);
         }
 
@@ -164,7 +164,7 @@ class MemberRepositoryTest extends TestCase
 
     public function testGetWhere()
     {
-        for ($i = 0; $i < $this->getFaker()->numberBetween(10, $this->getFaker()->numberBetween(10, 30)); $i++) {
+        for ($i = 0; $i < $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10)); $i++) {
             $this->testStore($i);
         }
         $string = 'aiueo';
@@ -175,7 +175,7 @@ class MemberRepositoryTest extends TestCase
 
     public function testGetWhereCount()
     {
-        for ($i = 0; $i < $this->getFaker()->numberBetween(10, $this->getFaker()->numberBetween(10, 30)); $i++) {
+        for ($i = 0; $i < $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10)); $i++) {
             $this->testStore($i);
         }
         $string = 'aiueo';

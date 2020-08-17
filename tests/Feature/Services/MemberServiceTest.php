@@ -132,7 +132,7 @@ class MemberServiceTest extends TestCase
 
     public function testGet()
     {
-        for ($i = 0; $i < $this->getFaker()->numberBetween(10, $this->getFaker()->numberBetween(10, 30)); $i++) {
+        for ($i = 0; $i < $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10)); $i++) {
             $memberServiceResponse = $this->testStore($i);
         }
         $result = $this->container->call([$this->memberService, 'get'],['ownerId' => $this->getFaker()->boolean ? $memberServiceResponse->member->owner_id : null]);
@@ -141,7 +141,7 @@ class MemberServiceTest extends TestCase
 
     public function testGetCount()
     {
-        for ($i = 0; $i < $this->getFaker()->numberBetween(10, $this->getFaker()->numberBetween(10, 30)); $i++) {
+        for ($i = 0; $i < $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10)); $i++) {
             $memberServiceResponse = $this->testStore($i);
         }
         $result = $this->container->call([$this->memberService, 'getCount'], ['ownerId' => $this->getFaker()->boolean ? $memberServiceResponse->member->owner_id : null]);
@@ -161,13 +161,13 @@ class MemberServiceTest extends TestCase
     public function testDelete()
     {
         $memberServiceResponse = $this->testStore();
-        $result = $this->container->call([$this->memberService, 'delete'], ['id' => $memberServiceResponse->member->id,'ownerId' => $this->getFaker()->boolean ? $memberServiceResponse->member->owner_id : null]);
+        $result = $this->container->call([$this->memberService, 'delete'], ['code' => $memberServiceResponse->member->code,'ownerId' => $this->getFaker()->boolean ? $memberServiceResponse->member->owner_id : null]);
         self::assertTrue($result);
     }
 
     public function testGetWhere()
     {
-        for ($i = 0; $i < $this->getFaker()->numberBetween(10, $this->getFaker()->numberBetween(10, 30)); $i++) {
+        for ($i = 0; $i < $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10)); $i++) {
             $memberServiceResponse = $this->testStore($i);
         }
         $string = 'aiueo';
@@ -178,7 +178,7 @@ class MemberServiceTest extends TestCase
 
     public function testGetWhereCount()
     {
-        for ($i = 0; $i < $this->getFaker()->numberBetween(10, $this->getFaker()->numberBetween(10, 30)); $i++) {
+        for ($i = 0; $i < $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10)); $i++) {
             $memberServiceResponse = $this->testStore($i);
         }
         $string = 'aiueo';

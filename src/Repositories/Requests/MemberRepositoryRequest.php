@@ -84,5 +84,9 @@ class MemberRepositoryRequest
      * @var int
      */
     public $owner_id;
-                
+
+    /**
+     * @var int
+     */
+    public $profile_id;
 }

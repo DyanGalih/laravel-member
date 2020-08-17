@@ -84,4 +84,9 @@ class MemberServiceRequest
      * @var int
      */
     public $user_id;
+
+    /**
+     * @var int
+     */
+    public $profile_id;
 }
