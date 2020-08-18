@@ -149,6 +149,21 @@ class MemberRepository implements MemberRepositoryContract
     /**
      * @inheritDoc
      */
+    public function getByProfileId(int $profileId,
+                              Member $member,
+                              int $ownerId = null): ?Member
+    {
+        return $this->getJoin($member)
+            ->where('members.profile_id', $profileId)
+            ->when($ownerId != null, function ($query) use ($ownerId) {
+                return $query->where('members.owner_id', $ownerId);
+            })
+            ->first($this->getColumn());
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getById(int $id,
                             Member $member,
                             int $ownerId = null): ?Member

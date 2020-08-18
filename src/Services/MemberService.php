@@ -148,6 +148,28 @@ class MemberService extends BaseService implements MemberServiceContract
     /**
      * @inheritDoc
      */
+    public function getByProfileId(int $profileId,
+                              MemberRepository $memberRepository,
+                              MemberServiceResponse $memberServiceResponse,
+                              int $ownerId = null): MemberServiceResponse
+    {
+        $result = $this->container->call([$memberRepository, 'getByProfileId'], compact('profileId', 'ownerId'));
+        if ($result != null) {
+            $memberServiceResponse->status = true;
+            $memberServiceResponse->message = 'Data Found';
+            $memberServiceResponse->member = $result;
+            $memberServiceResponse->addressList = $result->addresses;
+        } else {
+            $memberServiceResponse->status = false;
+            $memberServiceResponse->message = 'Data Not Found';
+        }
+
+        return $memberServiceResponse;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getById(int $id,
                             MemberRepository $memberRepository,
                             MemberServiceResponse $memberServiceResponse,

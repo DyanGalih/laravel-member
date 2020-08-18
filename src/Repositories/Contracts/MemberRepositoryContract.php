@@ -48,6 +48,16 @@ interface MemberRepositoryContract
                               int $ownerId = null): ?Member;
 
     /**
+     * @param int $profileId
+     * @param Member $member
+     * @param int|null $ownerId
+     * @return Member|null
+     */
+    public function getByProfileId(int $profileId,
+                              Member $member,
+                              int $ownerId = null): ?Member;
+
+    /**
      * @param int $id
      * @param Member $member
      * @param int|null $ownerId
