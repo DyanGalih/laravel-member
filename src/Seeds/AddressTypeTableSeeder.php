@@ -23,14 +23,14 @@ class AddressTypeTableSeeder extends Seeder
     {
         $memberTypes = [];
         try {
-            $addressTypeRepositoryRequest = $this->container->make(AddressTypeRepositoryRequest::class);
+            $addressTypeRepositoryRequest = app()->make(AddressTypeRepositoryRequest::class);
             $addressTypeRepositoryRequest->name = "home";
             $memberTypes[] = $addressTypeRepositoryRequest;
 
             foreach ($memberTypes as $memberType) {
-                $memberTypeResult = $this->container->call([$addressTypeRepository, 'getByName'], ['name' => $memberType->name]);
+                $memberTypeResult = app()->call([$addressTypeRepository, 'getByName'], ['name' => $memberType->name]);
                 if ($memberTypeResult == null) {
-                    $this->container->call([$addressTypeRepository, 'store'], ['addressTypeRepositoryRequest' => $memberType]);
+                    app()->call([$addressTypeRepository, 'store'], ['addressTypeRepositoryRequest' => $memberType]);
                 }
             }
         } catch (BindingResolutionException $e) {

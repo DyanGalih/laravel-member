@@ -36,8 +36,8 @@ class IdentityTypeRepositoryTest extends TestCase
     {
         parent::__construct($name, $data, $dataName);
         try {
-            $this->identityTypeRepository = $this->container->make(IdentityTypeRepository::class);
-            $this->userRepositoryTest = $this->container->make(UserRepositoryTest::class);
+            $this->identityTypeRepository = app()->make(IdentityTypeRepository::class);
+            $this->userRepositoryTest = app()->make(UserRepositoryTest::class);
         } catch (BindingResolutionException $e) {
             report($e);
         }
@@ -47,8 +47,8 @@ class IdentityTypeRepositoryTest extends TestCase
     {
         $dummy = null;
         try {
-            $dummy = $this->container->make(IdentityTypeRepositoryRequest::class);
-            $user = $this->container->call([$this->userRepositoryTest, 'testStore']);
+            $dummy = app()->make(IdentityTypeRepositoryRequest::class);
+            $user = app()->call([$this->userRepositoryTest, 'testStore']);
             $dummy->name = $this->getFaker()->text(50);
             $dummy->user_id = $user->id;
 
@@ -61,7 +61,7 @@ class IdentityTypeRepositoryTest extends TestCase
     public function testStore(int $no = 0): ?IdentityType
     {
         $identityTypeRepositoryRequest = $this->getDummy($no);
-        $result = $this->container->call([$this->identityTypeRepository, 'store'], ['identityTypeRepositoryRequest' => $identityTypeRepositoryRequest]);
+        $result = app()->call([$this->identityTypeRepository, 'store'], ['identityTypeRepositoryRequest' => $identityTypeRepositoryRequest]);
 
         self::assertNotEquals(null, $result);
         return $result;
@@ -70,21 +70,21 @@ class IdentityTypeRepositoryTest extends TestCase
     public function testGetById()
     {
         $identityType = $this->testStore();
-        $result = $this->container->call([$this->identityTypeRepository, 'getById'], ['id' => $identityType->id]);
+        $result = app()->call([$this->identityTypeRepository, 'getById'], ['id' => $identityType->id]);
         self::assertNotEquals(null, $result);
     }
 
     public function testGetByName()
     {
         $identityType = $this->testStore();
-        $result = $this->container->call([$this->identityTypeRepository, 'getByName'], ['name' => $identityType->name]);
+        $result = app()->call([$this->identityTypeRepository, 'getByName'], ['name' => $identityType->name]);
         self::assertNotEquals(null, $result);
     }
 
     public function testDelete()
     {
         $identityType = $this->testStore();
-        $result = $this->container->call([$this->identityTypeRepository, 'delete'], ['id' => $identityType->id]);
+        $result = app()->call([$this->identityTypeRepository, 'delete'], ['id' => $identityType->id]);
         self::assertTrue($result);
     }
 
@@ -94,7 +94,7 @@ class IdentityTypeRepositoryTest extends TestCase
             $this->testStore($i);
         }
 
-        $resultList = $this->container->call([$this->identityTypeRepository, 'get']);
+        $resultList = app()->call([$this->identityTypeRepository, 'get']);
         self::assertGreaterThanOrEqual(1, count($resultList));
     }
 
@@ -104,7 +104,7 @@ class IdentityTypeRepositoryTest extends TestCase
             $this->testStore($i);
         }
 
-        $result = $this->container->call([$this->identityTypeRepository, 'getCount']);
+        $result = app()->call([$this->identityTypeRepository, 'getCount']);
         self::assertGreaterThanOrEqual(1, $result);
     }
 
@@ -112,7 +112,7 @@ class IdentityTypeRepositoryTest extends TestCase
     {
         $identityType = $this->testStore();
         $identityTypeRepositoryRequest = $this->getDummy(1);
-        $result = $this->container->call([$this->identityTypeRepository, 'update'], ['id' => $identityType->id, 'identityTypeRepositoryRequest' => $identityTypeRepositoryRequest]);
+        $result = app()->call([$this->identityTypeRepository, 'update'], ['id' => $identityType->id, 'identityTypeRepositoryRequest' => $identityTypeRepositoryRequest]);
         self::assertNotEquals(null, $result);
     }
 
@@ -123,7 +123,7 @@ class IdentityTypeRepositoryTest extends TestCase
         }
         $string = 'aiueo';
         $q = $string[$this->getFaker()->numberBetween(0, strlen($string) - 1)];
-        $result = $this->container->call([$this->identityTypeRepository, 'get'], ['q' => $q]);
+        $result = app()->call([$this->identityTypeRepository, 'get'], ['q' => $q]);
         self::assertGreaterThanOrEqual(1, count($result));
     }
 
@@ -134,7 +134,7 @@ class IdentityTypeRepositoryTest extends TestCase
         }
         $string = 'aiueo';
         $q = $string[$this->getFaker()->numberBetween(0, strlen($string) - 1)];
-        $result = $this->container->call([$this->identityTypeRepository, 'getCount'], ['q' => $q]);
+        $result = app()->call([$this->identityTypeRepository, 'getCount'], ['q' => $q]);
         self::assertGreaterThanOrEqual(1, $result);
     }
 }

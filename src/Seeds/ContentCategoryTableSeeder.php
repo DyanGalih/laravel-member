@@ -21,18 +21,18 @@ class ContentCategoryTableSeeder extends Seeder
 {
     public function run(CategoryRepository $categoryRepository)
     {
-        $categoryRepositoryRequest = $this->container->make(CategoryRepositoryRequest::class);
+        $categoryRepositoryRequest = app()->make(CategoryRepositoryRequest::class);
         $categoryRepositoryRequest->code = 'profile';
         $categoryRepositoryRequest->name = 'Profile';
         $categoryRepositoryRequest->user_id = '1';
         $categoryRepositoryRequest->status_id = '2';
         $categoryRepositoryRequest->parent_id = '0';
 
-        $category = $this->container->call([$categoryRepository, 'getByName'], ['name' => $categoryRepositoryRequest->name]);
+        $category = app()->call([$categoryRepository, 'getByName'], ['name' => $categoryRepositoryRequest->name]);
         if ($category == null) {
-            $this->container->call([$categoryRepository, 'store'], compact('categoryRepositoryRequest'));
+            app()->call([$categoryRepository, 'store'], compact('categoryRepositoryRequest'));
         } else {
-            $this->container->call([$categoryRepository, 'update'], ['id' => $category->id, 'categoryRepositoryRequest' => $categoryRepositoryRequest]);
+            app()->call([$categoryRepository, 'update'], ['id' => $category->id, 'categoryRepositoryRequest' => $categoryRepositoryRequest]);
         }
     }
 }

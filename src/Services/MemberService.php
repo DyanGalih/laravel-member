@@ -25,7 +25,7 @@ use WebAppId\DDD\Tools\Lazy;
  * Class MemberService
  * @package WebAppId\Member\Services
  */
-class MemberService extends BaseService implements MemberServiceContract
+class MemberService implements MemberServiceContract
 {
     /**
      * @inheritDoc
@@ -40,18 +40,18 @@ class MemberService extends BaseService implements MemberServiceContract
     {
         DB::beginTransaction();
         $memberRepositoryRequest = Lazy::copy($memberServiceRequest, $memberRepositoryRequest);
-        $category = $this->container->call([$categoryRepository, 'getByName'], ['name' => 'Profile']);
+        $category = app()->call([$categoryRepository, 'getByName'], ['name' => 'Profile']);
         if ($category != null) {
             $contentServiceRequest->categories[] = $category->id;
         }
         if ($contentServiceRequest->content == null) {
             $contentServiceRequest->content = '';
         }
-        $resultContent = $this->container->call([$contentService, 'store'], compact('contentServiceRequest'));
+        $resultContent = app()->call([$contentService, 'store'], compact('contentServiceRequest'));
 
         $memberRepositoryRequest->content_id = $resultContent->content->id;
 
-        $result = $this->container->call([$memberRepository, 'store'], compact('memberRepositoryRequest'));
+        $result = app()->call([$memberRepository, 'store'], compact('memberRepositoryRequest'));
 
         if ($result != null) {
             $memberServiceResponse->status = true;
@@ -87,11 +87,11 @@ class MemberService extends BaseService implements MemberServiceContract
         DB::beginTransaction();
         $memberRepositoryRequest = Lazy::copy($memberServiceRequest, $memberRepositoryRequest);
 
-        $member = $this->container->call([$memberRepository, 'getByCode'], compact('code', 'ownerId'));
+        $member = app()->call([$memberRepository, 'getByCode'], compact('code', 'ownerId'));
 
         $contentCode = $member->content_code;
 
-        $category = $this->container->call([$categoryRepository, 'getByName'], ['name' => 'Profile']);
+        $category = app()->call([$categoryRepository, 'getByName'], ['name' => 'Profile']);
         if ($category != null) {
             $contentServiceRequest->categories[] = $category->id;
         }
@@ -99,11 +99,11 @@ class MemberService extends BaseService implements MemberServiceContract
             $contentServiceRequest->content = '';
         }
 
-        $resultContent = $this->container->call([$contentService, 'update'], ['code' => $contentCode, 'contentServiceRequest' => $contentServiceRequest, 'ownerId' => $ownerId]);
+        $resultContent = app()->call([$contentService, 'update'], ['code' => $contentCode, 'contentServiceRequest' => $contentServiceRequest, 'ownerId' => $ownerId]);
 
         $memberRepositoryRequest->content_id = $resultContent->content->id;
 
-        $result = $this->container->call([$memberRepository, 'update'], compact('code', 'memberRepositoryRequest', 'ownerId'));
+        $result = app()->call([$memberRepository, 'update'], compact('code', 'memberRepositoryRequest', 'ownerId'));
 
         if ($result != null) {
             $memberServiceResponse->status = true;
@@ -131,7 +131,7 @@ class MemberService extends BaseService implements MemberServiceContract
                               MemberServiceResponse $memberServiceResponse,
                               int $ownerId = null): MemberServiceResponse
     {
-        $result = $this->container->call([$memberRepository, 'getByCode'], compact('code', 'ownerId'));
+        $result = app()->call([$memberRepository, 'getByCode'], compact('code', 'ownerId'));
         if ($result != null) {
             $memberServiceResponse->status = true;
             $memberServiceResponse->message = 'Data Found';
@@ -153,7 +153,7 @@ class MemberService extends BaseService implements MemberServiceContract
                               MemberServiceResponse $memberServiceResponse,
                               int $ownerId = null): MemberServiceResponse
     {
-        $result = $this->container->call([$memberRepository, 'getByProfileId'], compact('profileId', 'ownerId'));
+        $result = app()->call([$memberRepository, 'getByProfileId'], compact('profileId', 'ownerId'));
         if ($result != null) {
             $memberServiceResponse->status = true;
             $memberServiceResponse->message = 'Data Found';
@@ -175,7 +175,7 @@ class MemberService extends BaseService implements MemberServiceContract
                             MemberServiceResponse $memberServiceResponse,
                             int $ownerId = null): MemberServiceResponse
     {
-        $result = $this->container->call([$memberRepository, 'getById'], compact('id', 'ownerId'));
+        $result = app()->call([$memberRepository, 'getById'], compact('id', 'ownerId'));
         if ($result != null) {
             $memberServiceResponse->status = true;
             $memberServiceResponse->message = 'Data Found';
@@ -196,7 +196,7 @@ class MemberService extends BaseService implements MemberServiceContract
                            MemberRepository $memberRepository,
                            int $ownerId = null): bool
     {
-        return $this->container->call([$memberRepository, 'delete'], compact('code', 'ownerId'));
+        return app()->call([$memberRepository, 'delete'], compact('code', 'ownerId'));
     }
 
     /**
@@ -208,12 +208,12 @@ class MemberService extends BaseService implements MemberServiceContract
                         string $q = null,
                         int $ownerId = null): MemberServiceResponseList
     {
-        $result = $this->container->call([$memberRepository, 'get'], compact('q', 'ownerId'));
+        $result = app()->call([$memberRepository, 'get'], compact('q', 'ownerId'));
         if (count($result) > 0) {
             $memberServiceResponseList->status = true;
             $memberServiceResponseList->message = 'Data Found';
             $memberServiceResponseList->memberList = $result;
-            $memberServiceResponseList->count = $this->container->call([$memberRepository, 'getCount'], compact('ownerId'));
+            $memberServiceResponseList->count = app()->call([$memberRepository, 'getCount'], compact('ownerId'));
             $memberServiceResponseList->countFiltered = $result->total();
         } else {
             $memberServiceResponseList->status = false;
@@ -229,6 +229,6 @@ class MemberService extends BaseService implements MemberServiceContract
                              string $q = null,
                              int $ownerId = null): int
     {
-        return $this->container->call([$memberRepository, 'getCount'], compact('ownerId', 'q'));
+        return app()->call([$memberRepository, 'getCount'], compact('ownerId', 'q'));
     }
 }

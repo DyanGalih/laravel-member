@@ -21,7 +21,7 @@ use WebAppId\DDD\Tools\Lazy;
  * Class MemberTypeService
  * @package App\Services
  */
-class MemberTypeService extends BaseService implements MemberTypeServiceContract
+class MemberTypeService implements MemberTypeServiceContract
 {
 
     /**
@@ -31,7 +31,7 @@ class MemberTypeService extends BaseService implements MemberTypeServiceContract
     {
         $memberTypeRepositoryRequest = Lazy::copy($memberTypeServiceRequest, $memberTypeRepositoryRequest, Lazy::AUTOCAST);
 
-        $result = $this->container->call([$memberTypeRepository, 'store'], ['memberTypeRepositoryRequest' => $memberTypeRepositoryRequest]);
+        $result = app()->call([$memberTypeRepository, 'store'], ['memberTypeRepositoryRequest' => $memberTypeRepositoryRequest]);
         if ($result != null) {
             $memberTypeServiceResponse->status = true;
             $memberTypeServiceResponse->message = 'Store Data Success';
@@ -51,7 +51,7 @@ class MemberTypeService extends BaseService implements MemberTypeServiceContract
     {
         $memberTypeRepositoryRequest = Lazy::copy($memberTypeServiceRequest, $memberTypeRepositoryRequest, Lazy::AUTOCAST);
 
-        $result = $this->container->call([$memberTypeRepository, 'update'], ['id' => $id, 'memberTypeRepositoryRequest' => $memberTypeRepositoryRequest]);
+        $result = app()->call([$memberTypeRepository, 'update'], ['id' => $id, 'memberTypeRepositoryRequest' => $memberTypeRepositoryRequest]);
         if ($result != null) {
             $memberTypeServiceResponse->status = true;
             $memberTypeServiceResponse->message = 'Update Data Success';
@@ -69,7 +69,7 @@ class MemberTypeService extends BaseService implements MemberTypeServiceContract
      */
     public function getById(int $id, MemberTypeRepository $memberTypeRepository, MemberTypeServiceResponse $memberTypeServiceResponse): MemberTypeServiceResponse
     {
-        $result = $this->container->call([$memberTypeRepository, 'getById'], ['id' => $id]);
+        $result = app()->call([$memberTypeRepository, 'getById'], ['id' => $id]);
         if ($result != null) {
             $memberTypeServiceResponse->status = true;
             $memberTypeServiceResponse->message = 'Data Found';
@@ -87,7 +87,7 @@ class MemberTypeService extends BaseService implements MemberTypeServiceContract
      */
     public function delete(int $id, MemberTypeRepository $memberTypeRepository): bool
     {
-        return $this->container->call([$memberTypeRepository, 'delete'], ['id' => $id]);
+        return app()->call([$memberTypeRepository, 'delete'], ['id' => $id]);
     }
 
     /**
@@ -95,12 +95,12 @@ class MemberTypeService extends BaseService implements MemberTypeServiceContract
      */
     public function get(MemberTypeRepository $memberTypeRepository, MemberTypeServiceResponseList $memberTypeServiceResponseList, int $length = 12, string $q = null): MemberTypeServiceResponseList
     {
-        $result = $this->container->call([$memberTypeRepository, 'get'], ['q' => $q]);
+        $result = app()->call([$memberTypeRepository, 'get'], ['q' => $q]);
         if (count($result) > 0) {
             $memberTypeServiceResponseList->status = true;
             $memberTypeServiceResponseList->message = 'Data Found';
             $memberTypeServiceResponseList->memberTypeList = $result;
-            $memberTypeServiceResponseList->count = $this->container->call([$memberTypeRepository, 'getCount']);
+            $memberTypeServiceResponseList->count = app()->call([$memberTypeRepository, 'getCount']);
             $memberTypeServiceResponseList->countFiltered = $result->total();
         } else {
             $memberTypeServiceResponseList->status = false;
@@ -114,6 +114,6 @@ class MemberTypeService extends BaseService implements MemberTypeServiceContract
      */
     public function getCount(MemberTypeRepository $memberTypeRepository, string $q = null): int
     {
-        return $this->container->call([$memberTypeRepository, 'getCount'], ['q' => $q]);
+        return app()->call([$memberTypeRepository, 'getCount'], ['q' => $q]);
     }
 }

@@ -21,7 +21,7 @@ use WebAppId\DDD\Tools\Lazy;
  * Class IdentityTypeService
  * @package WebAppId\Member\Services
  */
-class IdentityTypeService extends BaseService implements IdentityTypeServiceContract
+class IdentityTypeService implements IdentityTypeServiceContract
 {
 
     /**
@@ -31,7 +31,7 @@ class IdentityTypeService extends BaseService implements IdentityTypeServiceCont
     {
         $identityTypeRepositoryRequest = Lazy::copy($identityTypeServiceRequest, $identityTypeRepositoryRequest);
 
-        $result = $this->container->call([$identityTypeRepository, 'store'], ['identityTypeRepositoryRequest' => $identityTypeRepositoryRequest]);
+        $result = app()->call([$identityTypeRepository, 'store'], ['identityTypeRepositoryRequest' => $identityTypeRepositoryRequest]);
         if ($result != null) {
             $identityTypeServiceResponse->status = true;
             $identityTypeServiceResponse->message = 'Store Data Success';
@@ -51,7 +51,7 @@ class IdentityTypeService extends BaseService implements IdentityTypeServiceCont
     {
         $identityTypeRepositoryRequest = Lazy::copy($identityTypeServiceRequest, $identityTypeRepositoryRequest);
 
-        $result = $this->container->call([$identityTypeRepository, 'update'], ['id' => $id, 'identityTypeRepositoryRequest' => $identityTypeRepositoryRequest]);
+        $result = app()->call([$identityTypeRepository, 'update'], ['id' => $id, 'identityTypeRepositoryRequest' => $identityTypeRepositoryRequest]);
         if ($result != null) {
             $identityTypeServiceResponse->status = true;
             $identityTypeServiceResponse->message = 'Update Data Success';
@@ -69,7 +69,7 @@ class IdentityTypeService extends BaseService implements IdentityTypeServiceCont
      */
     public function getById(int $id, IdentityTypeRepository $identityTypeRepository, IdentityTypeServiceResponse $identityTypeServiceResponse): IdentityTypeServiceResponse
     {
-        $result = $this->container->call([$identityTypeRepository, 'getById'], ['id' => $id]);
+        $result = app()->call([$identityTypeRepository, 'getById'], ['id' => $id]);
         if ($result != null) {
             $identityTypeServiceResponse->status = true;
             $identityTypeServiceResponse->message = 'Data Found';
@@ -87,7 +87,7 @@ class IdentityTypeService extends BaseService implements IdentityTypeServiceCont
      */
     public function delete(int $id, IdentityTypeRepository $identityTypeRepository): bool
     {
-        return $this->container->call([$identityTypeRepository, 'delete'], ['id' => $id]);
+        return app()->call([$identityTypeRepository, 'delete'], ['id' => $id]);
     }
 
     /**
@@ -95,13 +95,13 @@ class IdentityTypeService extends BaseService implements IdentityTypeServiceCont
      */
     public function get(IdentityTypeRepository $identityTypeRepository, IdentityTypeServiceResponseList $identityTypeServiceResponseList, int $length = 12, string $q = null): IdentityTypeServiceResponseList
     {
-        $result = $this->container->call([$identityTypeRepository, 'get'], ['q' => $q]);
+        $result = app()->call([$identityTypeRepository, 'get'], ['q' => $q]);
         
         if (count($result) > 0) {
             $identityTypeServiceResponseList->status = true;
             $identityTypeServiceResponseList->message = 'Data Found';
             $identityTypeServiceResponseList->identityTypeList = $result;
-            $identityTypeServiceResponseList->count = $this->container->call([$identityTypeRepository, 'getCount']);
+            $identityTypeServiceResponseList->count = app()->call([$identityTypeRepository, 'getCount']);
             $identityTypeServiceResponseList->countFiltered = $result->total();
         } else {
             $identityTypeServiceResponseList->status = false;
@@ -115,6 +115,6 @@ class IdentityTypeService extends BaseService implements IdentityTypeServiceCont
      */
     public function getCount(IdentityTypeRepository $identityTypeRepository, string $q = null): int
     {
-        return $this->container->call([$identityTypeRepository, 'getCount'], ['q' => $q]);
+        return app()->call([$identityTypeRepository, 'getCount'], ['q' => $q]);
     }
 }

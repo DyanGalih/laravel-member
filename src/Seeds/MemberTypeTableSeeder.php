@@ -23,14 +23,14 @@ class MemberTypeTableSeeder extends Seeder
     {
         $memberTypes = [];
         try {
-            $memberTypeRepositoryRequest = $this->container->make(MemberTypeRepositoryRequest::class);
+            $memberTypeRepositoryRequest = app()->make(MemberTypeRepositoryRequest::class);
             $memberTypeRepositoryRequest->name = "member";
             $memberTypes[] = $memberTypeRepositoryRequest;
 
             foreach ($memberTypes as $memberType) {
-                $memberTypeResult = $this->container->call([$memberTypeRepository, 'getByName'], ['name' => $memberType->name]);
+                $memberTypeResult = app()->call([$memberTypeRepository, 'getByName'], ['name' => $memberType->name]);
                 if ($memberTypeResult == null) {
-                    $this->container->call([$memberTypeRepository, 'store'], ['memberTypeRepositoryRequest' => $memberType]);
+                    app()->call([$memberTypeRepository, 'store'], ['memberTypeRepositoryRequest' => $memberType]);
                 }
             }
         } catch (BindingResolutionException $e) {

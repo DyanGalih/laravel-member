@@ -52,10 +52,10 @@ class MemberAddressRepositoryTest extends TestCase
     {
         parent::__construct($name, $data, $dataName);
         try {
-            $this->memberAddressRepository = $this->container->make(MemberAddressRepository::class);
-            $this->memberRepositoryTest = $this->container->make(MemberRepositoryTest::class);
-            $this->userRepositoryTest = $this->container->make(UserRepositoryTest::class);
-            $this->addressTypeRepositoryTest = $this->container->make(AddressTypeRepositoryTest::class);
+            $this->memberAddressRepository = app()->make(MemberAddressRepository::class);
+            $this->memberRepositoryTest = app()->make(MemberRepositoryTest::class);
+            $this->userRepositoryTest = app()->make(UserRepositoryTest::class);
+            $this->addressTypeRepositoryTest = app()->make(AddressTypeRepositoryTest::class);
         } catch (BindingResolutionException $e) {
             report($e);
         }
@@ -70,14 +70,14 @@ class MemberAddressRepositoryTest extends TestCase
     {
         $dummy = null;
         try {
-            $dummy = $this->container->make(MemberAddressRepositoryRequest::class);
-            $user = $this->container->call([$this->userRepositoryTest, 'testStore']);
+            $dummy = app()->make(MemberAddressRepositoryRequest::class);
+            $user = app()->call([$this->userRepositoryTest, 'testStore']);
 
             if ($this->member == null) {
-                $this->member = $this->container->call([$this->memberRepositoryTest, 'testStore']);
+                $this->member = app()->call([$this->memberRepositoryTest, 'testStore']);
             }
 
-            $addressType = $this->container->call([$this->addressTypeRepositoryTest, 'testStore']);
+            $addressType = app()->call([$this->addressTypeRepositoryTest, 'testStore']);
             $dummy->type_id = $addressType->id;
             $dummy->code = $this->getFaker()->uuid;
             $dummy->name = $this->getFaker()->domainName;
@@ -101,7 +101,7 @@ class MemberAddressRepositoryTest extends TestCase
     public function testStore(int $no = 0): ?MemberAddress
     {
         $memberAddressRepositoryRequest = $this->getDummy($no);
-        $result = $this->container->call([$this->memberAddressRepository, 'store'], ['memberAddressRepositoryRequest' => $memberAddressRepositoryRequest]);
+        $result = app()->call([$this->memberAddressRepository, 'store'], ['memberAddressRepositoryRequest' => $memberAddressRepositoryRequest]);
         self::assertNotEquals(null, $result);
         return $result;
     }
@@ -109,14 +109,14 @@ class MemberAddressRepositoryTest extends TestCase
     public function testGetByCode()
     {
         $memberAddress = $this->testStore();
-        $result = $this->container->call([$this->memberAddressRepository, 'getByCode'], ['code' => $memberAddress->code]);
+        $result = app()->call([$this->memberAddressRepository, 'getByCode'], ['code' => $memberAddress->code]);
         self::assertNotEquals(null, $result);
     }
 
     public function testDelete()
     {
         $memberAddress = $this->testStore();
-        $result = $this->container->call([$this->memberAddressRepository, 'delete'], ['code' => $memberAddress->code]);
+        $result = app()->call([$this->memberAddressRepository, 'delete'], ['code' => $memberAddress->code]);
         self::assertTrue($result);
     }
 
@@ -126,7 +126,7 @@ class MemberAddressRepositoryTest extends TestCase
             $this->testStore($i);
         }
 
-        $resultList = $this->container->call([$this->memberAddressRepository, 'get'], ['identity' => $this->member->identity]);
+        $resultList = app()->call([$this->memberAddressRepository, 'get'], ['identity' => $this->member->identity]);
         self::assertGreaterThanOrEqual(1, count($resultList));
     }
 
@@ -136,7 +136,7 @@ class MemberAddressRepositoryTest extends TestCase
             $this->testStore($i);
         }
 
-        $result = $this->container->call([$this->memberAddressRepository, 'getCount'], ['identity' => $this->member->identity]);
+        $result = app()->call([$this->memberAddressRepository, 'getCount'], ['identity' => $this->member->identity]);
         self::assertGreaterThanOrEqual(1, $result);
     }
 
@@ -144,7 +144,7 @@ class MemberAddressRepositoryTest extends TestCase
     {
         $memberAddress = $this->testStore();
         $memberAddressRepositoryRequest = $this->getDummy(1);
-        $result = $this->container->call([$this->memberAddressRepository, 'update'], ['code' => $memberAddress->code, 'memberAddressRepositoryRequest' => $memberAddressRepositoryRequest]);
+        $result = app()->call([$this->memberAddressRepository, 'update'], ['code' => $memberAddress->code, 'memberAddressRepositoryRequest' => $memberAddressRepositoryRequest]);
         self::assertNotEquals(null, $result);
     }
 
@@ -155,7 +155,7 @@ class MemberAddressRepositoryTest extends TestCase
         }
         $string = 'aiueo';
         $q = $string[$this->getFaker()->numberBetween(0, strlen($string) - 1)];
-        $result = $this->container->call([$this->memberAddressRepository, 'get'], ['identity' => $this->member->identity, 'q' => $q]);
+        $result = app()->call([$this->memberAddressRepository, 'get'], ['identity' => $this->member->identity, 'q' => $q]);
         self::assertGreaterThanOrEqual(1, count($result));
     }
 
@@ -166,7 +166,7 @@ class MemberAddressRepositoryTest extends TestCase
         }
         $string = 'aiueo';
         $q = $string[$this->getFaker()->numberBetween(0, strlen($string) - 1)];
-        $result = $this->container->call([$this->memberAddressRepository, 'getCount'], ['identity' => $this->member->identity, 'q' => $q]);
+        $result = app()->call([$this->memberAddressRepository, 'getCount'], ['identity' => $this->member->identity, 'q' => $q]);
         self::assertGreaterThanOrEqual(1, $result);
     }
 }

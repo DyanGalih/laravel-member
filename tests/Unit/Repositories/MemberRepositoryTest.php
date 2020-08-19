@@ -58,12 +58,12 @@ class MemberRepositoryTest extends TestCase
     public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
-        $this->memberRepository = $this->container->make(MemberRepository::class);
-        $this->identityRepositoryTest = $this->container->make(IdentityTypeRepositoryTest::class);
-        $this->timezoneRepositoryTest = $this->container->make(TimeZoneRepositoryTest::class);
-        $this->languageRepositoryTest = $this->container->make(LanguageRepositoryTest::class);
-        $this->contentRepositoryTest = $this->container->make(ContentRepositoryTest::class);
-        $this->userRepositoryTest = $this->container->make(UserRepositoryTest::class);
+        $this->memberRepository = app()->make(MemberRepository::class);
+        $this->identityRepositoryTest = app()->make(IdentityTypeRepositoryTest::class);
+        $this->timezoneRepositoryTest = app()->make(TimeZoneRepositoryTest::class);
+        $this->languageRepositoryTest = app()->make(LanguageRepositoryTest::class);
+        $this->contentRepositoryTest = app()->make(ContentRepositoryTest::class);
+        $this->userRepositoryTest = app()->make(UserRepositoryTest::class);
     }
 
     public function getDummy(int $no = 0): ?MemberRepositoryRequest
@@ -72,12 +72,12 @@ class MemberRepositoryTest extends TestCase
         $sexList = ['M', 'F', 'O'];
         $sex = $sexList[$this->getFaker()->numberBetween(0, count($sexList) - 1)];
         try {
-            $dummy = $this->container->make(MemberRepositoryRequest::class);
-            $identityType = $this->container->call([$this->identityRepositoryTest, 'testStore']);
-            $timeZone = $this->container->call([$this->timezoneRepositoryTest, 'testStore']);
-            $language = $this->container->call([$this->languageRepositoryTest, 'testStore']);
-            $content = $this->container->call([$this->contentRepositoryTest, 'testStore']);
-            $user = $this->container->call([$this->userRepositoryTest, 'testStore']);
+            $dummy = app()->make(MemberRepositoryRequest::class);
+            $identityType = app()->call([$this->identityRepositoryTest, 'testStore']);
+            $timeZone = app()->call([$this->timezoneRepositoryTest, 'testStore']);
+            $language = app()->call([$this->languageRepositoryTest, 'testStore']);
+            $content = app()->call([$this->contentRepositoryTest, 'testStore']);
+            $user = app()->call([$this->userRepositoryTest, 'testStore']);
             $dummy->identity_type_id = $identityType->id;
             $dummy->identity = $this->getFaker()->uuid;
             $dummy->profile_id = $user->id;
@@ -103,7 +103,7 @@ class MemberRepositoryTest extends TestCase
     public function testStore(int $no = 0): ?Member
     {
         $memberRepositoryRequest = $this->getDummy($no);
-        $result = $this->container->call([$this->memberRepository, 'store'], ['memberRepositoryRequest' => $memberRepositoryRequest]);
+        $result = app()->call([$this->memberRepository, 'store'], ['memberRepositoryRequest' => $memberRepositoryRequest]);
         self::assertNotEquals(null, $result);
         return $result;
     }
@@ -111,21 +111,21 @@ class MemberRepositoryTest extends TestCase
     public function testGetByCode()
     {
         $member = $this->testStore();
-        $result = $this->container->call([$this->memberRepository, 'getByCode'], ['code' => $member->code, 'ownerId' => $this->getFaker()->boolean ? $member->owner_id : null]);
+        $result = app()->call([$this->memberRepository, 'getByCode'], ['code' => $member->code, 'ownerId' => $this->getFaker()->boolean ? $member->owner_id : null]);
         self::assertNotEquals(null, $result);
     }
 
     public function testGetById()
     {
         $member = $this->testStore();
-        $result = $this->container->call([$this->memberRepository, 'getById'], ['id' => $member->id, 'ownerId' => $this->getFaker()->boolean ? $member->owner_id : null]);
+        $result = app()->call([$this->memberRepository, 'getById'], ['id' => $member->id, 'ownerId' => $this->getFaker()->boolean ? $member->owner_id : null]);
         self::assertNotEquals(null, $result);
     }
 
     public function testDelete()
     {
         $member = $this->testStore();
-        $result = $this->container->call([$this->memberRepository, 'delete'], ['code' => $member->code, 'ownerId' => $this->getFaker()->boolean ? $member->owner_id : null]);
+        $result = app()->call([$this->memberRepository, 'delete'], ['code' => $member->code, 'ownerId' => $this->getFaker()->boolean ? $member->owner_id : null]);
         self::assertTrue($result);
     }
 
@@ -135,7 +135,7 @@ class MemberRepositoryTest extends TestCase
             $member = $this->testStore($i);
         }
 
-        $resultList = $this->container->call([$this->memberRepository, 'get'], ['ownerId' => $this->getFaker()->boolean ? $member->owner_id : null]);
+        $resultList = app()->call([$this->memberRepository, 'get'], ['ownerId' => $this->getFaker()->boolean ? $member->owner_id : null]);
         self::assertGreaterThanOrEqual(1, count($resultList));
     }
 
@@ -145,7 +145,7 @@ class MemberRepositoryTest extends TestCase
             $member = $this->testStore($i);
         }
 
-        $result = $this->container->call([$this->memberRepository, 'getCount'], ['ownerId' => $this->getFaker()->boolean ? $member->owner_id : null]);
+        $result = app()->call([$this->memberRepository, 'getCount'], ['ownerId' => $this->getFaker()->boolean ? $member->owner_id : null]);
         self::assertGreaterThanOrEqual(1, $result);
     }
 
@@ -154,7 +154,7 @@ class MemberRepositoryTest extends TestCase
         $member = $this->testStore();
         $memberRepositoryRequest = $this->getDummy(1);
         $ownerId = $this->getFaker()->boolean ? $member->owner_id : null;
-        $result = $this->container->call([$this->memberRepository, 'update'],
+        $result = app()->call([$this->memberRepository, 'update'],
             [
                 'code' => $member->code,
                 'memberRepositoryRequest' => $memberRepositoryRequest,
@@ -170,7 +170,7 @@ class MemberRepositoryTest extends TestCase
         }
         $string = 'aiueo';
         $q = $string[$this->getFaker()->numberBetween(0, strlen($string) - 1)];
-        $result = $this->container->call([$this->memberRepository, 'get'], ['q' => $q]);
+        $result = app()->call([$this->memberRepository, 'get'], ['q' => $q]);
         self::assertGreaterThanOrEqual(1, count($result));
     }
 
@@ -181,14 +181,14 @@ class MemberRepositoryTest extends TestCase
         }
         $string = 'aiueo';
         $q = $string[$this->getFaker()->numberBetween(0, strlen($string) - 1)];
-        $result = $this->container->call([$this->memberRepository, 'getCount'], ['q' => $q]);
+        $result = app()->call([$this->memberRepository, 'getCount'], ['q' => $q]);
         self::assertGreaterThanOrEqual(1, $result);
     }
 
     public function testAvailableIdentity()
     {
         $member = $this->testStore();
-        $result = $this->container->call([$this->memberRepository, 'checkAvailableIdentity'], ['identity' => $member->identity]);
+        $result = app()->call([$this->memberRepository, 'checkAvailableIdentity'], ['identity' => $member->identity]);
         self::assertEquals(null, $result);
     }
 
@@ -196,10 +196,10 @@ class MemberRepositoryTest extends TestCase
     {
         $memberRepositoryRequest = $this->getDummy();
         $identity = $memberRepositoryRequest->identity;
-        $this->container->call([$this->memberRepository, 'store'], ['memberRepositoryRequest' => $memberRepositoryRequest]);
+        app()->call([$this->memberRepository, 'store'], ['memberRepositoryRequest' => $memberRepositoryRequest]);
         $memberRepositoryRequest = $this->getDummy();
-        $member = $this->container->call([$this->memberRepository, 'store'], ['memberRepositoryRequest' => $memberRepositoryRequest]);
-        $result = $this->container->call([$this->memberRepository, 'checkAvailableIdentity'], ['identity' => $identity, 'memberId' => $member->id]);
+        $member = app()->call([$this->memberRepository, 'store'], ['memberRepositoryRequest' => $memberRepositoryRequest]);
+        $result = app()->call([$this->memberRepository, 'checkAvailableIdentity'], ['identity' => $identity, 'memberId' => $member->id]);
         self::assertTrue($result);
     }
 
@@ -207,10 +207,10 @@ class MemberRepositoryTest extends TestCase
     {
         $memberRepositoryRequest = $this->getDummy();
         $email = $memberRepositoryRequest->email;
-        $this->container->call([$this->memberRepository, 'store'], ['memberRepositoryRequest' => $memberRepositoryRequest]);
+        app()->call([$this->memberRepository, 'store'], ['memberRepositoryRequest' => $memberRepositoryRequest]);
         $memberRepositoryRequest = $this->getDummy();
-        $member = $this->container->call([$this->memberRepository, 'store'], ['memberRepositoryRequest' => $memberRepositoryRequest]);
-        $result = $this->container->call([$this->memberRepository, 'checkAvailableEmail'], ['email' => $this->getFaker()->email, 'memberId' => $member->id]);
+        $member = app()->call([$this->memberRepository, 'store'], ['memberRepositoryRequest' => $memberRepositoryRequest]);
+        $result = app()->call([$this->memberRepository, 'checkAvailableEmail'], ['email' => $this->getFaker()->email, 'memberId' => $member->id]);
         self::assertTrue($result);
     }
 }

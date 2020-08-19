@@ -21,7 +21,7 @@ use WebAppId\DDD\Tools\Lazy;
  * Class AddressTypeService
  * @package WebAppId\Member\Services
  */
-class AddressTypeService extends BaseService implements AddressTypeServiceContract
+class AddressTypeService implements AddressTypeServiceContract
 {
 
     /**
@@ -31,7 +31,7 @@ class AddressTypeService extends BaseService implements AddressTypeServiceContra
     {
         $addressTypeRepositoryRequest = Lazy::copy($addressTypeServiceRequest, $addressTypeRepositoryRequest, Lazy::AUTOCAST);
 
-        $result = $this->container->call([$addressTypeRepository, 'store'], ['addressTypeRepositoryRequest' => $addressTypeRepositoryRequest]);
+        $result = app()->call([$addressTypeRepository, 'store'], ['addressTypeRepositoryRequest' => $addressTypeRepositoryRequest]);
         if ($result != null) {
             $addressTypeServiceResponse->status = true;
             $addressTypeServiceResponse->message = 'Store Data Success';
@@ -51,7 +51,7 @@ class AddressTypeService extends BaseService implements AddressTypeServiceContra
     {
         $addressTypeRepositoryRequest = Lazy::copy($addressTypeServiceRequest, $addressTypeRepositoryRequest, Lazy::AUTOCAST);
 
-        $result = $this->container->call([$addressTypeRepository, 'update'], ['id' => $id, 'addressTypeRepositoryRequest' => $addressTypeRepositoryRequest]);
+        $result = app()->call([$addressTypeRepository, 'update'], ['id' => $id, 'addressTypeRepositoryRequest' => $addressTypeRepositoryRequest]);
         if ($result != null) {
             $addressTypeServiceResponse->status = true;
             $addressTypeServiceResponse->message = 'Update Data Success';
@@ -69,7 +69,7 @@ class AddressTypeService extends BaseService implements AddressTypeServiceContra
      */
     public function getById(int $id, AddressTypeRepository $addressTypeRepository, AddressTypeServiceResponse $addressTypeServiceResponse): AddressTypeServiceResponse
     {
-        $result = $this->container->call([$addressTypeRepository, 'getById'], ['id' => $id]);
+        $result = app()->call([$addressTypeRepository, 'getById'], ['id' => $id]);
         if ($result != null) {
             $addressTypeServiceResponse->status = true;
             $addressTypeServiceResponse->message = 'Data Found';
@@ -87,7 +87,7 @@ class AddressTypeService extends BaseService implements AddressTypeServiceContra
      */
     public function getByName(string $name, AddressTypeRepository $addressTypeRepository, AddressTypeServiceResponse $addressTypeServiceResponse): AddressTypeServiceResponse
     {
-        $result = $this->container->call([$addressTypeRepository, 'getByName'], ['name' => $name]);
+        $result = app()->call([$addressTypeRepository, 'getByName'], ['name' => $name]);
         if ($result != null) {
             $addressTypeServiceResponse->status = true;
             $addressTypeServiceResponse->message = 'Data Found';
@@ -105,7 +105,7 @@ class AddressTypeService extends BaseService implements AddressTypeServiceContra
      */
     public function delete(int $id, AddressTypeRepository $addressTypeRepository): bool
     {
-        return $this->container->call([$addressTypeRepository, 'delete'], ['id' => $id]);
+        return app()->call([$addressTypeRepository, 'delete'], ['id' => $id]);
     }
 
     /**
@@ -113,12 +113,12 @@ class AddressTypeService extends BaseService implements AddressTypeServiceContra
      */
     public function get(AddressTypeRepository $addressTypeRepository, AddressTypeServiceResponseList $addressTypeServiceResponseList, int $length = 12, string $q = null): AddressTypeServiceResponseList
     {
-        $result = $this->container->call([$addressTypeRepository, 'get'], ['q' => $q]);
+        $result = app()->call([$addressTypeRepository, 'get'], ['q' => $q]);
         if (count($result) > 0) {
             $addressTypeServiceResponseList->status = true;
             $addressTypeServiceResponseList->message = 'Data Found';
             $addressTypeServiceResponseList->addressTypeList = $result;
-            $addressTypeServiceResponseList->count = $this->container->call([$addressTypeRepository, 'getCount']);
+            $addressTypeServiceResponseList->count = app()->call([$addressTypeRepository, 'getCount']);
             $addressTypeServiceResponseList->countFiltered = $result->total();
         } else {
             $addressTypeServiceResponseList->status = false;
@@ -132,6 +132,6 @@ class AddressTypeService extends BaseService implements AddressTypeServiceContra
      */
     public function getCount(AddressTypeRepository $addressTypeRepository, string $q = null): int
     {
-        return $this->container->call([$addressTypeRepository, 'getCount'], ['q' => $q]);
+        return app()->call([$addressTypeRepository, 'getCount'], ['q' => $q]);
     }
 }

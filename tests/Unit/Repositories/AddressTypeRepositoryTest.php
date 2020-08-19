@@ -30,7 +30,7 @@ class AddressTypeRepositoryTest extends TestCase
     {
         parent::__construct($name, $data, $dataName);
         try {
-            $this->addressTypeRepository = $this->container->make(AddressTypeRepository::class);
+            $this->addressTypeRepository = app()->make(AddressTypeRepository::class);
         } catch (BindingResolutionException $e) {
             report($e);
         }
@@ -40,7 +40,7 @@ class AddressTypeRepositoryTest extends TestCase
     {
         $dummy = null;
         try {
-            $dummy = $this->container->make(AddressTypeRepositoryRequest::class);
+            $dummy = app()->make(AddressTypeRepositoryRequest::class);
             $dummy->name = $this->getFaker()->text(50);
         } catch (BindingResolutionException $e) {
             report($e);
@@ -51,7 +51,7 @@ class AddressTypeRepositoryTest extends TestCase
     public function testStore(int $no = 0): ?AddressType
     {
         $addressTypeRepositoryRequest = $this->getDummy($no);
-        $result = $this->container->call([$this->addressTypeRepository, 'store'], ['addressTypeRepositoryRequest' => $addressTypeRepositoryRequest]);
+        $result = app()->call([$this->addressTypeRepository, 'store'], ['addressTypeRepositoryRequest' => $addressTypeRepositoryRequest]);
         self::assertNotEquals(null, $result);
         return $result;
     }
@@ -59,21 +59,21 @@ class AddressTypeRepositoryTest extends TestCase
     public function testGetById()
     {
         $addressType = $this->testStore();
-        $result = $this->container->call([$this->addressTypeRepository, 'getById'], ['id' => $addressType->id]);
+        $result = app()->call([$this->addressTypeRepository, 'getById'], ['id' => $addressType->id]);
         self::assertNotEquals(null, $result);
     }
 
     public function testGetByName()
     {
         $addressType = $this->testStore();
-        $result = $this->container->call([$this->addressTypeRepository, 'getByName'], ['name' => $addressType->name]);
+        $result = app()->call([$this->addressTypeRepository, 'getByName'], ['name' => $addressType->name]);
         self::assertNotEquals(null, $result);
     }
 
     public function testDelete()
     {
         $addressType = $this->testStore();
-        $result = $this->container->call([$this->addressTypeRepository, 'delete'], ['id' => $addressType->id]);
+        $result = app()->call([$this->addressTypeRepository, 'delete'], ['id' => $addressType->id]);
         self::assertTrue($result);
     }
 
@@ -83,7 +83,7 @@ class AddressTypeRepositoryTest extends TestCase
             $this->testStore($i);
         }
 
-        $resultList = $this->container->call([$this->addressTypeRepository, 'get']);
+        $resultList = app()->call([$this->addressTypeRepository, 'get']);
         self::assertGreaterThanOrEqual(1, count($resultList));
     }
 
@@ -93,7 +93,7 @@ class AddressTypeRepositoryTest extends TestCase
             $this->testStore($i);
         }
 
-        $result = $this->container->call([$this->addressTypeRepository, 'getCount']);
+        $result = app()->call([$this->addressTypeRepository, 'getCount']);
         self::assertGreaterThanOrEqual(1, $result);
     }
 
@@ -101,7 +101,7 @@ class AddressTypeRepositoryTest extends TestCase
     {
         $addressType = $this->testStore();
         $addressTypeRepositoryRequest = $this->getDummy(1);
-        $result = $this->container->call([$this->addressTypeRepository, 'update'], ['id' => $addressType->id, 'addressTypeRepositoryRequest' => $addressTypeRepositoryRequest]);
+        $result = app()->call([$this->addressTypeRepository, 'update'], ['id' => $addressType->id, 'addressTypeRepositoryRequest' => $addressTypeRepositoryRequest]);
         self::assertNotEquals(null, $result);
     }
 
@@ -112,7 +112,7 @@ class AddressTypeRepositoryTest extends TestCase
         }
         $string = 'aiueo';
         $q = $string[$this->getFaker()->numberBetween(0, strlen($string) - 1)];
-        $result = $this->container->call([$this->addressTypeRepository, 'get'], ['q' => $q]);
+        $result = app()->call([$this->addressTypeRepository, 'get'], ['q' => $q]);
         self::assertGreaterThanOrEqual(1, count($result));
     }
 
@@ -123,7 +123,7 @@ class AddressTypeRepositoryTest extends TestCase
         }
         $string = 'aiueo';
         $q = $string[$this->getFaker()->numberBetween(0, strlen($string) - 1)];
-        $result = $this->container->call([$this->addressTypeRepository, 'getCount'], ['q' => $q]);
+        $result = app()->call([$this->addressTypeRepository, 'getCount'], ['q' => $q]);
         self::assertGreaterThanOrEqual(1, $result);
     }
 }

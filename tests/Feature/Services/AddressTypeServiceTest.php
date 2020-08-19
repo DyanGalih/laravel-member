@@ -36,8 +36,8 @@ class AddressTypeServiceTest extends TestCase
     {
         parent::__construct($name, $data, $dataName);
         try {
-            $this->addressTypeService = $this->container->make(AddressTypeService::class);
-            $this->addressTypeRepositoryTest = $this->container->make(AddressTypeRepositoryTest::class);
+            $this->addressTypeService = app()->make(AddressTypeService::class);
+            $this->addressTypeRepositoryTest = app()->make(AddressTypeRepositoryTest::class);
         } catch (BindingResolutionException $e) {
             report($e);
         }
@@ -47,23 +47,23 @@ class AddressTypeServiceTest extends TestCase
     public function testGetById()
     {
         $contentServiceResponse = $this->testStore();
-        $result = $this->container->call([$this->addressTypeService, 'getById'], ['id' => $contentServiceResponse->addressType->id]);
+        $result = app()->call([$this->addressTypeService, 'getById'], ['id' => $contentServiceResponse->addressType->id]);
         self::assertTrue($result->status);
     }
 
     public function testGetByName()
     {
         $contentServiceResponse = $this->testStore();
-        $result = $this->container->call([$this->addressTypeService, 'getByName'], ['name' => $contentServiceResponse->addressType->name]);
+        $result = app()->call([$this->addressTypeService, 'getByName'], ['name' => $contentServiceResponse->addressType->name]);
         self::assertTrue($result->status);
     }
 
     private function getDummy(int $number = 0): AddressTypeServiceRequest
     {
-        $addressTypeRepositoryRequest = $this->container->call([$this->addressTypeRepositoryTest, 'getDummy'], ['no' => $number]);
+        $addressTypeRepositoryRequest = app()->call([$this->addressTypeRepositoryTest, 'getDummy'], ['no' => $number]);
         $addressTypeServiceRequest = null;
         try {
-            $addressTypeServiceRequest = $this->container->make(AddressTypeServiceRequest::class);
+            $addressTypeServiceRequest = app()->make(AddressTypeServiceRequest::class);
         } catch (BindingResolutionException $e) {
             report($e);
         }
@@ -73,7 +73,7 @@ class AddressTypeServiceTest extends TestCase
     public function testStore(int $number = 0)
     {
         $addressTypeServiceRequest = $this->getDummy($number);
-        $result = $this->container->call([$this->addressTypeService, 'store'], ['addressTypeServiceRequest' => $addressTypeServiceRequest]);
+        $result = app()->call([$this->addressTypeService, 'store'], ['addressTypeServiceRequest' => $addressTypeServiceRequest]);
         self::assertTrue($result->status);
         return $result;
     }
@@ -83,7 +83,7 @@ class AddressTypeServiceTest extends TestCase
         for ($i = 0; $i < $this->getFaker()->numberBetween(10, $this->getFaker()->numberBetween(10, 30)); $i++) {
             $this->testStore($i);
         }
-        $result = $this->container->call([$this->addressTypeService, 'get']);
+        $result = app()->call([$this->addressTypeService, 'get']);
         self::assertTrue($result->status);
     }
 
@@ -92,7 +92,7 @@ class AddressTypeServiceTest extends TestCase
         for ($i = 0; $i < $this->getFaker()->numberBetween(10, $this->getFaker()->numberBetween(10, 30)); $i++) {
             $this->testStore($i);
         }
-        $result = $this->container->call([$this->addressTypeService, 'getCount']);
+        $result = app()->call([$this->addressTypeService, 'getCount']);
         self::assertGreaterThanOrEqual(1, $result);
     }
 
@@ -100,14 +100,14 @@ class AddressTypeServiceTest extends TestCase
     {
         $contentServiceResponse = $this->testStore();
         $addressTypeServiceRequest = $this->getDummy();
-        $result = $this->container->call([$this->addressTypeService, 'update'], ['id' => $contentServiceResponse->addressType->id, 'addressTypeServiceRequest' => $addressTypeServiceRequest]);
+        $result = app()->call([$this->addressTypeService, 'update'], ['id' => $contentServiceResponse->addressType->id, 'addressTypeServiceRequest' => $addressTypeServiceRequest]);
         self::assertNotEquals(null, $result);
     }
 
     public function testDelete()
     {
         $contentServiceResponse = $this->testStore();
-        $result = $this->container->call([$this->addressTypeService, 'delete'], ['id' => $contentServiceResponse->addressType->id]);
+        $result = app()->call([$this->addressTypeService, 'delete'], ['id' => $contentServiceResponse->addressType->id]);
         self::assertTrue($result);
     }
 
@@ -118,7 +118,7 @@ class AddressTypeServiceTest extends TestCase
         }
         $string = 'aiueo';
         $q = $string[$this->getFaker()->numberBetween(0, strlen($string) - 1)];
-        $result = $this->container->call([$this->addressTypeService, 'get'], ['q' => $q]);
+        $result = app()->call([$this->addressTypeService, 'get'], ['q' => $q]);
         self::assertTrue($result->status);
     }
 
@@ -129,7 +129,7 @@ class AddressTypeServiceTest extends TestCase
         }
         $string = 'aiueo';
         $q = $string[$this->getFaker()->numberBetween(0, strlen($string) - 1)];
-        $result = $this->container->call([$this->addressTypeService, 'getCount'], ['q' => $q]);
+        $result = app()->call([$this->addressTypeService, 'getCount'], ['q' => $q]);
         self::assertGreaterThanOrEqual(1, $result);
     }
 }

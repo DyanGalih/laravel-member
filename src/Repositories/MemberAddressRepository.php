@@ -81,6 +81,7 @@ class MemberAddressRepository implements MemberAddressRepositoryContract
             'users.name AS creator_name',
             'users.email AS creator_email',
             'members.identity',
+            'members.code AS member_code',
             'members.name AS member_name',
             'members.email',
             'members.phone',
@@ -116,7 +117,7 @@ class MemberAddressRepository implements MemberAddressRepositoryContract
      */
     public function getByCode(string $code, MemberAddress $memberAddress): ?MemberAddress
     {
-        return $this->getJoin($memberAddress)->where('code', $code)->first($this->getColumn());
+        return $this->getJoin($memberAddress)->where('member_addresses.code', $code)->first($this->getColumn());
     }
 
     /**

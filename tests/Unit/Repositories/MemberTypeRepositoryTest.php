@@ -30,7 +30,7 @@ class MemberTypeRepositoryTest extends TestCase
     {
         parent::__construct($name, $data, $dataName);
         try {
-            $this->memberTypeRepository = $this->container->make(MemberTypeRepository::class);
+            $this->memberTypeRepository = app()->make(MemberTypeRepository::class);
         } catch (BindingResolutionException $e) {
             report($e);
         }
@@ -40,7 +40,7 @@ class MemberTypeRepositoryTest extends TestCase
     {
         $dummy = null;
         try {
-            $dummy = $this->container->make(MemberTypeRepositoryRequest::class);
+            $dummy = app()->make(MemberTypeRepositoryRequest::class);
             $dummy->name = $this->getFaker()->text(50);
 
         } catch (BindingResolutionException $e) {
@@ -52,7 +52,7 @@ class MemberTypeRepositoryTest extends TestCase
     public function testStore(int $no = 0): ?MemberType
     {
         $memberTypeRepositoryRequest = $this->getDummy($no);
-        $result = $this->container->call([$this->memberTypeRepository, 'store'], ['memberTypeRepositoryRequest' => $memberTypeRepositoryRequest]);
+        $result = app()->call([$this->memberTypeRepository, 'store'], ['memberTypeRepositoryRequest' => $memberTypeRepositoryRequest]);
         self::assertNotEquals(null, $result);
         return $result;
     }
@@ -60,21 +60,21 @@ class MemberTypeRepositoryTest extends TestCase
     public function testGetById()
     {
         $memberType = $this->testStore();
-        $result = $this->container->call([$this->memberTypeRepository, 'getById'], ['id' => $memberType->id]);
+        $result = app()->call([$this->memberTypeRepository, 'getById'], ['id' => $memberType->id]);
         self::assertNotEquals(null, $result);
     }
 
     public function testGetByName()
     {
         $memberType = $this->testStore();
-        $result = $this->container->call([$this->memberTypeRepository, 'getByName'], ['name' => $memberType->name]);
+        $result = app()->call([$this->memberTypeRepository, 'getByName'], ['name' => $memberType->name]);
         self::assertNotEquals(null, $result);
     }
 
     public function testDelete()
     {
         $memberType = $this->testStore();
-        $result = $this->container->call([$this->memberTypeRepository, 'delete'], ['id' => $memberType->id]);
+        $result = app()->call([$this->memberTypeRepository, 'delete'], ['id' => $memberType->id]);
         self::assertTrue($result);
     }
 
@@ -84,7 +84,7 @@ class MemberTypeRepositoryTest extends TestCase
             $this->testStore($i);
         }
 
-        $resultList = $this->container->call([$this->memberTypeRepository, 'get']);
+        $resultList = app()->call([$this->memberTypeRepository, 'get']);
         self::assertGreaterThanOrEqual(1, count($resultList));
     }
 
@@ -94,7 +94,7 @@ class MemberTypeRepositoryTest extends TestCase
             $this->testStore($i);
         }
 
-        $result = $this->container->call([$this->memberTypeRepository, 'getCount']);
+        $result = app()->call([$this->memberTypeRepository, 'getCount']);
         self::assertGreaterThanOrEqual(1, $result);
     }
 
@@ -102,7 +102,7 @@ class MemberTypeRepositoryTest extends TestCase
     {
         $memberType = $this->testStore();
         $memberTypeRepositoryRequest = $this->getDummy(1);
-        $result = $this->container->call([$this->memberTypeRepository, 'update'], ['id' => $memberType->id, 'memberTypeRepositoryRequest' => $memberTypeRepositoryRequest]);
+        $result = app()->call([$this->memberTypeRepository, 'update'], ['id' => $memberType->id, 'memberTypeRepositoryRequest' => $memberTypeRepositoryRequest]);
         self::assertNotEquals(null, $result);
     }
 
@@ -113,7 +113,7 @@ class MemberTypeRepositoryTest extends TestCase
         }
         $string = 'aiueo';
         $q = $string[$this->getFaker()->numberBetween(0, strlen($string) - 1)];
-        $result = $this->container->call([$this->memberTypeRepository, 'get'], ['q' => $q]);
+        $result = app()->call([$this->memberTypeRepository, 'get'], ['q' => $q]);
         self::assertGreaterThanOrEqual(1, count($result));
     }
 
@@ -124,7 +124,7 @@ class MemberTypeRepositoryTest extends TestCase
         }
         $string = 'aiueo';
         $q = $string[$this->getFaker()->numberBetween(0, strlen($string) - 1)];
-        $result = $this->container->call([$this->memberTypeRepository, 'getCount'], ['q' => $q]);
+        $result = app()->call([$this->memberTypeRepository, 'getCount'], ['q' => $q]);
         self::assertGreaterThanOrEqual(1, $result);
     }
 }

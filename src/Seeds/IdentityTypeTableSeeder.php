@@ -34,13 +34,13 @@ class IdentityTypeTableSeeder extends Seeder
                 ]
             ];
 
-        $identityTypeRepositoryRequest = $this->container->make(IdentityTypeRepositoryRequest::class);
+        $identityTypeRepositoryRequest = app()->make(IdentityTypeRepositoryRequest::class);
 
         foreach ($identityTypes as $identityType) {
             $identityTypeRepositoryRequest = Lazy::copyFromArray($identityType, $identityTypeRepositoryRequest, Lazy::AUTOCAST);
-            $result = $this->container->call([$identityTypeRepository, 'getByName'], ['name' => $identityTypeRepositoryRequest->name]);
+            $result = app()->call([$identityTypeRepository, 'getByName'], ['name' => $identityTypeRepositoryRequest->name]);
             if($result == null){
-                $this->container->call([$identityTypeRepository, 'store'],compact('identityTypeRepositoryRequest'));
+                app()->call([$identityTypeRepository, 'store'],compact('identityTypeRepositoryRequest'));
             }
         }
     }

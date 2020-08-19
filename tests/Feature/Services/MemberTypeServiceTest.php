@@ -36,8 +36,8 @@ class MemberTypeServiceTest extends TestCase
     {
         parent::__construct($name, $data, $dataName);
         try {
-            $this->memberTypeService = $this->container->make(MemberTypeService::class);
-            $this->memberTypeRepositoryTest = $this->container->make(MemberTypeRepositoryTest::class);
+            $this->memberTypeService = app()->make(MemberTypeService::class);
+            $this->memberTypeRepositoryTest = app()->make(MemberTypeRepositoryTest::class);
         } catch (BindingResolutionException $e) {
             report($e);
         }
@@ -47,16 +47,16 @@ class MemberTypeServiceTest extends TestCase
     public function testGetById()
     {
         $contentServiceResponse = $this->testStore();
-        $result = $this->container->call([$this->memberTypeService, 'getById'], ['id' => $contentServiceResponse->memberType->id]);
+        $result = app()->call([$this->memberTypeService, 'getById'], ['id' => $contentServiceResponse->memberType->id]);
         self::assertTrue($result->status);
     }
 
     private function getDummy(int $number = 0): MemberTypeServiceRequest
     {
-        $memberTypeRepositoryRequest = $this->container->call([$this->memberTypeRepositoryTest, 'getDummy'], ['no' => $number]);
+        $memberTypeRepositoryRequest = app()->call([$this->memberTypeRepositoryTest, 'getDummy'], ['no' => $number]);
         $memberTypeServiceRequest = null;
         try {
-            $memberTypeServiceRequest = $this->container->make(MemberTypeServiceRequest::class);
+            $memberTypeServiceRequest = app()->make(MemberTypeServiceRequest::class);
         } catch (BindingResolutionException $e) {
             report($e);
         }
@@ -66,7 +66,7 @@ class MemberTypeServiceTest extends TestCase
     public function testStore(int $number = 0)
     {
         $memberTypeServiceRequest = $this->getDummy($number);
-        $result = $this->container->call([$this->memberTypeService, 'store'], ['memberTypeServiceRequest' => $memberTypeServiceRequest]);
+        $result = app()->call([$this->memberTypeService, 'store'], ['memberTypeServiceRequest' => $memberTypeServiceRequest]);
         self::assertTrue($result->status);
         return $result;
     }
@@ -76,7 +76,7 @@ class MemberTypeServiceTest extends TestCase
         for ($i=0; $i<$this->getFaker()->numberBetween(10, $this->getFaker()->numberBetween(10, 30)); $i++){
             $this->testStore($i);
         }
-        $result = $this->container->call([$this->memberTypeService, 'get']);
+        $result = app()->call([$this->memberTypeService, 'get']);
         self::assertTrue($result->status);
     }
 
@@ -85,7 +85,7 @@ class MemberTypeServiceTest extends TestCase
         for ($i=0; $i<$this->getFaker()->numberBetween(10, $this->getFaker()->numberBetween(10, 30)); $i++){
             $this->testStore($i);
         }
-        $result = $this->container->call([$this->memberTypeService, 'getCount']);
+        $result = app()->call([$this->memberTypeService, 'getCount']);
         self::assertGreaterThanOrEqual(1, $result);
     }
 
@@ -93,14 +93,14 @@ class MemberTypeServiceTest extends TestCase
     {
         $contentServiceResponse = $this->testStore();
         $memberTypeServiceRequest = $this->getDummy();
-        $result = $this->container->call([$this->memberTypeService, 'update'], ['id' => $contentServiceResponse->memberType->id, 'memberTypeServiceRequest' => $memberTypeServiceRequest]);
+        $result = app()->call([$this->memberTypeService, 'update'], ['id' => $contentServiceResponse->memberType->id, 'memberTypeServiceRequest' => $memberTypeServiceRequest]);
         self::assertNotEquals(null, $result);
     }
 
     public function testDelete()
     {
         $contentServiceResponse = $this->testStore();
-        $result = $this->container->call([$this->memberTypeService, 'delete'], ['id' => $contentServiceResponse->memberType->id]);
+        $result = app()->call([$this->memberTypeService, 'delete'], ['id' => $contentServiceResponse->memberType->id]);
         self::assertTrue($result);
     }
 
@@ -111,7 +111,7 @@ class MemberTypeServiceTest extends TestCase
         }
         $string = 'aiueo';
         $q = $string[$this->getFaker()->numberBetween(0, strlen($string) - 1)];
-        $result = $this->container->call([$this->memberTypeService, 'get'], ['q' => $q]);
+        $result = app()->call([$this->memberTypeService, 'get'], ['q' => $q]);
         self::assertTrue($result->status);
     }
 
@@ -122,7 +122,7 @@ class MemberTypeServiceTest extends TestCase
         }
         $string = 'aiueo';
         $q = $string[$this->getFaker()->numberBetween(0, strlen($string) - 1)];
-        $result = $this->container->call([$this->memberTypeService, 'getCount'], ['q' => $q]);
+        $result = app()->call([$this->memberTypeService, 'getCount'], ['q' => $q]);
         self::assertGreaterThanOrEqual(1, $result);
     }
 }
