@@ -6,7 +6,7 @@
 namespace WebAppId\Member\Repositories;
 
 use Illuminate\Support\Facades\DB;
-use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Str;
 use WebAppId\Member\Models\Member;
 use WebAppId\Member\Repositories\Contracts\MemberRepositoryContract;
 use WebAppId\Member\Repositories\Requests\MemberRepositoryRequest;
@@ -31,7 +31,7 @@ class MemberRepository implements MemberRepositoryContract
     {
         try {
             $member = Lazy::copy($memberRepositoryRequest, $member);
-            $member->code = Uuid::uuid4()->toString();
+            $member->code = Str::uuid();
             $member->save();
             return $member;
         } catch (QueryException $queryException) {
