@@ -14,15 +14,15 @@ namespace WebAppId\Member\Repositories\Requests;
  */
 class IdentityTypeRepositoryRequest
 {
-    
+
     /**
      * @var string
      */
     public $name;
-                
+
     /**
      * @var int
      */
     public $user_id;
-                
+
 }

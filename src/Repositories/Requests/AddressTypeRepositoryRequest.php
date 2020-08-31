@@ -18,5 +18,5 @@ class AddressTypeRepositoryRequest
      * @var string
      */
     public $name;
-                
+
 }

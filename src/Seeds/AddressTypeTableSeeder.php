@@ -5,9 +5,9 @@
 
 namespace WebAppId\Member\Seeds;
 
-use WebAppId\Member\Repositories\AddressTypeRepository;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Seeder;
+use WebAppId\Member\Repositories\AddressTypeRepository;
 use WebAppId\Member\Repositories\Requests\AddressTypeRepositoryRequest;
 
 /**

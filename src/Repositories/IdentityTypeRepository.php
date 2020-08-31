@@ -5,13 +5,13 @@
 
 namespace WebAppId\Member\Repositories;
 
-use WebAppId\Member\Models\IdentityType;
-use WebAppId\Member\Repositories\Contracts\IdentityTypeRepositoryContract;
-use WebAppId\Member\Repositories\Requests\IdentityTypeRepositoryRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use WebAppId\DDD\Tools\Lazy;
+use WebAppId\Member\Models\IdentityType;
+use WebAppId\Member\Repositories\Contracts\IdentityTypeRepositoryContract;
+use WebAppId\Member\Repositories\Requests\IdentityTypeRepositoryRequest;
 
 /**
  * @author: Dyan Galih<dyan.galih@gmail.com>
@@ -118,7 +118,8 @@ class IdentityTypeRepository implements IdentityTypeRepositoryContract
     {
         return $this
             ->getJoin($identityType, $q)
-            ->paginate($length, $this->getColumn());
+            ->paginate($length, $this->getColumn())
+            ->appends(request()->input());
     }
 
     /**

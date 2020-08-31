@@ -6,6 +6,7 @@
 namespace WebAppId\Member\Services;
 
 use Ramsey\Uuid\Uuid;
+use WebAppId\DDD\Tools\Lazy;
 use WebAppId\Member\Repositories\MemberAddressRepository;
 use WebAppId\Member\Repositories\MemberRepository;
 use WebAppId\Member\Repositories\Requests\MemberAddressRepositoryRequest;
@@ -13,8 +14,6 @@ use WebAppId\Member\Services\Contracts\MemberAddressServiceContract;
 use WebAppId\Member\Services\Requests\MemberAddressServiceRequest;
 use WebAppId\Member\Services\Responses\MemberAddressServiceResponse;
 use WebAppId\Member\Services\Responses\MemberAddressServiceResponseList;
-use WebAppId\DDD\Services\BaseService;
-use WebAppId\DDD\Tools\Lazy;
 
 /**
  * @author: Dyan Galih<dyan.galih@gmail.com>

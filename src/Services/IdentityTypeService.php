@@ -5,14 +5,13 @@
 
 namespace WebAppId\Member\Services;
 
+use WebAppId\DDD\Tools\Lazy;
 use WebAppId\Member\Repositories\IdentityTypeRepository;
 use WebAppId\Member\Repositories\Requests\IdentityTypeRepositoryRequest;
 use WebAppId\Member\Services\Contracts\IdentityTypeServiceContract;
 use WebAppId\Member\Services\Requests\IdentityTypeServiceRequest;
 use WebAppId\Member\Services\Responses\IdentityTypeServiceResponse;
 use WebAppId\Member\Services\Responses\IdentityTypeServiceResponseList;
-use WebAppId\DDD\Services\BaseService;
-use WebAppId\DDD\Tools\Lazy;
 
 /**
  * @author: Dyan Galih<dyan.galih@gmail.com>
@@ -96,7 +95,7 @@ class IdentityTypeService implements IdentityTypeServiceContract
     public function get(IdentityTypeRepository $identityTypeRepository, IdentityTypeServiceResponseList $identityTypeServiceResponseList, int $length = 12, string $q = null): IdentityTypeServiceResponseList
     {
         $result = app()->call([$identityTypeRepository, 'get'], ['q' => $q]);
-        
+
         if (count($result) > 0) {
             $identityTypeServiceResponseList->status = true;
             $identityTypeServiceResponseList->message = 'Data Found';

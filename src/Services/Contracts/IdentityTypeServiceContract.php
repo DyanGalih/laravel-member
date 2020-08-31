@@ -61,12 +61,12 @@ interface IdentityTypeServiceContract
      * @param int $length
      * @return IdentityTypeServiceResponseList
      */
-    public function get(IdentityTypeRepository $identityTypeRepository, IdentityTypeServiceResponseList $identityTypeServiceResponseList,int $length = 12, string $q = null): IdentityTypeServiceResponseList;
+    public function get(IdentityTypeRepository $identityTypeRepository, IdentityTypeServiceResponseList $identityTypeServiceResponseList, int $length = 12, string $q = null): IdentityTypeServiceResponseList;
 
     /**
      * @param string $q
      * @param IdentityTypeRepository $identityTypeRepository
      * @return int
      */
-    public function getCount(IdentityTypeRepository $identityTypeRepository, string $q = null):int;
+    public function getCount(IdentityTypeRepository $identityTypeRepository, string $q = null): int;
 }

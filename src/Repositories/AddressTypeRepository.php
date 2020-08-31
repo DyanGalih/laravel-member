@@ -5,13 +5,13 @@
 
 namespace WebAppId\Member\Repositories;
 
-use WebAppId\Member\Models\AddressType;
-use WebAppId\Member\Repositories\Contracts\AddressTypeRepositoryContract;
-use WebAppId\Member\Repositories\Requests\AddressTypeRepositoryRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use WebAppId\DDD\Tools\Lazy;
+use WebAppId\Member\Models\AddressType;
+use WebAppId\Member\Repositories\Contracts\AddressTypeRepositoryContract;
+use WebAppId\Member\Repositories\Requests\AddressTypeRepositoryRequest;
 
 /**
  * @author: Dyan Galih<dyan.galih@gmail.com>
@@ -116,7 +116,8 @@ class AddressTypeRepository implements AddressTypeRepositoryContract
     {
         return $this
             ->getJoin($addressType, $q)
-            ->paginate($length, $this->getColumn());
+            ->paginate($length, $this->getColumn())
+            ->appends(request()->input());
     }
 
     /**

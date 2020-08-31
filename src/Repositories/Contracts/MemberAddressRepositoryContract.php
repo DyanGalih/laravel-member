@@ -5,9 +5,9 @@
 
 namespace WebAppId\Member\Repositories\Contracts;
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use WebAppId\Member\Models\MemberAddress;
 use WebAppId\Member\Repositories\Requests\MemberAddressRepositoryRequest;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * @author: Dyan Galih<dyan.galih@gmail.com>

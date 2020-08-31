@@ -39,8 +39,8 @@ class IdentityTypeTableSeeder extends Seeder
         foreach ($identityTypes as $identityType) {
             $identityTypeRepositoryRequest = Lazy::copyFromArray($identityType, $identityTypeRepositoryRequest, Lazy::AUTOCAST);
             $result = app()->call([$identityTypeRepository, 'getByName'], ['name' => $identityTypeRepositoryRequest->name]);
-            if($result == null){
-                app()->call([$identityTypeRepository, 'store'],compact('identityTypeRepositoryRequest'));
+            if ($result == null) {
+                app()->call([$identityTypeRepository, 'store'], compact('identityTypeRepositoryRequest'));
             }
         }
     }

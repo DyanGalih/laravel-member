@@ -5,10 +5,10 @@
 
 namespace WebAppId\Member\Tests\Unit\Repositories;
 
+use Illuminate\Contracts\Container\BindingResolutionException;
 use WebAppId\Member\Models\AddressType;
 use WebAppId\Member\Repositories\AddressTypeRepository;
 use WebAppId\Member\Repositories\Requests\AddressTypeRepositoryRequest;
-use Illuminate\Contracts\Container\BindingResolutionException;
 use WebAppId\Member\Tests\TestCase;
 
 /**

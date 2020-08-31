@@ -26,7 +26,8 @@ class Member extends Model
         return $this->hasMany(MemberAddress::class);
     }
 
-    public function content(){
+    public function content()
+    {
         return $this->belongsTo(Content::class);
     }
 

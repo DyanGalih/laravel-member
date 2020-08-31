@@ -5,13 +5,13 @@
 
 namespace WebAppId\Member\Repositories;
 
-use WebAppId\Member\Models\MemberType;
-use WebAppId\Member\Repositories\Contracts\MemberTypeRepositoryContract;
-use WebAppId\Member\Repositories\Requests\MemberTypeRepositoryRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use WebAppId\DDD\Tools\Lazy;
+use WebAppId\Member\Models\MemberType;
+use WebAppId\Member\Repositories\Contracts\MemberTypeRepositoryContract;
+use WebAppId\Member\Repositories\Requests\MemberTypeRepositoryRequest;
 
 /**
  * @author: Dyan Galih<dyan.galih@gmail.com>
@@ -45,23 +45,23 @@ class MemberTypeRepository implements MemberTypeRepositoryContract
     protected function getJoin(MemberType $memberType, string $q = null): Builder
     {
         return $memberType
-                ->when($q != null, function ($query) use ($q) {
-                        return $query->where('name', 'LIKE', '%' . $q . '%');
-                    });
+            ->when($q != null, function ($query) use ($q) {
+                return $query->where('name', 'LIKE', '%' . $q . '%');
+            });
     }
 
     /**
-    * @return array
-    */
+     * @return array
+     */
     protected function getColumn(): array
     {
-        return 
+        return
             [
                 'member_types.id',
                 'member_types.name',
                 'member_types.created_at',
                 'member_types.updated_at'
-                ];
+            ];
     }
 
     /**
@@ -70,12 +70,12 @@ class MemberTypeRepository implements MemberTypeRepositoryContract
     public function update(int $id, MemberTypeRepositoryRequest $memberTypeRepositoryRequest, MemberType $memberType): ?MemberType
     {
         $memberType = $this->getById($id, $memberType);
-        if($memberType!=null){
+        if ($memberType != null) {
             try {
                 $memberType = Lazy::copy($memberTypeRepositoryRequest, $memberType);
                 $memberType->save();
                 return $memberType;
-            }catch (QueryException $queryException){
+            } catch (QueryException $queryException) {
                 report($queryException);
             }
         }
@@ -96,9 +96,9 @@ class MemberTypeRepository implements MemberTypeRepositoryContract
     public function delete(int $id, MemberType $memberType): bool
     {
         $memberType = $this->getById($id, $memberType);
-        if($memberType!=null){
+        if ($memberType != null) {
             return $memberType->delete();
-        }else{
+        } else {
             return false;
         }
     }
@@ -110,7 +110,8 @@ class MemberTypeRepository implements MemberTypeRepositoryContract
     {
         return $this
             ->getJoin($memberType, $q)
-            ->paginate($length, $this->getColumn());
+            ->paginate($length, $this->getColumn())
+            ->appends(request()->input());
     }
 
     /**

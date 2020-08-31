@@ -24,7 +24,7 @@ class MemberServiceRequest
      * @var string
      */
     public $identity;
-    
+
     /**
      * @var string
      */

@@ -32,55 +32,55 @@ class MemberAddressServiceRequest
      */
 
     public $name;
-    
+
     /**
      * @var int
      */
     public $member_id;
-                
+
     /**
      * @var string
      */
     public $address;
-                
+
     /**
      * @var string
      */
     public $city;
-                
+
     /**
      * @var string
      */
     public $state;
-                
+
     /**
      * @var string
      */
     public $post_code;
-                
+
     /**
      * @var string
      */
     public $country;
-                
+
     /**
      * @var string
      */
     public $isDefault;
-                
+
     /**
      * @var int
      */
     public $user_id;
-                
+
     /**
      * @var int
      */
     public $creator_id;
-                
+
     /**
      * @var int
      */
     public $owner_id;
-                
+
 }

@@ -14,10 +14,10 @@ namespace WebAppId\Member\Repositories\Requests;
  */
 class MemberTypeRepositoryRequest
 {
-    
+
     /**
      * @var string
      */
     public $name;
-                
+
 }

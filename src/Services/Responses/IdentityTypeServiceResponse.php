@@ -5,8 +5,8 @@
 
 namespace WebAppId\Member\Services\Responses;
 
-use WebAppId\Member\Models\IdentityType;
 use WebAppId\DDD\Responses\AbstractResponse;
+use WebAppId\Member\Models\IdentityType;
 
 /**
  * @author: Dyan Galih<dyan.galih@gmail.com>

@@ -61,12 +61,12 @@ interface MemberTypeServiceContract
      * @param int $length
      * @return MemberTypeServiceResponseList
      */
-    public function get(MemberTypeRepository $memberTypeRepository, MemberTypeServiceResponseList $memberTypeServiceResponseList,int $length = 12, string $q = null): MemberTypeServiceResponseList;
+    public function get(MemberTypeRepository $memberTypeRepository, MemberTypeServiceResponseList $memberTypeServiceResponseList, int $length = 12, string $q = null): MemberTypeServiceResponseList;
 
     /**
      * @param string $q
      * @param MemberTypeRepository $memberTypeRepository
      * @return int
      */
-    public function getCount(MemberTypeRepository $memberTypeRepository, string $q = null):int;
+    public function getCount(MemberTypeRepository $memberTypeRepository, string $q = null): int;
 }

@@ -23,11 +23,11 @@ class CreateMembersTable extends Migration
                 ->comment('Member Name');
             $table->string('email', 100)
                 ->comment('Member email');
-            $table->string('phone',20)
+            $table->string('phone', 20)
                 ->comment('Member Phone Number');
             $table->string('phone_alternative')
                 ->comment('Member Phone Alternative');
-            $table->enum('sex',['M', 'F', 'O'])
+            $table->enum('sex', ['M', 'F', 'O'])
                 ->nullable(false)
                 ->default('O')
                 ->comment('Member Sex');

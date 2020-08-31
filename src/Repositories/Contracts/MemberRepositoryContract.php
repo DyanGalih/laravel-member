@@ -5,9 +5,9 @@
 
 namespace WebAppId\Member\Repositories\Contracts;
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use WebAppId\Member\Models\Member;
 use WebAppId\Member\Repositories\Requests\MemberRepositoryRequest;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * @author: Dyan Galih<dyan.galih@gmail.com>
@@ -54,8 +54,8 @@ interface MemberRepositoryContract
      * @return Member|null
      */
     public function getByProfileId(int $profileId,
-                              Member $member,
-                              int $ownerId = null): ?Member;
+                                   Member $member,
+                                   int $ownerId = null): ?Member;
 
     /**
      * @param int $id

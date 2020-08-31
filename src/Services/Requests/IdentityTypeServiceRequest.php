@@ -14,15 +14,15 @@ namespace WebAppId\Member\Services\Requests;
  */
 class IdentityTypeServiceRequest
 {
-    
+
     /**
      * @var string
      */
     public $name;
-                
+
     /**
      * @var int
      */
     public $user_id;
-                
+
 }

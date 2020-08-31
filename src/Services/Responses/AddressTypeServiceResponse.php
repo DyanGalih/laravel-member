@@ -5,8 +5,8 @@
 
 namespace WebAppId\Member\Services\Responses;
 
-use WebAppId\Member\Models\AddressType;
 use WebAppId\DDD\Responses\AbstractResponse;
+use WebAppId\Member\Models\AddressType;
 
 /**
  * @author: Dyan Galih<dyan.galih@gmail.com>

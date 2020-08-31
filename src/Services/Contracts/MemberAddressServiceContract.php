@@ -76,7 +76,7 @@ interface MemberAddressServiceContract
      * @param string $q
      * @return MemberAddressServiceResponseList
      */
-    public function get(string $identity, MemberAddressRepository $memberAddressRepository, MemberAddressServiceResponseList $memberAddressServiceResponseList,int $length = 12, string $q = null): MemberAddressServiceResponseList;
+    public function get(string $identity, MemberAddressRepository $memberAddressRepository, MemberAddressServiceResponseList $memberAddressServiceResponseList, int $length = 12, string $q = null): MemberAddressServiceResponseList;
 
     /**
      * @param string $identity
@@ -84,5 +84,5 @@ interface MemberAddressServiceContract
      * @param string $q
      * @return int
      */
-    public function getCount(string $identity, MemberAddressRepository $memberAddressRepository, string $q = null):int;
+    public function getCount(string $identity, MemberAddressRepository $memberAddressRepository, string $q = null): int;
 }

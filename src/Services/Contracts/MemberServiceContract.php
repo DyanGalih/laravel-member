@@ -83,9 +83,9 @@ interface MemberServiceContract
      * @return MemberServiceResponse
      */
     public function getByProfileId(int $profileId,
-                              MemberRepository $memberRepository,
-                              MemberServiceResponse $memberServiceResponse,
-                              int $ownerId = null): MemberServiceResponse;
+                                   MemberRepository $memberRepository,
+                                   MemberServiceResponse $memberServiceResponse,
+                                   int $ownerId = null): MemberServiceResponse;
 
     /**
      * @param int $id

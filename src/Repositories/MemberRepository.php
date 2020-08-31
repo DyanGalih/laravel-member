@@ -5,15 +5,15 @@
 
 namespace WebAppId\Member\Repositories;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use WebAppId\Member\Models\Member;
-use WebAppId\Member\Repositories\Contracts\MemberRepositoryContract;
-use WebAppId\Member\Repositories\Requests\MemberRepositoryRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use WebAppId\DDD\Tools\Lazy;
+use WebAppId\Member\Models\Member;
+use WebAppId\Member\Repositories\Contracts\MemberRepositoryContract;
+use WebAppId\Member\Repositories\Requests\MemberRepositoryRequest;
 
 /**
  * @author: Dyan Galih<dyan.galih@gmail.com>
@@ -150,8 +150,8 @@ class MemberRepository implements MemberRepositoryContract
      * @inheritDoc
      */
     public function getByProfileId(int $profileId,
-                              Member $member,
-                              int $ownerId = null): ?Member
+                                   Member $member,
+                                   int $ownerId = null): ?Member
     {
         return $this->getJoin($member)
             ->where('members.profile_id', $profileId)
@@ -209,7 +209,8 @@ class MemberRepository implements MemberRepositoryContract
             ->when($ownerId != null, function ($query) use ($ownerId) {
                 return $query->where('members.owner_id', $ownerId);
             })
-            ->paginate($length, $this->getColumn());
+            ->paginate($length, $this->getColumn())
+            ->appends(request()->input());
     }
 
     /**

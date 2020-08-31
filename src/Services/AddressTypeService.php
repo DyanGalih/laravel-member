@@ -5,14 +5,13 @@
 
 namespace WebAppId\Member\Services;
 
+use WebAppId\DDD\Tools\Lazy;
 use WebAppId\Member\Repositories\AddressTypeRepository;
 use WebAppId\Member\Repositories\Requests\AddressTypeRepositoryRequest;
 use WebAppId\Member\Services\Contracts\AddressTypeServiceContract;
 use WebAppId\Member\Services\Requests\AddressTypeServiceRequest;
 use WebAppId\Member\Services\Responses\AddressTypeServiceResponse;
 use WebAppId\Member\Services\Responses\AddressTypeServiceResponseList;
-use WebAppId\DDD\Services\BaseService;
-use WebAppId\DDD\Tools\Lazy;
 
 /**
  * @author: Dyan Galih<dyan.galih@gmail.com>

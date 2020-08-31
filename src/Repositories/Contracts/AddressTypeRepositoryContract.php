@@ -5,9 +5,9 @@
 
 namespace WebAppId\Member\Repositories\Contracts;
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use WebAppId\Member\Models\AddressType;
 use WebAppId\Member\Repositories\Requests\AddressTypeRepositoryRequest;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * @author: Dyan Galih<dyan.galih@gmail.com>
@@ -64,8 +64,8 @@ interface AddressTypeRepositoryContract
 
     /**
      * @param AddressType $addressType
-     * @return int
      * @param string $q
+     * @return int
      */
     public function getCount(AddressType $addressType, string $q = null): int;
 

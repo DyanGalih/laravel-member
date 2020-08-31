@@ -5,18 +5,17 @@
 
 namespace WebAppId\Member\Services;
 
+use Illuminate\Support\Facades\DB;
 use WebAppId\Content\Repositories\CategoryRepository;
 use WebAppId\Content\Services\ContentService;
 use WebAppId\Content\Services\Requests\ContentServiceRequest;
+use WebAppId\DDD\Tools\Lazy;
 use WebAppId\Member\Repositories\MemberRepository;
-use Illuminate\Support\Facades\DB;
 use WebAppId\Member\Repositories\Requests\MemberRepositoryRequest;
 use WebAppId\Member\Services\Contracts\MemberServiceContract;
 use WebAppId\Member\Services\Requests\MemberServiceRequest;
 use WebAppId\Member\Services\Responses\MemberServiceResponse;
 use WebAppId\Member\Services\Responses\MemberServiceResponseList;
-use WebAppId\DDD\Services\BaseService;
-use WebAppId\DDD\Tools\Lazy;
 
 /**
  * @author: Dyan Galih<dyan.galih@gmail.com>
@@ -149,9 +148,9 @@ class MemberService implements MemberServiceContract
      * @inheritDoc
      */
     public function getByProfileId(int $profileId,
-                              MemberRepository $memberRepository,
-                              MemberServiceResponse $memberServiceResponse,
-                              int $ownerId = null): MemberServiceResponse
+                                   MemberRepository $memberRepository,
+                                   MemberServiceResponse $memberServiceResponse,
+                                   int $ownerId = null): MemberServiceResponse
     {
         $result = app()->call([$memberRepository, 'getByProfileId'], compact('profileId', 'ownerId'));
         if ($result != null) {

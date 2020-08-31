@@ -13,7 +13,7 @@ class AlterAddCodeProfileIdMemberTable extends Migration
      */
     public function up()
     {
-        Schema::table('members', function (Blueprint $table){
+        Schema::table('members', function (Blueprint $table) {
             $table->unsignedBigInteger('profile_id')
                 ->after('id')
                 ->nullable(true)

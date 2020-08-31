@@ -14,10 +14,10 @@ namespace WebAppId\Member\Services\Requests;
  */
 class MemberTypeServiceRequest
 {
-    
+
     /**
      * @var string
      */
     public $name;
-                
+
 }

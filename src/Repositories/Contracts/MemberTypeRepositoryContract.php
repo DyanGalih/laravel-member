@@ -5,9 +5,9 @@
 
 namespace WebAppId\Member\Repositories\Contracts;
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use WebAppId\Member\Models\MemberType;
 use WebAppId\Member\Repositories\Requests\MemberTypeRepositoryRequest;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * @author: Dyan Galih<dyan.galih@gmail.com>
@@ -57,8 +57,8 @@ interface MemberTypeRepositoryContract
 
     /**
      * @param MemberType $memberType
-     * @return int
      * @param string $q
+     * @return int
      */
     public function getCount(MemberType $memberType, string $q = null): int;
 

@@ -5,13 +5,13 @@
 
 namespace WebAppId\Member\Repositories;
 
-use WebAppId\Member\Models\MemberAddress;
-use WebAppId\Member\Repositories\Contracts\MemberAddressRepositoryContract;
-use WebAppId\Member\Repositories\Requests\MemberAddressRepositoryRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use WebAppId\DDD\Tools\Lazy;
+use WebAppId\Member\Models\MemberAddress;
+use WebAppId\Member\Repositories\Contracts\MemberAddressRepositoryContract;
+use WebAppId\Member\Repositories\Requests\MemberAddressRepositoryRequest;
 
 /**
  * @author: Dyan Galih<dyan.galih@gmail.com>
@@ -140,7 +140,8 @@ class MemberAddressRepository implements MemberAddressRepositoryContract
     {
         return $this
             ->getJoin($memberAddress, $q)
-            ->paginate($length, $this->getColumn());
+            ->paginate($length, $this->getColumn())
+            ->appends(request()->input());
     }
 
     /**

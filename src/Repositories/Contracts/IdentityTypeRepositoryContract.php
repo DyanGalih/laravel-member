@@ -5,9 +5,9 @@
 
 namespace WebAppId\Member\Repositories\Contracts;
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use WebAppId\Member\Models\IdentityType;
 use WebAppId\Member\Repositories\Requests\IdentityTypeRepositoryRequest;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * @author: Dyan Galih<dyan.galih@gmail.com>
@@ -64,8 +64,8 @@ interface IdentityTypeRepositoryContract
 
     /**
      * @param IdentityType $identityType
-     * @return int
      * @param string $q
+     * @return int
      */
     public function getCount(IdentityType $identityType, string $q = null): int;
 

@@ -5,12 +5,12 @@
 
 namespace WebAppId\Member\Tests\Feature\Services;
 
+use Illuminate\Contracts\Container\BindingResolutionException;
+use WebAppId\DDD\Tools\Lazy;
 use WebAppId\Member\Services\AddressTypeService;
 use WebAppId\Member\Services\Requests\AddressTypeServiceRequest;
-use Illuminate\Contracts\Container\BindingResolutionException;
 use WebAppId\Member\Tests\TestCase;
 use WebAppId\Member\Tests\Unit\Repositories\AddressTypeRepositoryTest;
-use WebAppId\DDD\Tools\Lazy;
 
 /**
  * @author: Dyan Galih<dyan.galih@gmail.com>

@@ -5,17 +5,17 @@
 
 namespace WebAppId\Member\Tests\Feature\Services;
 
+use Illuminate\Contracts\Container\BindingResolutionException;
 use WebAppId\Content\Services\Requests\ContentServiceRequest;
 use WebAppId\Content\Tests\Unit\Repositories\CategoryRepositoryTest;
 use WebAppId\Content\Tests\Unit\Repositories\ContentRepositoryTest;
+use WebAppId\DDD\Tools\Lazy;
 use WebAppId\Member\Repositories\MemberAddressRepository;
 use WebAppId\Member\Services\MemberService;
 use WebAppId\Member\Services\Requests\MemberServiceRequest;
-use Illuminate\Contracts\Container\BindingResolutionException;
 use WebAppId\Member\Tests\TestCase;
 use WebAppId\Member\Tests\Unit\Repositories\MemberAddressRepositoryTest;
 use WebAppId\Member\Tests\Unit\Repositories\MemberRepositoryTest;
-use WebAppId\DDD\Tools\Lazy;
 
 /**
  * @author: Dyan Galih<dyan.galih@gmail.com>
@@ -135,7 +135,7 @@ class MemberServiceTest extends TestCase
         for ($i = 0; $i < $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10)); $i++) {
             $memberServiceResponse = $this->testStore($i);
         }
-        $result = app()->call([$this->memberService, 'get'],['ownerId' => $this->getFaker()->boolean ? $memberServiceResponse->member->owner_id : null]);
+        $result = app()->call([$this->memberService, 'get'], ['ownerId' => $this->getFaker()->boolean ? $memberServiceResponse->member->owner_id : null]);
         self::assertTrue($result->status);
     }
 
@@ -161,7 +161,7 @@ class MemberServiceTest extends TestCase
     public function testDelete()
     {
         $memberServiceResponse = $this->testStore();
-        $result = app()->call([$this->memberService, 'delete'], ['code' => $memberServiceResponse->member->code,'ownerId' => $this->getFaker()->boolean ? $memberServiceResponse->member->owner_id : null]);
+        $result = app()->call([$this->memberService, 'delete'], ['code' => $memberServiceResponse->member->code, 'ownerId' => $this->getFaker()->boolean ? $memberServiceResponse->member->owner_id : null]);
         self::assertTrue($result);
     }
 

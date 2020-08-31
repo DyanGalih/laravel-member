@@ -18,5 +18,5 @@ class AddressTypeServiceRequest
      * @var string
      */
     public $name;
-                
+
 }

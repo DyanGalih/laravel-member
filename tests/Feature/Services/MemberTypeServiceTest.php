@@ -5,12 +5,12 @@
 
 namespace WebAppId\Member\Tests\Feature\Services;
 
+use Illuminate\Contracts\Container\BindingResolutionException;
+use WebAppId\DDD\Tools\Lazy;
 use WebAppId\Member\Services\MemberTypeService;
 use WebAppId\Member\Services\Requests\MemberTypeServiceRequest;
-use Illuminate\Contracts\Container\BindingResolutionException;
-use WebAppId\Member\Tests\Unit\Repositories\MemberTypeRepositoryTest;
-use WebAppId\DDD\Tools\Lazy;
 use WebAppId\Member\Tests\TestCase;
+use WebAppId\Member\Tests\Unit\Repositories\MemberTypeRepositoryTest;
 
 /**
  * @author: Dyan Galih<dyan.galih@gmail.com>
@@ -73,7 +73,7 @@ class MemberTypeServiceTest extends TestCase
 
     public function testGet()
     {
-        for ($i=0; $i<$this->getFaker()->numberBetween(10, $this->getFaker()->numberBetween(10, 30)); $i++){
+        for ($i = 0; $i < $this->getFaker()->numberBetween(10, $this->getFaker()->numberBetween(10, 30)); $i++) {
             $this->testStore($i);
         }
         $result = app()->call([$this->memberTypeService, 'get']);
@@ -82,7 +82,7 @@ class MemberTypeServiceTest extends TestCase
 
     public function testGetCount()
     {
-        for ($i=0; $i<$this->getFaker()->numberBetween(10, $this->getFaker()->numberBetween(10, 30)); $i++){
+        for ($i = 0; $i < $this->getFaker()->numberBetween(10, $this->getFaker()->numberBetween(10, 30)); $i++) {
             $this->testStore($i);
         }
         $result = app()->call([$this->memberTypeService, 'getCount']);
