@@ -1,8 +1,8 @@
-# Laravel-User
+# Laravel-Member
 
 this package is the core of member management based on laravel.
 
-This package required webappid/laravel-user. 
+This package required `webappid/laravel-user` and `webappid/content`. 
 
 #### Step by step to use :
 
