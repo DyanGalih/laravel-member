@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a52d97e6f8b9438bc233e7528b99c023",
+    "content-hash": "04c4e867c71d554f558e38248947e0cf",
     "packages": [
         {
             "name": "brick/math",
@@ -4892,6 +4892,49 @@
             "time": "2020-09-13T12:41:59+00:00"
         },
         {
+            "name": "webappid/lazy",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webappid/lazy.git",
+                "reference": "f9b217ad145dcf05157a8aadb0fbc6104a963799"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webappid/lazy/zipball/f9b217ad145dcf05157a8aadb0fbc6104a963799",
+                "reference": "f9b217ad145dcf05157a8aadb0fbc6104a963799",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "illuminate/support": "^7.0|^8.0",
+                "php": ">=7.2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "WebAppId\\Lazy\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dyan Galih",
+                    "email": "dyan.galih@gmail.com"
+                }
+            ],
+            "description": "Laravel Lazy",
+            "time": "2020-09-13T11:32:07+00:00"
+        },
+        {
             "name": "webappid/smartresponse",
             "version": "1.1.10",
             "source": {
@@ -6978,7 +7021,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "webappid/lazy": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

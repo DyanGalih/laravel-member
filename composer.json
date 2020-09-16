@@ -27,7 +27,8 @@
         "doctrine/dbal": "^2.5",
         "webappid/laravel-user": "^4.0",
         "nesbot/carbon": "^2.0",
-        "webappid/content": "^5.0"
+        "webappid/content": "^5.0",
+        "webappid/lazy": "^1.0@dev"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.0|^9.0",

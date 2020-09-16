@@ -9,9 +9,9 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use WebAppId\DDD\Responses\AbstractResponseList;
 
 /**
- * @author: Dyan Galih<dyan.galih@gmail.com>
- * Date: 03:24:51
- * Time: 2020/05/09
+ * @author:
+ * Date: 12:08:19
+ * Time: 2020/09/16
  * Class MemberServiceResponseList
  * @package WebAppId\Member\Services\Responses
  */

@@ -3,24 +3,25 @@
  * Created by LazyCrud - @DyanGalih <dyan.galih@gmail.com>
  */
 
-namespace WebAppId\Member\Tests\Unit\Repositories;
+namespace Tests\Unit\Repositories;
 
 use Illuminate\Contracts\Container\BindingResolutionException;
 use WebAppId\Content\Tests\Unit\Repositories\ContentRepositoryTest;
 use WebAppId\Content\Tests\Unit\Repositories\LanguageRepositoryTest;
 use WebAppId\Content\Tests\Unit\Repositories\TimeZoneRepositoryTest;
-use WebAppId\Member\Models\Member;
 use WebAppId\Member\Repositories\MemberRepository;
 use WebAppId\Member\Repositories\Requests\MemberRepositoryRequest;
 use WebAppId\Member\Tests\TestCase;
+use WebAppId\Member\Tests\Unit\Repositories\IdentityTypeRepositoryTest;
 use WebAppId\User\Tests\Unit\Repositories\UserRepositoryTest;
 
+
 /**
- * @author: Dyan Galih<dyan.galih@gmail.com>
- * Date: 03:24:51
- * Time: 2020/05/09
+ * @author:
+ * Date: 12:59:29
+ * Time: 2020/09/16
  * Class MemberServiceResponseList
- * @package WebAppId\Member\Tests\Unit\Repositories
+ * @package Tests\Unit\Repositories
  */
 class MemberRepositoryTest extends TestCase
 {
@@ -30,122 +31,94 @@ class MemberRepositoryTest extends TestCase
      */
     private $memberRepository;
 
-    /**
-     * @var IdentityTypeRepositoryTest
-     */
-    private $identityRepositoryTest;
-
-    /**
-     * @var TimeZoneRepositoryTest
-     */
-    private $timezoneRepositoryTest;
-
-    /**
-     * @var LanguageRepositoryTest
-     */
-    private $languageRepositoryTest;
-
-    /**
-     * @var ContentRepositoryTest
-     */
-    private $contentRepositoryTest;
-
-    /**
-     * @var UserRepositoryTest
-     */
-    private $userRepositoryTest;
-
     public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
-        $this->memberRepository = app()->make(MemberRepository::class);
-        $this->identityRepositoryTest = app()->make(IdentityTypeRepositoryTest::class);
-        $this->timezoneRepositoryTest = app()->make(TimeZoneRepositoryTest::class);
-        $this->languageRepositoryTest = app()->make(LanguageRepositoryTest::class);
-        $this->contentRepositoryTest = app()->make(ContentRepositoryTest::class);
-        $this->userRepositoryTest = app()->make(UserRepositoryTest::class);
-    }
-
-    public function getDummy(int $no = 0): ?MemberRepositoryRequest
-    {
-        $dummy = null;
-        $sexList = ['M', 'F', 'O'];
-        $sex = $sexList[$this->getFaker()->numberBetween(0, count($sexList) - 1)];
         try {
-            $dummy = app()->make(MemberRepositoryRequest::class);
-            $identityType = app()->call([$this->identityRepositoryTest, 'testStore']);
-            $timeZone = app()->call([$this->timezoneRepositoryTest, 'testStore']);
-            $language = app()->call([$this->languageRepositoryTest, 'testStore']);
-            $content = app()->call([$this->contentRepositoryTest, 'testStore']);
-            $user = app()->call([$this->userRepositoryTest, 'testStore']);
-            $dummy->identity_type_id = $identityType->id;
-            $dummy->identity = $this->getFaker()->uuid;
-            $dummy->profile_id = $user->id;
-            $dummy->name = $this->getFaker()->name;
-            $dummy->email = $this->getFaker()->safeEmailDomain;
-            $dummy->phone = $this->getFaker()->text(20);
-            $dummy->phone_alternative = $this->getFaker()->text(20);
-            $dummy->sex = $sex;
-            $dummy->dob = $this->getFaker()->dateTime()->format('Y-m-d');
-            $dummy->timezone_id = $timeZone->id;
-            $dummy->language_id = $language->id;
-            $dummy->content_id = $content->id;
-            $dummy->user_id = $user->id;
-            $dummy->creator_id = $user->id;
-            $dummy->owner_id = $user->id;
-            return $dummy;
+            $this->memberRepository = app()->make(MemberRepository::class);
         } catch (BindingResolutionException $e) {
             report($e);
-            return null;
         }
     }
 
-    public function testStore(int $no = 0): ?Member
+    public function getDummy(int $no = 0): ?array
     {
-        $memberRepositoryRequest = $this->getDummy($no);
-        $result = app()->call([$this->memberRepository, 'store'], ['memberRepositoryRequest' => $memberRepositoryRequest]);
-        self::assertNotEquals(null, $result);
+        $result = [];
+        try {
+            $userRepositoryTest = app()->make(UserRepositoryTest::class);
+            $user = app()->call([$userRepositoryTest, 'testStore']);
+            $result['users'] = $user;
+            $identityTypeRepositoryTest = app()->make(IdentityTypeRepositoryTest::class);
+            $identityType = app()->call([$identityTypeRepositoryTest, 'testStore']);
+            $result['identity_types'] = $identityType;
+            $timeZoneRepositoryTest = app()->make(TimeZoneRepositoryTest::class);
+            $timeZone = app()->call([$timeZoneRepositoryTest, 'testStore']);
+            $result['time_zones'] = $timeZone;
+            $languageRepositoryTest = app()->make(LanguageRepositoryTest::class);
+            $language = app()->call([$languageRepositoryTest, 'testStore']);
+            $result['languages'] = $language;
+            $contentRepositoryTest = app()->make(ContentRepositoryTest::class);
+            $content = app()->call([$contentRepositoryTest, 'testStore']);
+            $result['contents'] = $content;
+            $member = app()->make(MemberRepositoryRequest::class);
+            $member->profile_id = $user->id;
+            $member->code = $this->getFaker()->text(100);
+            $member->identity_type_id = $identityType->id;
+            $member->identity = $this->getFaker()->text(255);
+            $member->name = $this->getFaker()->text(255);
+            $member->email = $this->getFaker()->text(100);
+            $member->phone = $this->getFaker()->text(20);
+            $member->phone_alternative = $this->getFaker()->text(255);
+            $sexes = explode(",", "M,F,O");
+            $member->sex = $sexes[$this->getFaker()->numberBetween(0, count($sexes) - 1)];
+            $member->dob = $this->getFaker()->date("Y-m-d H:m:i");
+            $member->timezone_id = $timeZone->id;
+            $member->language_id = $language->id;
+            $member->content_id = $content->id;
+            $member->user_id = $user->id;
+            $member->creator_id = $user->id;
+            $member->owner_id = $user->id;
+
+            $result['members'] = $member;
+        } catch (BindingResolutionException $e) {
+            report($e);
+        }
         return $result;
     }
 
-    public function testGetByCode()
+    public function testStore(int $no = 0): ?array
     {
-        $member = $this->testStore();
-        $result = app()->call([$this->memberRepository, 'getByCode'], ['code' => $member->code, 'ownerId' => $this->getFaker()->boolean ? $member->owner_id : null]);
+        $memberRepositoryRequest = $this->getDummy($no);
+        $result = app()->call([$this->memberRepository, 'store'], ['memberRepositoryRequest' => $memberRepositoryRequest['members']]);
         self::assertNotEquals(null, $result);
-    }
-
-    public function testGetById()
-    {
-        $member = $this->testStore();
-        $result = app()->call([$this->memberRepository, 'getById'], ['id' => $member->id, 'ownerId' => $this->getFaker()->boolean ? $member->owner_id : null]);
-        self::assertNotEquals(null, $result);
+        $memberRepositoryRequest['members'] = $result;
+        return $memberRepositoryRequest;
     }
 
     public function testDelete()
     {
         $member = $this->testStore();
-        $result = app()->call([$this->memberRepository, 'delete'], ['code' => $member->code, 'ownerId' => $this->getFaker()->boolean ? $member->owner_id : null]);
+        $result = app()->call([$this->memberRepository, 'delete'], ['code' => $member['members']->code]);
         self::assertTrue($result);
     }
 
     public function testGet()
     {
         for ($i = 0; $i < $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10)); $i++) {
-            $member = $this->testStore($i);
+            $this->testStore($i);
         }
 
-        $resultList = app()->call([$this->memberRepository, 'get'], ['ownerId' => $this->getFaker()->boolean ? $member->owner_id : null]);
+        $resultList = app()->call([$this->memberRepository, 'get']);
         self::assertGreaterThanOrEqual(1, count($resultList));
     }
 
     public function testGetCount()
     {
         for ($i = 0; $i < $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10)); $i++) {
-            $member = $this->testStore($i);
+            $this->testStore($i);
         }
 
-        $result = app()->call([$this->memberRepository, 'getCount'], ['ownerId' => $this->getFaker()->boolean ? $member->owner_id : null]);
+        $result = app()->call([$this->memberRepository, 'getCount']);
         self::assertGreaterThanOrEqual(1, $result);
     }
 
@@ -153,13 +126,7 @@ class MemberRepositoryTest extends TestCase
     {
         $member = $this->testStore();
         $memberRepositoryRequest = $this->getDummy(1);
-        $ownerId = $this->getFaker()->boolean ? $member->owner_id : null;
-        $result = app()->call([$this->memberRepository, 'update'],
-            [
-                'code' => $member->code,
-                'memberRepositoryRequest' => $memberRepositoryRequest,
-                'ownerId' => $this->getFaker()->boolean ? $member->owner_id : null
-            ]);
+        $result = app()->call([$this->memberRepository, 'update'], ['code' => $member['members']->code, 'memberRepositoryRequest' => $memberRepositoryRequest['members']]);
         self::assertNotEquals(null, $result);
     }
 
@@ -185,32 +152,844 @@ class MemberRepositoryTest extends TestCase
         self::assertGreaterThanOrEqual(1, $result);
     }
 
-    public function testAvailableIdentity()
+    public function testGetByCode()
     {
-        $member = $this->testStore();
-        $result = app()->call([$this->memberRepository, 'checkAvailableIdentity'], ['identity' => $member->identity]);
-        self::assertEquals(null, $result);
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByCode'], ['code' => $result['members']->code]);
+        self::assertNotNull($resultData);
     }
 
-    public function testAvailableIdentityById()
+    public function testGetByCodeList()
     {
-        $memberRepositoryRequest = $this->getDummy();
-        $identity = $memberRepositoryRequest->identity;
-        app()->call([$this->memberRepository, 'store'], ['memberRepositoryRequest' => $memberRepositoryRequest]);
-        $memberRepositoryRequest = $this->getDummy();
-        $member = app()->call([$this->memberRepository, 'store'], ['memberRepositoryRequest' => $memberRepositoryRequest]);
-        $result = app()->call([$this->memberRepository, 'checkAvailableIdentity'], ['identity' => $identity, 'memberId' => $member->id]);
-        self::assertTrue($result);
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByCodeList'], ['code' => $result['members']->code]);
+        self::assertGreaterThanOrEqual(1, count($resultData));
     }
 
-    public function testAvailableEmail()
+    public function testGetByContentId()
     {
-        $memberRepositoryRequest = $this->getDummy();
-        $email = $memberRepositoryRequest->email;
-        app()->call([$this->memberRepository, 'store'], ['memberRepositoryRequest' => $memberRepositoryRequest]);
-        $memberRepositoryRequest = $this->getDummy();
-        $member = app()->call([$this->memberRepository, 'store'], ['memberRepositoryRequest' => $memberRepositoryRequest]);
-        $result = app()->call([$this->memberRepository, 'checkAvailableEmail'], ['email' => $this->getFaker()->email, 'memberId' => $member->id]);
-        self::assertTrue($result);
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByContentId'], ['contentId' => $result['members']->content_id]);
+        self::assertNotNull($resultData);
     }
+
+    public function testGetByContentIdList()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByContentIdList'], ['contentId' => $result['members']->content_id]);
+        self::assertGreaterThanOrEqual(1, count($resultData));
+    }
+
+    public function testGetByCreatorId()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByCreatorId'], ['creatorId' => $result['members']->creator_id]);
+        self::assertNotNull($resultData);
+    }
+
+    public function testGetByCreatorIdList()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByCreatorIdList'], ['creatorId' => $result['members']->creator_id]);
+        self::assertGreaterThanOrEqual(1, count($resultData));
+    }
+
+    public function testGetByEmail()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByEmail'], ['email' => $result['members']->email]);
+        self::assertNotNull($resultData);
+    }
+
+    public function testGetByEmailList()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByEmailList'], ['email' => $result['members']->email]);
+        self::assertGreaterThanOrEqual(1, count($resultData));
+    }
+
+    public function testGetByIdentityTypeId()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByIdentityTypeId'], ['identityTypeId' => $result['members']->identity_type_id]);
+        self::assertNotNull($resultData);
+    }
+
+    public function testGetByIdentityTypeIdList()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByIdentityTypeIdList'], ['identityTypeId' => $result['members']->identity_type_id]);
+        self::assertGreaterThanOrEqual(1, count($resultData));
+    }
+
+    public function testGetByLanguageId()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByLanguageId'], ['languageId' => $result['members']->language_id]);
+        self::assertNotNull($resultData);
+    }
+
+    public function testGetByLanguageIdList()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByLanguageIdList'], ['languageId' => $result['members']->language_id]);
+        self::assertGreaterThanOrEqual(1, count($resultData));
+    }
+
+    public function testGetByOwnerId()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByOwnerId'], ['ownerId' => $result['members']->owner_id]);
+        self::assertNotNull($resultData);
+    }
+
+    public function testGetByOwnerIdList()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByOwnerIdList'], ['ownerId' => $result['members']->owner_id]);
+        self::assertGreaterThanOrEqual(1, count($resultData));
+    }
+
+    public function testGetByProfileId()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByProfileId'], ['profileId' => $result['members']->profile_id]);
+        self::assertNotNull($resultData);
+    }
+
+    public function testGetByProfileIdList()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByProfileIdList'], ['profileId' => $result['members']->profile_id]);
+        self::assertGreaterThanOrEqual(1, count($resultData));
+    }
+
+    public function testGetByTimezoneId()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByTimezoneId'], ['timezoneId' => $result['members']->timezone_id]);
+        self::assertNotNull($resultData);
+    }
+
+    public function testGetByTimezoneIdList()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByTimezoneIdList'], ['timezoneId' => $result['members']->timezone_id]);
+        self::assertGreaterThanOrEqual(1, count($resultData));
+    }
+
+    public function testGetByUserId()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByUserId'], ['userId' => $result['members']->user_id]);
+        self::assertNotNull($resultData);
+    }
+
+    public function testGetByUserIdList()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByUserIdList'], ['userId' => $result['members']->user_id]);
+        self::assertGreaterThanOrEqual(1, count($resultData));
+    }
+
+    public function testGetById()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getById'], ['id' => $result['members']->id]);
+        self::assertNotNull($resultData);
+    }
+
+    public function testGetByIdList()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByIdList'], ['id' => $result['members']->id]);
+        self::assertGreaterThanOrEqual(1, count($resultData));
+    }
+
+    public function testGetByContentCode()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByContentCode'], ['code' => $result['contents']->code]);
+        self::assertNotNull($resultData);
+    }
+
+    public function testGetByContentCodeList()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByContentCodeList'], ['code' => $result['contents']->code]);
+        self::assertGreaterThanOrEqual(1, count($resultData));
+    }
+
+    public function testGetByContentKeyword()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByContentKeyword'], ['keyword' => $result['contents']->keyword]);
+        self::assertNotNull($resultData);
+    }
+
+    public function testGetByContentKeywordList()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByContentKeywordList'], ['keyword' => $result['contents']->keyword]);
+        self::assertGreaterThanOrEqual(1, count($resultData));
+    }
+
+    public function testGetByContentOgDescription()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByContentOgDescription'], ['ogDescription' => $result['contents']->og_description]);
+        self::assertNotNull($resultData);
+    }
+
+    public function testGetByContentOgDescriptionList()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByContentOgDescriptionList'], ['ogDescription' => $result['contents']->og_description]);
+        self::assertGreaterThanOrEqual(1, count($resultData));
+    }
+
+    public function testGetByContentOgTitle()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByContentOgTitle'], ['ogTitle' => $result['contents']->og_title]);
+        self::assertNotNull($resultData);
+    }
+
+    public function testGetByContentOgTitleList()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByContentOgTitleList'], ['ogTitle' => $result['contents']->og_title]);
+        self::assertGreaterThanOrEqual(1, count($resultData));
+    }
+
+    public function testGetByContentTitle()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByContentTitle'], ['title' => $result['contents']->title]);
+        self::assertNotNull($resultData);
+    }
+
+    public function testGetByContentTitleList()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByContentTitleList'], ['title' => $result['contents']->title]);
+        self::assertGreaterThanOrEqual(1, count($resultData));
+    }
+
+    public function testGetByUserEmail()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByUserEmail'], ['email' => $result['users']->email]);
+        self::assertNotNull($resultData);
+    }
+
+    public function testGetByUserEmailList()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByUserEmailList'], ['email' => $result['users']->email]);
+        self::assertGreaterThanOrEqual(1, count($resultData));
+    }
+
+    public function testGetByIdentityTypeName()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByIdentityTypeName'], ['name' => $result['identity_types']->name]);
+        self::assertNotNull($resultData);
+    }
+
+    public function testGetByIdentityTypeNameList()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByIdentityTypeNameList'], ['name' => $result['identity_types']->name]);
+        self::assertGreaterThanOrEqual(1, count($resultData));
+    }
+
+    public function testGetByLanguageCode()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByLanguageCode'], ['code' => $result['languages']->code]);
+        self::assertNotNull($resultData);
+    }
+
+    public function testGetByLanguageCodeList()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByLanguageCodeList'], ['code' => $result['languages']->code]);
+        self::assertGreaterThanOrEqual(1, count($resultData));
+    }
+
+    public function testGetByTimeZoneCode()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByTimeZoneCode'], ['code' => $result['time_zones']->code]);
+        self::assertNotNull($resultData);
+    }
+
+    public function testGetByTimeZoneCodeList()
+    {
+
+        $max = $this->getFaker()->numberBetween(5, $this->getFaker()->numberBetween(5, 10));
+
+        $random = $this->getFaker()->numberBetween(0, $max - 1);
+
+        $result = null;
+
+        for ($i = 0; $i < $max; $i++) {
+            if ($random == $i) {
+                $result = $this->testStore($i);
+            } else {
+                $this->testStore($i);
+            }
+        }
+
+        $resultData = app()->call([$this->memberRepository, 'getByTimeZoneCodeList'], ['code' => $result['time_zones']->code]);
+        self::assertGreaterThanOrEqual(1, count($resultData));
+    }
+
 }

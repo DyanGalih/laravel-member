@@ -6,14 +6,24 @@
 namespace WebAppId\Member\Services\Requests;
 
 /**
- * @author: Dyan Galih<dyan.galih@gmail.com>
- * Date: 03:24:51
- * Time: 2020/05/09
+ * @author:
+ * Date: 12:08:19
+ * Time: 2020/09/16
  * Class MemberServiceRequest
  * @package WebAppId\Member\Services\Requests
  */
 class MemberServiceRequest
 {
+
+    /**
+     * @var int
+     */
+    public $profile_id;
+
+    /**
+     * @var string
+     */
+    public $code;
 
     /**
      * @var int
@@ -73,6 +83,11 @@ class MemberServiceRequest
     /**
      * @var int
      */
+    public $user_id;
+
+    /**
+     * @var int
+     */
     public $creator_id;
 
     /**
@@ -80,13 +95,4 @@ class MemberServiceRequest
      */
     public $owner_id;
 
-    /**
-     * @var int
-     */
-    public $user_id;
-
-    /**
-     * @var int
-     */
-    public $profile_id;
 }

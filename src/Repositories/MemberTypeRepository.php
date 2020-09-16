@@ -18,7 +18,7 @@ use WebAppId\Member\Repositories\Requests\MemberTypeRepositoryRequest;
  * Date: 00:04:43
  * Time: 2020/07/03
  * Class MemberTypeRepository
- * @package App\Repositories
+ * @package WebAppId\Member\Repositories
  */
 class MemberTypeRepository implements MemberTypeRepositoryContract
 {

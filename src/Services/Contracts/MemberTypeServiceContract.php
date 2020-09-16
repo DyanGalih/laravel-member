@@ -16,7 +16,7 @@ use WebAppId\Member\Services\Responses\MemberTypeServiceResponseList;
  * Date: 00:04:43
  * Time: 2020/07/03
  * Class MemberTypeServiceContract
- * @package App\Services\Contracts
+ * @package WebAppId\Member\Services\Contracts
  */
 interface MemberTypeServiceContract
 {
