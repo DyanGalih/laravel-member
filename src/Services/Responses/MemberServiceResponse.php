@@ -5,6 +5,7 @@
 
 namespace WebAppId\Member\Services\Responses;
 
+use WebAppId\Content\Models\Content;
 use WebAppId\DDD\Responses\AbstractResponse;
 use WebAppId\Member\Models\Member;
 
@@ -21,4 +22,24 @@ class MemberServiceResponse extends AbstractResponse
      * @var Member
      */
     public $member;
+
+    /**
+     * @var Content
+     */
+    public $content;
+
+    /**
+     * @var array
+     */
+    public $galleries = [];
+
+    /**
+     * @var array
+     */
+    public $categories = [];
+
+    /**
+     * @var array
+     */
+    public $children=[];
 }
