@@ -3,7 +3,7 @@
  * Created by LazyCrud - @DyanGalih <dyan.galih@gmail.com>
  */
 
-namespace Tests\Unit\Repositories;
+namespace WebAppId\Member\Tests\Unit\Repositories;
 
 use Illuminate\Contracts\Container\BindingResolutionException;
 use WebAppId\Content\Tests\Unit\Repositories\ContentRepositoryTest;
@@ -12,7 +12,6 @@ use WebAppId\Content\Tests\Unit\Repositories\TimeZoneRepositoryTest;
 use WebAppId\Member\Repositories\MemberRepository;
 use WebAppId\Member\Repositories\Requests\MemberRepositoryRequest;
 use WebAppId\Member\Tests\TestCase;
-use WebAppId\Member\Tests\Unit\Repositories\IdentityTypeRepositoryTest;
 use WebAppId\User\Tests\Unit\Repositories\UserRepositoryTest;
 
 

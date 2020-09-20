@@ -8,6 +8,7 @@ namespace WebAppId\Member\Repositories;
 use WebAppId\Content\Models\Content;
 use WebAppId\Content\Models\File;
 use WebAppId\Content\Models\Language;
+use WebAppId\Content\Models\TimeZone;
 use WebAppId\Lazy\Models\Join;
 use WebAppId\Member\Models\IdentityType;
 use WebAppId\Member\Repositories\Contracts\MemberRepositoryContract;
@@ -30,6 +31,11 @@ class MemberRepository implements MemberRepositoryContract
         $content->class = Content::class;
         $content->foreign = 'content_id';
         $this->joinTable['contents'] = $content;
+
+        $time_zone = app()->make(Join::class);
+        $time_zone->class = TimeZone::class;
+        $time_zone->foreign = 'timezone_id';
+        $this->joinTable['time_zones'] = $time_zone;
 
         $user = app()->make(Join::class);
         $user->class = User::class;

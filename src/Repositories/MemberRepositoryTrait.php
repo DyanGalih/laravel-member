@@ -579,7 +579,6 @@ trait MemberRepositoryTrait
      */
     public function getByTimeZoneCode(string $code, Member $member): ?Member
     {
-
         return $this
             ->getJoin($member)
             ->where('time_zones.code', $code)
