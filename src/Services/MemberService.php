@@ -5,16 +5,17 @@
 
 namespace WebAppId\Member\Services;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use WebAppId\Content\Repositories\CategoryRepository;
+use WebAppId\Content\Services\ContentService;
+use WebAppId\Content\Services\Requests\ContentServiceRequest;
 use WebAppId\Lazy\Tools\Lazy;
 use WebAppId\Member\Repositories\MemberRepository;
+use WebAppId\Member\Repositories\Requests\MemberRepositoryRequest;
 use WebAppId\Member\Services\Contracts\MemberServiceContract;
 use WebAppId\Member\Services\Requests\MemberServiceRequest;
-use WebAppId\Content\Services\Requests\ContentServiceRequest;
-use WebAppId\Content\Services\ContentService;
-use WebAppId\Content\Repositories\CategoryRepository;
-use WebAppId\Member\Repositories\Requests\MemberRepositoryRequest;
 use WebAppId\Member\Services\Responses\MemberServiceResponse;
-use Illuminate\Support\Facades\DB;
 
 /**
  * @author:
@@ -25,24 +26,43 @@ use Illuminate\Support\Facades\DB;
  */
 class MemberService implements MemberServiceContract
 {
-    use MemberServiceTrait{
+    use MemberServiceTrait {
         store as baseStore;
         update as baseUpdate;
     }
 
     /**
-     * @inheritDoc
-     * MemberServiceRequest $memberServiceRequest, MemberRepositoryRequest $memberRepositoryRequest, MemberRepository $memberRepository, MemberServiceResponse $memberServiceResponse
+     * @param MemberServiceRequest $memberServiceRequest
+     * @param ContentServiceRequest $contentServiceRequest
+     * @param MemberRepositoryRequest $memberRepositoryRequest
+     * @param ContentService $contentService
+     * @param CategoryRepository $categoryRepository
+     * @param MemberRepository $memberRepository
+     * @param MemberServiceResponse $memberServiceResponse
+     * @return MemberServiceResponse
      */
-    public function store(MemberServiceRequest $memberServiceRequest,
-                          MemberRepositoryRequest $memberRepositoryRequest,
-                          MemberRepository $memberRepository,
-                          MemberServiceResponse $memberServiceResponse): MemberServiceResponse
+    public function storeMember(MemberServiceRequest $memberServiceRequest,
+                                ContentServiceRequest $contentServiceRequest,
+                                MemberRepositoryRequest $memberRepositoryRequest,
+                                ContentService $contentService,
+                                CategoryRepository $categoryRepository,
+                                MemberRepository $memberRepository,
+                                MemberServiceResponse $memberServiceResponse): MemberServiceResponse
     {
         DB::beginTransaction();
-        $contentServiceRequest = app()->make(ContentServiceRequest::class);
-        $contentService = app()->make(ContentService::class);
-        $categoryRepository = app()->make(CategoryRepository::class);
+
+        $availableMember = app()->call([$memberRepository, 'getByEmail'], ['email' => $memberServiceRequest->email]);
+
+        if ($availableMember != null) {
+            $memberServiceResponse->status = false;
+            $memberServiceResponse->message = 'Email already used. Choose another one';
+            return $memberServiceResponse;
+        }
+
+        if ($memberServiceRequest->code == null) {
+            $memberServiceRequest->code = Str::uuid();
+        }
+
         $memberRepositoryRequest = Lazy::copy($memberServiceRequest, $memberRepositoryRequest);
         $category = app()->call([$categoryRepository, 'getByName'], ['name' => 'Profile']);
         if ($category != null) {
@@ -51,6 +71,7 @@ class MemberService implements MemberServiceContract
         if ($contentServiceRequest->content == null) {
             $contentServiceRequest->content = '';
         }
+
         $resultContent = app()->call([$contentService, 'store'], compact('contentServiceRequest'));
 
         $memberRepositoryRequest->content_id = $resultContent->content->id;
@@ -76,19 +97,37 @@ class MemberService implements MemberServiceContract
     }
 
     /**
-     * @inheritDoc
+     * @param string $code
+     * @param MemberServiceRequest $memberServiceRequest
+     * @param ContentServiceRequest $contentServiceRequest
+     * @param MemberRepositoryRequest $memberRepositoryRequest
+     * @param ContentService $contentService
+     * @param CategoryRepository $categoryRepository
+     * @param MemberRepository $memberRepository
+     * @param MemberServiceResponse $memberServiceResponse
+     * @param int|null $ownerId
+     * @return MemberServiceResponse
      */
     public function privateUpdate(string $code,
-                           MemberServiceRequest $memberServiceRequest,
-                           ContentServiceRequest $contentServiceRequest,
-                           MemberRepositoryRequest $memberRepositoryRequest,
-                           ContentService $contentService,
-                           CategoryRepository $categoryRepository,
-                           MemberRepository $memberRepository,
-                           MemberServiceResponse $memberServiceResponse,
-                           int $ownerId = null): MemberServiceResponse
+                                  MemberServiceRequest $memberServiceRequest,
+                                  ContentServiceRequest $contentServiceRequest,
+                                  MemberRepositoryRequest $memberRepositoryRequest,
+                                  ContentService $contentService,
+                                  CategoryRepository $categoryRepository,
+                                  MemberRepository $memberRepository,
+                                  MemberServiceResponse $memberServiceResponse,
+                                  int $ownerId = null): MemberServiceResponse
     {
         DB::beginTransaction();
+
+        $availableMember = app()->call([$memberRepository, 'getByEmail'], ['email' => $memberServiceRequest->email]);
+
+        if ($availableMember != null && $availableMember->code != $code) {
+            $memberServiceResponse->status = false;
+            $memberServiceResponse->message = 'Email already used. Choose another one';
+            return $memberServiceResponse;
+        }
+
         $memberRepositoryRequest = Lazy::copy($memberServiceRequest, $memberRepositoryRequest);
 
         $member = app()->call([$memberRepository, 'getByCode'], compact('code', 'ownerId'));

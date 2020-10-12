@@ -10,9 +10,9 @@ use WebAppId\Member\Models\Member;
 use WebAppId\Member\Repositories\Requests\MemberRepositoryRequest;
 
 /**
- * @author:
- * Date: 12:59:28
- * Time: 2020/09/16
+ * @author: 
+ * Date: 18:40:24
+ * Time: 2020/10/08
  * Class MemberRepositoryContract
  * @package WebAppId\Member\Repositories\Contracts
  */
@@ -60,299 +60,547 @@ interface MemberRepositoryContract
      * @param Member $member
      * @return Member
      */
-    public function getByCode(string $code, Member $member): ?Member;
+    public function getByCode(string $code, Member $member):? Member;
 
     /**
      * @param string $code
      * @param Member $member
+     * @param string|null $q
      * @param int $length
      * @return LengthAwarePaginator
      */
-    public function getByCodeList(string $code, Member $member, int $length = 12): ?LengthAwarePaginator;
-
-    /**
-     * @param int $contentId
-     * @param Member $member
-     * @return Member
-     */
-    public function getByContentId(int $contentId, Member $member): ?Member;
-
-    /**
-     * @param int $contentId
-     * @param Member $member
-     * @param int $length
-     * @return LengthAwarePaginator
-     */
-    public function getByContentIdList(int $contentId, Member $member, int $length = 12): ?LengthAwarePaginator;
+    public function getByCodeList(string $code, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
 
     /**
      * @param int $creatorId
+     * @param int $typeId
      * @param Member $member
      * @return Member
      */
-    public function getByCreatorId(int $creatorId, Member $member): ?Member;
+    public function getByCreatorIdTypeId(int $creatorId, int $typeId, Member $member):? Member;
 
     /**
      * @param int $creatorId
+     * @param int $typeId
      * @param Member $member
+     * @param string|null $q
      * @param int $length
      * @return LengthAwarePaginator
      */
-    public function getByCreatorIdList(int $creatorId, Member $member, int $length = 12): ?LengthAwarePaginator;
+    public function getByCreatorIdTypeIdList(int $creatorId, int $typeId, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
 
     /**
      * @param string $email
      * @param Member $member
      * @return Member
      */
-    public function getByEmail(string $email, Member $member): ?Member;
+    public function getByEmail(string $email, Member $member):? Member;
 
     /**
      * @param string $email
      * @param Member $member
+     * @param string|null $q
      * @param int $length
      * @return LengthAwarePaginator
      */
-    public function getByEmailList(string $email, Member $member, int $length = 12): ?LengthAwarePaginator;
-
-    /**
-     * @param int $identityTypeId
-     * @param Member $member
-     * @return Member
-     */
-    public function getByIdentityTypeId(int $identityTypeId, Member $member): ?Member;
-
-    /**
-     * @param int $identityTypeId
-     * @param Member $member
-     * @param int $length
-     * @return LengthAwarePaginator
-     */
-    public function getByIdentityTypeIdList(int $identityTypeId, Member $member, int $length = 12): ?LengthAwarePaginator;
-
-    /**
-     * @param int $languageId
-     * @param Member $member
-     * @return Member
-     */
-    public function getByLanguageId(int $languageId, Member $member): ?Member;
-
-    /**
-     * @param int $languageId
-     * @param Member $member
-     * @param int $length
-     * @return LengthAwarePaginator
-     */
-    public function getByLanguageIdList(int $languageId, Member $member, int $length = 12): ?LengthAwarePaginator;
-
-    /**
-     * @param int $ownerId
-     * @param Member $member
-     * @return Member
-     */
-    public function getByOwnerId(int $ownerId, Member $member): ?Member;
-
-    /**
-     * @param int $ownerId
-     * @param Member $member
-     * @param int $length
-     * @return LengthAwarePaginator
-     */
-    public function getByOwnerIdList(int $ownerId, Member $member, int $length = 12): ?LengthAwarePaginator;
-
-    /**
-     * @param int $profileId
-     * @param Member $member
-     * @return Member
-     */
-    public function getByProfileId(int $profileId, Member $member): ?Member;
-
-    /**
-     * @param int $profileId
-     * @param Member $member
-     * @param int $length
-     * @return LengthAwarePaginator
-     */
-    public function getByProfileIdList(int $profileId, Member $member, int $length = 12): ?LengthAwarePaginator;
-
-    /**
-     * @param int $timezoneId
-     * @param Member $member
-     * @return Member
-     */
-    public function getByTimezoneId(int $timezoneId, Member $member): ?Member;
-
-    /**
-     * @param int $timezoneId
-     * @param Member $member
-     * @param int $length
-     * @return LengthAwarePaginator
-     */
-    public function getByTimezoneIdList(int $timezoneId, Member $member, int $length = 12): ?LengthAwarePaginator;
-
-    /**
-     * @param int $userId
-     * @param Member $member
-     * @return Member
-     */
-    public function getByUserId(int $userId, Member $member): ?Member;
-
-    /**
-     * @param int $userId
-     * @param Member $member
-     * @param int $length
-     * @return LengthAwarePaginator
-     */
-    public function getByUserIdList(int $userId, Member $member, int $length = 12): ?LengthAwarePaginator;
-
-    /**
-     * @param int $id
-     * @param Member $member
-     * @return Member
-     */
-    public function getById(int $id, Member $member): ?Member;
-
-    /**
-     * @param int $id
-     * @param Member $member
-     * @param int $length
-     * @return LengthAwarePaginator
-     */
-    public function getByIdList(int $id, Member $member, int $length = 12): ?LengthAwarePaginator;
-
-    /**
-     * @param string $code
-     * @param Member $member
-     * @return Member
-     */
-    public function getByContentCode(string $code, Member $member): ?Member;
-
-    /**
-     * @param string $code
-     * @param Member $member
-     * @param int $length
-     * @return LengthAwarePaginator
-     */
-    public function getByContentCodeList(string $code, Member $member, int $length = 12): ?LengthAwarePaginator;
-
-    /**
-     * @param string $keyword
-     * @param Member $member
-     * @return Member
-     */
-    public function getByContentKeyword(string $keyword, Member $member): ?Member;
-
-    /**
-     * @param string $keyword
-     * @param Member $member
-     * @param int $length
-     * @return LengthAwarePaginator
-     */
-    public function getByContentKeywordList(string $keyword, Member $member, int $length = 12): ?LengthAwarePaginator;
-
-    /**
-     * @param string $ogDescription
-     * @param Member $member
-     * @return Member
-     */
-    public function getByContentOgDescription(string $ogDescription, Member $member): ?Member;
-
-    /**
-     * @param string $ogDescription
-     * @param Member $member
-     * @param int $length
-     * @return LengthAwarePaginator
-     */
-    public function getByContentOgDescriptionList(string $ogDescription, Member $member, int $length = 12): ?LengthAwarePaginator;
-
-    /**
-     * @param string $ogTitle
-     * @param Member $member
-     * @return Member
-     */
-    public function getByContentOgTitle(string $ogTitle, Member $member): ?Member;
-
-    /**
-     * @param string $ogTitle
-     * @param Member $member
-     * @param int $length
-     * @return LengthAwarePaginator
-     */
-    public function getByContentOgTitleList(string $ogTitle, Member $member, int $length = 12): ?LengthAwarePaginator;
-
-    /**
-     * @param string $title
-     * @param Member $member
-     * @return Member
-     */
-    public function getByContentTitle(string $title, Member $member): ?Member;
-
-    /**
-     * @param string $title
-     * @param Member $member
-     * @param int $length
-     * @return LengthAwarePaginator
-     */
-    public function getByContentTitleList(string $title, Member $member, int $length = 12): ?LengthAwarePaginator;
-
-    /**
-     * @param string $email
-     * @param Member $member
-     * @return Member
-     */
-    public function getByUserEmail(string $email, Member $member): ?Member;
-
-    /**
-     * @param string $email
-     * @param Member $member
-     * @param int $length
-     * @return LengthAwarePaginator
-     */
-    public function getByUserEmailList(string $email, Member $member, int $length = 12): ?LengthAwarePaginator;
+    public function getByEmailList(string $email, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
 
     /**
      * @param string $name
      * @param Member $member
      * @return Member
      */
-    public function getByIdentityTypeName(string $name, Member $member): ?Member;
+    public function getByName(string $name, Member $member):? Member;
 
     /**
      * @param string $name
      * @param Member $member
+     * @param string|null $q
      * @param int $length
      * @return LengthAwarePaginator
      */
-    public function getByIdentityTypeNameList(string $name, Member $member, int $length = 12): ?LengthAwarePaginator;
+    public function getByNameList(string $name, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param int $ownerId
+     * @param int $typeId
+     * @param Member $member
+     * @return Member
+     */
+    public function getByOwnerIdTypeId(int $ownerId, int $typeId, Member $member):? Member;
+
+    /**
+     * @param int $ownerId
+     * @param int $typeId
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByOwnerIdTypeIdList(int $ownerId, int $typeId, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param string $phone
+     * @param Member $member
+     * @return Member
+     */
+    public function getByPhone(string $phone, Member $member):? Member;
+
+    /**
+     * @param string $phone
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByPhoneList(string $phone, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param string $sex
+     * @param Member $member
+     * @return Member
+     */
+    public function getBySex(string $sex, Member $member):? Member;
+
+    /**
+     * @param string $sex
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getBySexList(string $sex, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param int $id
+     * @param Member $member
+     * @return Member
+     */
+    public function getById(int $id, Member $member):? Member;
+
+    /**
+     * @param int $id
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByIdList(int $id, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
 
     /**
      * @param string $code
      * @param Member $member
      * @return Member
      */
-    public function getByLanguageCode(string $code, Member $member): ?Member;
+    public function getByContentCode(string $code, Member $member):? Member;
 
     /**
      * @param string $code
      * @param Member $member
+     * @param string|null $q
      * @param int $length
      * @return LengthAwarePaginator
      */
-    public function getByLanguageCodeList(string $code, Member $member, int $length = 12): ?LengthAwarePaginator;
+    public function getByContentCodeList(string $code, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param string $keyword
+     * @param Member $member
+     * @return Member
+     */
+    public function getByContentKeyword(string $keyword, Member $member):? Member;
+
+    /**
+     * @param string $keyword
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByContentKeywordList(string $keyword, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param string $ogDescription
+     * @param Member $member
+     * @return Member
+     */
+    public function getByContentOgDescription(string $ogDescription, Member $member):? Member;
+
+    /**
+     * @param string $ogDescription
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByContentOgDescriptionList(string $ogDescription, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param string $ogTitle
+     * @param Member $member
+     * @return Member
+     */
+    public function getByContentOgTitle(string $ogTitle, Member $member):? Member;
+
+    /**
+     * @param string $ogTitle
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByContentOgTitleList(string $ogTitle, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param string $title
+     * @param Member $member
+     * @return Member
+     */
+    public function getByContentTitle(string $title, Member $member):? Member;
+
+    /**
+     * @param string $title
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByContentTitleList(string $title, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param int $id
+     * @param Member $member
+     * @return Member
+     */
+    public function getByContentId(int $id, Member $member):? Member;
+
+    /**
+     * @param int $id
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByContentIdList(int $id, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param string $apiToken
+     * @param Member $member
+     * @return Member
+     */
+    public function getByUserApiToken(string $apiToken, Member $member):? Member;
+
+    /**
+     * @param string $apiToken
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByUserApiTokenList(string $apiToken, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param string $email
+     * @param Member $member
+     * @return Member
+     */
+    public function getByUserEmail(string $email, Member $member):? Member;
+
+    /**
+     * @param string $email
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByUserEmailList(string $email, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param int $id
+     * @param Member $member
+     * @return Member
+     */
+    public function getByUserId(int $id, Member $member):? Member;
+
+    /**
+     * @param int $id
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByUserIdList(int $id, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param string $name
+     * @param Member $member
+     * @return Member
+     */
+    public function getByIdentityTypeName(string $name, Member $member):? Member;
+
+    /**
+     * @param string $name
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByIdentityTypeNameList(string $name, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param int $id
+     * @param Member $member
+     * @return Member
+     */
+    public function getByIdentityTypeId(int $id, Member $member):? Member;
+
+    /**
+     * @param int $id
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByIdentityTypeIdList(int $id, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
 
     /**
      * @param string $code
      * @param Member $member
      * @return Member
      */
-    public function getByTimeZoneCode(string $code, Member $member): ?Member;
+    public function getByLanguageCode(string $code, Member $member):? Member;
 
     /**
      * @param string $code
      * @param Member $member
+     * @param string|null $q
      * @param int $length
      * @return LengthAwarePaginator
      */
-    public function getByTimeZoneCodeList(string $code, Member $member, int $length = 12): ?LengthAwarePaginator;
+    public function getByLanguageCodeList(string $code, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param int $id
+     * @param Member $member
+     * @return Member
+     */
+    public function getByLanguageId(int $id, Member $member):? Member;
+
+    /**
+     * @param int $id
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByLanguageIdList(int $id, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param string $apiToken
+     * @param Member $member
+     * @return Member
+     */
+    public function getByOwnerUserApiToken(string $apiToken, Member $member):? Member;
+
+    /**
+     * @param string $apiToken
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByOwnerUserApiTokenList(string $apiToken, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param string $email
+     * @param Member $member
+     * @return Member
+     */
+    public function getByOwnerUserEmail(string $email, Member $member):? Member;
+
+    /**
+     * @param string $email
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByOwnerUserEmailList(string $email, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param int $id
+     * @param Member $member
+     * @return Member
+     */
+    public function getByOwnerUserId(int $id, Member $member):? Member;
+
+    /**
+     * @param int $id
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByOwnerUserIdList(int $id, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param string $apiToken
+     * @param Member $member
+     * @return Member
+     */
+    public function getByProfileUserApiToken(string $apiToken, Member $member):? Member;
+
+    /**
+     * @param string $apiToken
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByProfileUserApiTokenList(string $apiToken, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param string $email
+     * @param Member $member
+     * @return Member
+     */
+    public function getByProfileUserEmail(string $email, Member $member):? Member;
+
+    /**
+     * @param string $email
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByProfileUserEmailList(string $email, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param int $id
+     * @param Member $member
+     * @return Member
+     */
+    public function getByProfileUserId(int $id, Member $member):? Member;
+
+    /**
+     * @param int $id
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByProfileUserIdList(int $id, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param string $code
+     * @param Member $member
+     * @return Member
+     */
+    public function getByTimeZoneCode(string $code, Member $member):? Member;
+
+    /**
+     * @param string $code
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByTimeZoneCodeList(string $code, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param int $id
+     * @param Member $member
+     * @return Member
+     */
+    public function getByTimeZoneId(int $id, Member $member):? Member;
+
+    /**
+     * @param int $id
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByTimeZoneIdList(int $id, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param string $name
+     * @param Member $member
+     * @return Member
+     */
+    public function getByMemberTypeName(string $name, Member $member):? Member;
+
+    /**
+     * @param string $name
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByMemberTypeNameList(string $name, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param int $id
+     * @param Member $member
+     * @return Member
+     */
+    public function getByMemberTypeId(int $id, Member $member):? Member;
+
+    /**
+     * @param int $id
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByMemberTypeIdList(int $id, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param string $apiToken
+     * @param Member $member
+     * @return Member
+     */
+    public function getByUserUserApiToken(string $apiToken, Member $member):? Member;
+
+    /**
+     * @param string $apiToken
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByUserUserApiTokenList(string $apiToken, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param string $email
+     * @param Member $member
+     * @return Member
+     */
+    public function getByUserUserEmail(string $email, Member $member):? Member;
+
+    /**
+     * @param string $email
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByUserUserEmailList(string $email, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param int $id
+     * @param Member $member
+     * @return Member
+     */
+    public function getByUserUserId(int $id, Member $member):? Member;
+
+    /**
+     * @param int $id
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByUserUserIdList(int $id, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
 
 }
