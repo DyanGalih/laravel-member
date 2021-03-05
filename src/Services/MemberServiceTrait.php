@@ -5,8 +5,8 @@
 
 namespace WebAppId\Member\Services;
 
-use DyanGalih\Member\Repositories\MemberRepository;
 use WebAppId\Lazy\Tools\Lazy;
+use WebAppId\Member\Repositories\MemberRepository;
 use WebAppId\Member\Repositories\Requests\MemberRepositoryRequest;
 use WebAppId\Member\Services\Requests\MemberServiceRequest;
 use WebAppId\Member\Services\Responses\MemberServiceResponse;

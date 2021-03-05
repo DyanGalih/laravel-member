@@ -87,7 +87,9 @@ trait MemberAddressRepositoryTrait
         return $this
             ->getJoin($memberAddress)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->paginate($length, $this->getColumn())
             ->appends(request()->input());
@@ -101,7 +103,9 @@ trait MemberAddressRepositoryTrait
         return $this
             ->getJoin($memberAddress)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->count();
     }

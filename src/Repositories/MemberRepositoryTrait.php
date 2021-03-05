@@ -166,7 +166,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->paginate($length, $this->getColumn())
             ->appends(request()->all());
@@ -180,7 +182,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->count();
     }
@@ -204,7 +208,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('members.code', '=', $code )
             ->paginate($length, $this->getColumn())
@@ -231,7 +237,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('members.creator_id', '=', $creatorId )
             ->where('members.type_id', '=', $typeId )
@@ -258,7 +266,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('members.email', '=', $email )
             ->paginate($length, $this->getColumn())
@@ -284,7 +294,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('members.name', '=', $name )
             ->paginate($length, $this->getColumn())
@@ -311,7 +323,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('members.owner_id', '=', $ownerId )
             ->where('members.type_id', '=', $typeId )
@@ -338,7 +352,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('members.phone', '=', $phone )
             ->paginate($length, $this->getColumn())
@@ -364,7 +380,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('members.sex', '=', $sex )
             ->paginate($length, $this->getColumn())
@@ -390,7 +408,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('members.id', '=', $id )
             ->paginate($length, $this->getColumn())
@@ -416,7 +436,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('contents.code', '=', $code )
             ->paginate($length, $this->getColumn())
@@ -442,7 +464,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('contents.keyword', '=', $keyword )
             ->paginate($length, $this->getColumn())
@@ -468,7 +492,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('contents.og_description', '=', $ogDescription )
             ->paginate($length, $this->getColumn())
@@ -494,7 +520,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('contents.og_title', '=', $ogTitle )
             ->paginate($length, $this->getColumn())
@@ -520,7 +548,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('contents.title', '=', $title )
             ->paginate($length, $this->getColumn())
@@ -546,7 +576,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('contents.id', '=', $id )
             ->paginate($length, $this->getColumn())
@@ -572,7 +604,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('users.api_token', '=', $apiToken )
             ->paginate($length, $this->getColumn())
@@ -598,7 +632,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('users.email', '=', $email )
             ->paginate($length, $this->getColumn())
@@ -624,7 +660,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('users.id', '=', $id )
             ->paginate($length, $this->getColumn())
@@ -650,7 +688,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('identity_types.name', '=', $name )
             ->paginate($length, $this->getColumn())
@@ -676,7 +716,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('identity_types.id', '=', $id )
             ->paginate($length, $this->getColumn())
@@ -702,7 +744,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('languages.code', '=', $code )
             ->paginate($length, $this->getColumn())
@@ -728,7 +772,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('languages.id', '=', $id )
             ->paginate($length, $this->getColumn())
@@ -754,7 +800,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('owner_users.api_token', '=', $apiToken )
             ->paginate($length, $this->getColumn())
@@ -780,7 +828,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('owner_users.email', '=', $email )
             ->paginate($length, $this->getColumn())
@@ -806,7 +856,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('owner_users.id', '=', $id )
             ->paginate($length, $this->getColumn())
@@ -832,7 +884,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('profile_users.api_token', '=', $apiToken )
             ->paginate($length, $this->getColumn())
@@ -858,7 +912,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('profile_users.email', '=', $email )
             ->paginate($length, $this->getColumn())
@@ -884,7 +940,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('profile_users.id', '=', $id )
             ->paginate($length, $this->getColumn())
@@ -910,7 +968,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('time_zones.code', '=', $code )
             ->paginate($length, $this->getColumn())
@@ -936,7 +996,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('time_zones.id', '=', $id )
             ->paginate($length, $this->getColumn())
@@ -962,7 +1024,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('member_types.name', '=', $name )
             ->paginate($length, $this->getColumn())
@@ -988,7 +1052,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('member_types.id', '=', $id )
             ->paginate($length, $this->getColumn())
@@ -1014,7 +1080,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('user_users.api_token', '=', $apiToken )
             ->paginate($length, $this->getColumn())
@@ -1040,7 +1108,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('user_users.email', '=', $email )
             ->paginate($length, $this->getColumn())
@@ -1066,7 +1136,9 @@ trait MemberRepositoryTrait
         return $this
             ->getJoin($member)
             ->when($q != null, function ($query) use ($q) {
-                return $this->getFilter($query, $q);
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
             })
             ->where('user_users.id', '=', $id )
             ->paginate($length, $this->getColumn())
