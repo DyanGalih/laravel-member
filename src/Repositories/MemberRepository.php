@@ -28,5 +28,11 @@ class MemberRepository implements MemberRepositoryContract
     public function __construct()
     {
         $this->init();
+        $contents = app()->make(Join::class);
+        $contents->class = File::class;
+        $contents->foreign = 'files.id';
+        $contents->type = 'left';
+        $contents->primary = 'contents.default_image';
+        $this->joinTable['files'] = $contents;
     }
 }
