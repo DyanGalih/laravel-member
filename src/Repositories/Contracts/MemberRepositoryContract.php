@@ -11,8 +11,8 @@ use WebAppId\Member\Repositories\Requests\MemberRepositoryRequest;
 
 /**
  * @author: 
- * Date: 18:40:24
- * Time: 2020/10/08
+ * Date: 04:35:07
+ * Time: 2021/03/14
  * Class MemberRepositoryContract
  * @package WebAppId\Member\Repositories\Contracts
  */
@@ -120,6 +120,24 @@ interface MemberRepositoryContract
      * @return LengthAwarePaginator
      */
     public function getByNameList(string $name, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
+
+    /**
+     * @param string $name
+     * @param int $typeId
+     * @param Member $member
+     * @return Member
+     */
+    public function getByNameTypeId(string $name, int $typeId, Member $member):? Member;
+
+    /**
+     * @param string $name
+     * @param int $typeId
+     * @param Member $member
+     * @param string|null $q
+     * @param int $length
+     * @return LengthAwarePaginator
+     */
+    public function getByNameTypeIdList(string $name, int $typeId, Member $member, string $q = null, int $length = 12): LengthAwarePaginator;
 
     /**
      * @param int $ownerId

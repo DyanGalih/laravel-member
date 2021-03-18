@@ -22,8 +22,8 @@ use WebAppId\Member\Repositories\Requests\MemberRepositoryRequest;
 
 /**
  * @author:
- * Date: 18:40:09
- * Time: 2020/10/08
+ * Date: 04:34:31
+ * Time: 2021/03/14
  * Trait MemberRepositoryTrait
  * @package WebAppId\Member\Repositories
  */
@@ -151,11 +151,14 @@ trait MemberRepositoryTrait
      */
     protected Function getFilter(Builder $query, string $q)
     {
-        return $query->where('members.code', 'LIKE', '%' . $q . '%')
+        return $query->where(function($query) use ($q){
+            return $query->where('members.code', 'LIKE', '%' . $q . '%')
         ->orWhere('members.email', 'LIKE', '%' . $q . '%')
         ->orWhere('members.name', 'LIKE', '%' . $q . '%')
         ->orWhere('members.phone', 'LIKE', '%' . $q . '%')
         ->orWhere('members.sex', 'LIKE', '%' . $q . '%');
+        });
+
     }
 
     /**
@@ -299,6 +302,36 @@ trait MemberRepositoryTrait
                 });
             })
             ->where('members.name', '=', $name )
+            ->paginate($length, $this->getColumn())
+            ->appends(request()->input());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getByNameTypeId(string $name, int $typeId, Member $member):? Member
+    {
+        return $this
+            ->getJoin($member)
+            ->where('members.name', '=', $name )
+            ->where('members.type_id', '=', $typeId )
+            ->first($this->getColumn());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getByNameTypeIdList(string $name, int $typeId, Member $member, string $q = null, int $length = 12): LengthAwarePaginator
+    {
+        return $this
+            ->getJoin($member)
+            ->when($q != null, function ($query) use ($q) {
+                return $query->where(function($query) use($q){
+                    return $this->getFilter($query, $q);
+                });
+            })
+            ->where('members.name', '=', $name )
+            ->where('members.type_id', '=', $typeId )
             ->paginate($length, $this->getColumn())
             ->appends(request()->input());
     }
