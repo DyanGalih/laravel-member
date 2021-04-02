@@ -6,7 +6,6 @@
 namespace WebAppId\Member\Services;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use WebAppId\Content\Repositories\CategoryRepository;
 use WebAppId\Content\Services\ContentService;
 use WebAppId\Content\Services\Requests\ContentServiceRequest;
@@ -16,6 +15,7 @@ use WebAppId\Member\Repositories\Requests\MemberRepositoryRequest;
 use WebAppId\Member\Services\Contracts\MemberServiceContract;
 use WebAppId\Member\Services\Requests\MemberServiceRequest;
 use WebAppId\Member\Services\Responses\MemberServiceResponse;
+use WebAppId\Member\Traits\MemberTrait;
 
 /**
  * @author:
@@ -26,7 +26,7 @@ use WebAppId\Member\Services\Responses\MemberServiceResponse;
  */
 class MemberService implements MemberServiceContract
 {
-    use MemberServiceTrait {
+    use MemberTrait, MemberServiceTrait {
         store as baseStore;
         update as baseUpdate;
     }
@@ -51,45 +51,19 @@ class MemberService implements MemberServiceContract
     {
         DB::beginTransaction();
 
-        $availableMember = app()->call([$memberRepository, 'getByEmail'], ['email' => $memberServiceRequest->email]);
+        $memberServiceResponse = $this->storeMemberContent(
+            $memberServiceRequest,
+            $contentServiceRequest,
+            $memberRepositoryRequest,
+            $contentService,
+            $categoryRepository,
+            $memberRepository,
+            $memberServiceResponse
+        );
 
-        if ($availableMember != null) {
-            $memberServiceResponse->status = false;
-            $memberServiceResponse->message = 'Email already used. Choose another one';
-            return $memberServiceResponse;
-        }
-
-        if ($memberServiceRequest->code == null) {
-            $memberServiceRequest->code = Str::uuid();
-        }
-
-        $memberRepositoryRequest = Lazy::copy($memberServiceRequest, $memberRepositoryRequest);
-        $category = app()->call([$categoryRepository, 'getByName'], ['name' => 'Profile']);
-        if ($category != null) {
-            $contentServiceRequest->categories[] = $category->id;
-        }
-        if ($contentServiceRequest->content == null) {
-            $contentServiceRequest->content = '';
-        }
-
-        $resultContent = app()->call([$contentService, 'store'], compact('contentServiceRequest'));
-
-        $memberRepositoryRequest->content_id = $resultContent->content->id;
-
-        $result = app()->call([$memberRepository, 'store'], compact('memberRepositoryRequest'));
-
-        if ($result != null) {
-            $memberServiceResponse->status = true;
-            $memberServiceResponse->message = 'Store Data Success';
-            $memberServiceResponse->member = $result;
-            $memberServiceResponse->content = $resultContent->content;
-            $memberServiceResponse->categories = $resultContent->categories;
-            $memberServiceResponse->galleries = $resultContent->galleries;
-            $memberServiceResponse->children = $resultContent->children;
+        if ($memberServiceResponse->status) {
             DB::commit();
         } else {
-            $memberServiceResponse->status = false;
-            $memberServiceResponse->message = 'Store Data Failed';
             DB::rollback();
         }
 
